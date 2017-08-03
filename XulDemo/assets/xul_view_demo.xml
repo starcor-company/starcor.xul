@@ -1,0 +1,2553 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<starcor.xul xmlns="http://www.starcor.cn/XUL" screen="1280x720">
+    <binding id="api_n36">file:///.assets/api/n36.xml</binding>
+
+    <script type="script/javascript" src="file:///.assets/xul_demo_script.js"/>
+
+    <page id="page_main" desc="主页">
+        <binding id="main_page_menu">file:///.assets/xul_demo_menu.xml</binding>
+
+        <layout>
+            <item id="@focus-tracker">
+                <focus mode="nofocus"/>
+                <style name="z-index">1000</style>
+                <attr name="animation-moving">true</attr>
+                <attr name="animation-sizing">true</attr>
+                <attr name="animation">sin</attr>
+                <attr name="animation-duration">200</attr>
+                <style name="border">5,9FFF00FF,10,10</style>
+            </item>
+            <area type="slider" class="vertical_scroll_slider">
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="direction">vertical</attr>
+
+                <template binding="#main_page_menu/meta_data/category_item">
+                    <area type="slider">
+                        <attr name="direction">vertical</attr>
+
+                        <item type="image" class="demo_item,focusable_item,category_item">
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+
+                         <area type="slider" id="demo_item_area" class="hide_area">
+                             <attr name="direction">vertical</attr>
+                             <attr name="animation-sizing">true</attr>
+                             <attr name="animation-duration">100</attr>
+                             <attr name="animation-mode">constant:300,20,100</attr>
+                             <template binding="demo_item">
+                                <item type="image" class="demo_item,focusable_item">
+                                    <attr name="text" binding="name"/>
+                                    <action event="click" type="usr_cmd" binding="item_data"/>
+                                    <attr name="behavior" binding="behavior"/>
+                                    <attr name="layout" binding="layout"/>
+                                </item>
+                            </template>
+                        </area>
+                    </area>
+                </template>
+            </area>
+        </layout>
+        <selector>
+            <select class="demo_item">
+                <focus mode="focusable"/>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_content</attr>
+
+                <style name="padding">20</style>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+
+                <!-- 白色分隔线 -->
+                <attr name="img.3">@color:FFFFFFFF</attr>
+                <attr name="img.3.width">2560</attr>
+                <attr name="img.3.height">1</attr>
+                <attr name="img.3.mode">center</attr>
+                <attr name="img.3.align">0,1</attr>
+            </select>
+            <select class="focusable_item" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select class="category_item">
+                <style name="background-color">88888888</style>
+
+                <attr name="img.0">file:///.assets/indicator/right-arrow.png</attr>
+                <attr name="img.0.width">20</attr>
+                <attr name="img.0.height">32</attr>
+                <attr name="img.0.mode">center</attr>
+                <attr name="img.0.align">1,0.5</attr>
+                <attr name="img.0.padding">20</attr>
+                <action event="click" type="script/javascript">
+                    var demoItemArea = this.parent.findItemById("demo_item_area");
+                    if (this.hasClass("category_item_expand")) {
+                        // 已经展开
+                        this.removeClass("category_item_expand");
+                        demoItemArea.addClass("hide_area");
+                    } else {
+                        this.addClass("category_item_expand");
+                        demoItemArea.removeClass("hide_area");
+                    }
+                </action>
+            </select>
+            <select class="hide_area">
+                <attr name="enabled">disabled</attr>
+                <attr name="height">0</attr>
+            </select>
+            <select class="category_item_expand">
+                <attr name="img.0">file:///.assets/indicator/down-arrow.png</attr>
+                <attr name="img.0.width">32</attr>
+                <attr name="img.0.height">20</attr>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_label_demo" desc="Label demo">
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+
+                <area desc="单行文本区域" type="grid">
+                    <attr name="direction">horizontal</attr>
+
+                    <item id="label_single_line" desc="单行文本" type="label">
+                        <focus mode="focusable" priority="1"/>
+                        <attr name="text">单行文本单行文本单行文本单行文本</attr>
+
+                        <!-- true/false，是否为多行文本，默认为false -->
+                        <attr name="multi-line">false</attr>
+                    </item>
+                    <item id="label_ellipsis_line" desc="截断文本" type="label">
+                        <attr name="text">截断文本截断文本截断文本截断文本</attr>
+
+                        <!-- true/false，文本截断是否显示省略号，默认为false -->
+                        <attr name="ellipsis">true</attr>
+                    </item>
+                    <item id="label_bold_line" desc="粗体文本" type="label">
+                        <attr name="text">粗体文本粗体文本粗体文本粗体文本</attr>
+
+                        <!-- 浮点数，大于1表示粗体 -->
+                        <style name="font-weight">2</style>
+                    </item>
+                    <item id="label_italic_line" desc="斜体文本" type="label">
+                        <attr name="text">斜体文本斜体文本</attr>
+
+                        <!-- true/false 文本是否显示为斜体，默认为false -->
+                        <style name="font-style-italic">true</style>
+                    </item>
+                    <item id="label_underline_line" desc="下划线文本" type="label">
+                        <attr name="text">下划线文本下划线文本</attr>
+
+                        <!-- true/false 文本是否添加下划线，默认为false -->
+                        <style name="font-style-underline">true</style>
+                    </item>
+                    <item id="label_strike_line" desc="中划线文本" type="label">
+                        <attr name="text">中划线文本中划线文本</attr>
+
+                        <!-- true/false 文本是否添加中划线，默认为false -->
+                        <style name="font-style-strike">true</style>
+                    </item>
+                    <item id="label_scale_x" desc="宽字体文本" type="label">
+                        <attr name="text">宽字体文本</attr>
+
+                        <!-- 浮点数，默认为1.0 -->
+                        <style name="font-scale-x">2.0</style>
+                    </item>
+                    <item id="label_scale_x" desc="半宽字体文本" type="label">
+                        <attr name="text">半宽字体文本</attr>
+
+                        <!-- 浮点数，默认为1.0 -->
+                        <style name="font-scale-x">0.5</style>
+                    </item>
+                    <item id="label_scale_x" desc="雅黑字体文本" type="label">
+                        <attr name="text">雅黑字体文本</attr>
+
+                        <!-- font-face字符串，设置对象使用的字体。字体必须通过
+                        XulRenderContext.addTypeFace(“名称”, <字体对象>)手工添加。
+                        -->
+                        <style name="font-face">scyahei</style>
+                    </item>
+
+                    <!-- 不同颜色的文本 -->
+                    <item id="label_red" desc="红色文本" type="label">
+                        <attr name="text">红色文本</attr>
+
+                        <!-- 十六进制颜色 -->
+                        <style name="font-color">FFFF0000</style>
+                    </item>
+                    <item id="label_red" desc="绿色文本" type="label">
+                        <attr name="text">绿色文本</attr>
+
+                        <!-- 十六进制颜色 -->
+                        <style name="font-color">FF00FF00</style>
+                    </item>
+                    <item id="label_red" desc="蓝色文本" type="label">
+                        <attr name="text">蓝色文本</attr>
+
+                        <!-- 十六进制颜色 -->
+                        <style name="font-color">FF0000FF</style>
+                    </item>
+
+                    <!-- 文本投影 -->
+                    <item desc="水平投影文本" type="label">
+                        <attr name="text">水平投影文本</attr>
+
+                        <!-- 格式x, y, size, color -->
+                        <style name="font-shadow">4,0,8,FF00FF00</style>
+                    </item>
+                    <item desc="竖直投影文本" type="label">
+                        <attr name="text">竖直投影文本</attr>
+
+                        <!-- 格式x, y, size, color -->
+                        <style name="font-shadow">0,4,8,FF00FF00</style>
+                    </item>
+                    <item desc="投影文本" type="label">
+                        <attr name="text">投影文本</attr>
+
+                        <!-- 格式x, y, size, color -->
+                        <style name="font-shadow">4,4,8,FF00FF00</style>
+                    </item>
+
+                    <!-- 单行滚动文本 -->
+                    <item id="label_marquee" desc="滚动文本" type="label">
+                        <attr name="text">滚动文本</attr>
+
+                        <!-- 文本自动滚动
+                            参数：
+                            speed，delay，interval，space
+                            mode，speed，delay，interval，space
+                            mode为滚动模式，默认为超长滚动
+                                 inverse表示反向滚动
+                            speed为文本滚动速度（单位ms）。单字（中文）滚动的时间
+                            delay启动延迟（单位ms）
+                            interval两次滚动时间间隔（单位ms）
+                            space首尾间距（象素或可视区域百分比）
+                        -->
+                        <attr name="marquee">500,1000,500,30%</attr>
+                    </item>
+                    <item id="label_marquee_left" desc="向左滚动文本" type="label">
+                        <attr name="text">向左滚动文本向左滚动文本</attr>
+
+                        <attr name="marquee">500,1000,500,30%</attr>
+                    </item>
+                    <item id="label_marquee_right" desc="向右滚动文本" type="label">
+                        <attr name="text">向右滚动文本向右滚动文本</attr>
+
+                        <attr name="marquee">inverse,500,1000,500,30%</attr>
+                    </item>
+
+                    <item id="label_rtl_style" desc="反向布局文本" type="label">
+                        <attr name="text">反向</attr>
+
+                        <!--
+                            ltr 默认值，从左向右布局
+                            rtl 从右向左布局，自动翻转x对齐方式及滚动方向。
+                        -->
+                        <style name="layout-mode">rtl</style>
+
+
+                        <!-- 右边有padding，需要重新调整水平align  padding-left/2/width -->
+                        <style name="font-align">0.5,0.5</style>
+                        <!-- 翻转成padding-right -->
+                        <style name="padding-left">20</style>
+                        <focus mode="focusable"></focus>
+                        <action event="click" type="script/javascript">
+                            if (this.text == "反向") {
+                                this.text = "反向布局文本反向布局文本反向布局文本123";
+                            } else {
+                                this.text = "反向";
+                            }
+                        </action>
+                    </item>
+                </area>
+
+                <area type="grid" desc="不同字号文本区域">
+                    <attr name="direction">horizontal</attr>
+
+                    <!-- 不同字号的文本 -->
+                    <item id="label_font_size_32" desc="32号字体文本" type="label">
+                        <attr name="text">32号字体文本</attr>
+
+                        <!-- 字体大小，具体数字 -->
+                        <style name="font-size">32</style>
+                    </item>
+                    <item id="label_font_size_48" desc="48号字体文本" type="label">
+                        <attr name="text">48号字体文本</attr>
+
+                        <!-- 字体大小，具体数字 -->
+                        <style name="font-size">48</style>
+                    </item>
+                    <item id="label_font_size_64" desc="64号字体文本" type="label">
+                        <attr name="text">64号字体文本</attr>
+
+                        <!-- 字体大小，具体数字 -->
+                        <style name="font-size">64</style>
+                    </item>
+                </area>
+
+                <area desc="固定文本高度区域" type="grid">
+                    <attr name="direction">horizontal</attr>
+
+                    <item id="label_multi_line" desc="多行文本" type="label" class="fix_height_item">
+                        <attr name="text">多行文本多行文本多行文本多行文本</attr>
+
+                        <!-- true/false，是否为多行文本，默认为false -->
+                        <attr name="multi-line">true</attr>
+                    </item>
+                    <item id="label_multi_line" desc="多行文本" type="label" class="fix_height_item">
+                        <attr name="text">多行文本多行文本多行文本多行文本</attr>
+
+                        <!-- true/false，是否为多行文本，默认为false -->
+                        <attr name="multi-line">true</attr>
+                        <!-- true/false，文本是否自动换行，仅对多行文本有效，默认为false -->
+                        <attr name="auto-wrap">true</attr>
+                    </item>
+                    <item id="label_multi_line_ellipsis" desc="多行文本截断" type="label"
+                          class="fix_height_item">
+                        <attr name="text">多行文本截断多行文本截断多行文本截断多行文本截断多行文本截断</attr>
+
+                        <!-- true/false，是否为多行文本，默认为false -->
+                        <attr name="multi-line">true</attr>
+                        <!-- true/false，文本是否自动换行，仅对多行文本有效，默认为false -->
+                        <attr name="auto-wrap">true</attr>
+                        <!-- true/false，文本截断是否显示省略号，默认为false -->
+                        <attr name="ellipsis">true</attr>
+                    </item>
+
+                    <item id="label_align_left_top" desc="左上文本" type="label"
+                          class="fix_height_item">
+                        <attr name="text">左上文本</attr>
+
+                        <!-- 格式x, y。取值范围0~1 -->
+                        <style name="font-align">0,0</style>
+                    </item>
+                    <item id="label_align_left_top" desc="居中文本" type="label"
+                          class="fix_height_item">
+                        <attr name="text">居中文本</attr>
+
+                        <!-- 格式x, y。取值范围0~1 -->
+                        <style name="font-align">0.5,0.5</style>
+                    </item>
+                    <item id="label_align_left_top" desc="右下文本" type="label"
+                          class="fix_height_item">
+                        <attr name="text">右下文本</attr>
+
+                        <!-- 格式x, y。取值范围0~1 -->
+                        <style name="font-align">1,1</style>
+                    </item>
+
+                    <item id="label_scrollbar" desc="滚动条文本" type="label" class="fix_height_item">
+                        <attr name="text">滚动条文本</attr>
+
+                        <!--
+                        设置滚动条样式，默认为none，无滚动条
+                        简单样式：
+                        simple, [基本参数,[背景参数]]
+                        基本参数如下：
+                        位置(0~1),隐藏延迟(ms，-1为不隐藏),宽度,圆角尺寸(不能大于宽度/2),颜色,阴影尺寸,阴影颜色
+
+                        背景参数如下：
+                        背景色
+                        背景色,边距
+                        背景色,滚动范围色,边距
+                        背景色,滚动范围色,背景圆角,边距
+                        背景色,边距上,左,右,下
+                        背景色,滚动范围色,边距上,左,右,下
+                        背景色,滚动范围色,背景圆角,边距上,左,右,下
+
+                        例(simple+基本参数)：
+                        simple,1.0,3000,4.0,2.0,80FFFFFF,2.0,FF000000
+                        -->
+                        <attr name="scrollbar">simple,1.0,-1,4.0,2.0,80FFFFFF,2.0,FF000000</attr>
+                    </item>
+                    <item id="label_scrollbar" desc="滚动条文本" type="label" class="fix_height_item">
+                        <attr name="text">滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本
+                            滚动条文本
+                            滚动条文本 滚动条文本 滚动条文本
+                        </attr>
+
+                        <focus mode="focusable" priority="1"/>
+                        <attr name="multi-line">true</attr>
+                        <attr name="auto-wrap">true</attr>
+                        <attr name="scrollbar">simple,1.0,3000,4.0,2.0,FFFF0000,2.0,FF000000</attr>
+                    </item>
+                </area>
+            </area>
+        </layout>
+
+        <selector>
+            <select type="label">
+                <attr name="width">200</attr>
+                <attr name="height">match_content</attr>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select class="fix_height_item">
+                <attr name="height">200</attr>
+                <style name="border">2,FFFFFFFF</style>
+            </select>
+            <select type="label" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+        </selector>
+
+    </page>
+
+    <page id="page_spanned_label_demo" desc="Spanned label demo">
+        <layout>
+            <area desc="Spanned label区域" type="slider" class="vertical_scroll_slider">
+
+                <item type="spanned_label" desc="基本使用" class="fix_height_item">
+                    <attr name="width">400</attr>
+                    <attr name="text">48号斜体带下划线红色滚动雅黑字体半宽水平居中竖直靠下文本</attr>
+                    <attr name="marquee">500,1000,500,30%</attr>
+                    <attr name="multi-line">false</attr>
+                    <style name="font-size">48</style>
+                    <style name="font-color">FFFF0000</style>
+                    <style name="font-style-italic">true</style>
+                    <style name="font-style-underline">true</style>
+                    <style name="font-face">scyahei</style>
+                    <style name="font-scale-x">0.5</style>
+                    <style name="font-align">0.5,1.0</style>
+                    <style name="font-shadow">8,-8,4,FF00FF00</style>
+                </item>
+                <item type="spanned_label" desc="单行文本">
+                    <attr name="text">单行文本0123456789</attr>
+
+                    <attr name="multi-line">false</attr>
+                </item>
+                <item type="spanned_label" desc="多行文本">
+                    <attr name="text">多行文本0123456789</attr>
+
+                    <attr name="multi-line">true</attr>
+                </item>
+                <item type="spanned_label" desc="多行文本" class="fix_height_item">
+                    <focus mode="focusable" focused="true"/>
+                    <attr name="text">
+                        多行文本带滚动条0123456789多行文本带滚动条0123456789多行文本带滚动条0123456789多行文本带滚动条0123456789
+                    </attr>
+                    <attr name="scrollbar">simple,1.0,3000,4.0,2.0,FFFF0000,2.0,FF000000</attr>
+                </item>
+
+                <!-- 图文混排
+                    <br>   定义换行
+                    <cite>   表示引用的URI
+                    <dfn>   定义标签  dfn 是defining instance的缩写
+                    <div align="...">
+                    <em>  强调标签  em 是emphasis的缩写
+                    <font size="..." color="..." face="...">
+                    <h1>
+                    <h2>
+                    <h3>
+                    <h4>
+                    <h5>
+                    <h6>
+                    <i>   定义斜体文字
+                    <img src="...">
+                    <p>     段落标签,里面可以加入文字,列表,表格等
+                    <small>  定义小字体的文字
+                    <strike>   定义删除线样式的文字
+                    <strong>   重点强调标签
+                    <sub>   下标标签   sub 是subscript的缩写
+                    <sup>   上标标签   sup 是superscript的缩写
+                    <tt>   定义monospaced字体的文字  tt是teletype or monospaced text style的意思
+                    <u>   定义带有下划线的文字  u是underlined text style的意思
+                -->
+                <item type="spanned_label" desc="内嵌图片" class="fix_height_item">
+                    <attr name="width">match_content</attr>
+                    <attr name="height">match_content</attr>
+                    <attr name="text"><![CDATA[
+                        资源图片<img src="file:///.assets/star/star-a1.png"/>
+                        网络图片<img src="http://2img.imgo.tv/preview/internettv/sp_images/itv/2015/dianying/111425/20150514103525700-new.jpg"/>
+                        Gif图片<img src="file:///.assets/gif/gun.gif"/>
+
+                        <br><h1><mxgsa>自定义标签</mxgsa></h1>
+                        <cite>"http://www.starcor.com/"</cite>
+                        <br><b>粗体文字</b>
+                        <br><big>大字体</big>
+                        <br><blockquote>引用块标签</blockquote>
+                        <em>强调字体</em>
+                        <br><small>小字体</small>
+                        <br>
+                        ]]>
+                    </attr>
+                </item>
+            </area>
+
+        </layout>
+        <selector>
+            <select type="spanned_label">
+                <focus mode="focusable"/>
+                <attr name="width">200</attr>
+                <attr name="height">match_content</attr>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select class="fix_height_item">
+                <attr name="height">200</attr>
+                <style name="border">2,FFFFFFFF</style>
+            </select>
+            <select type="spanned_label" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_image_demo" desc="Image demo">
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+
+                <area desc="Image区域" type="grid">
+                    <attr name="direction">horizontal</attr>
+
+                    <item type="image" desc="image.0">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="text">image.0</attr>
+                    </item>
+                    <item type="image" desc="image.1">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="text">image.1</attr>
+                    </item>
+                    <item type="image" desc="image.2">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="text">image.2</attr>
+                    </item>
+                    <item type="image" desc="image.3">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="text">image.3</attr>
+                    </item>
+                    <item type="image" desc="image.0,1,2,3">
+                        <attr name="img.0">@color:FFFFFFFF</attr>
+                        <attr name="img.0.width">200</attr>
+                        <attr name="img.0.height">200</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">1,1</attr>
+                        <attr name="img.1">@color:FFFF0000</attr>
+                        <attr name="img.1.width">150</attr>
+                        <attr name="img.1.height">150</attr>
+                        <attr name="img.1.mode">center</attr>
+                        <attr name="img.1.align">1,1</attr>
+                        <attr name="img.2">@color:FF00FF00</attr>
+                        <attr name="img.2.width">100</attr>
+                        <attr name="img.2.height">100</attr>
+                        <attr name="img.2.mode">center</attr>
+                        <attr name="img.2.align">1,1</attr>
+                        <attr name="img.3">@color:FF0000FF</attr>
+                        <attr name="img.3.width">50</attr>
+                        <attr name="img.3.height">50</attr>
+                        <attr name="img.3.mode">center</attr>
+                        <attr name="img.3.align">1,1</attr>
+                        <attr name="text">image.0 白色，1 红色，2绿色，3蓝色</attr>
+                    </item>
+
+                    <item type="image" desc="网络图片">
+                        <attr name="img.0">
+                            http://2img.imgo.tv/preview/internettv/sp_images/itv/2015/dianying/111425/20150514103525700-new.jpg
+                        </attr>
+                        <attr name="text">网络图片</attr>
+                    </item>
+                    <item type="image" desc="gif图片">
+                        <attr name="width">match_content</attr>
+                        <attr name="height">match_content</attr>
+                        <attr name="img.0">file:///.assets/gif/gun.gif</attr>
+                        <attr name="text">gif图片</attr>
+                    </item>
+                    <!-- 部分支持svg图片，但资源占用较大。-->
+                    <item type="image" desc="svg图片">
+                        <attr name="img.0">file:///.assets/svg/Tux.svg</attr>
+                        <attr name="text">svg图片</attr>
+                    </item>
+                    <!--
+                        帧动画文件是一个自定义内容的zip压缩包，由一张/组图片及相应的动画描述元数据组成。
+                        帧动画的文件名必须以.ani或.ani.zip结尾。
+                    -->
+                    <item type="image" desc="帧动画">
+                        <attr name="img.0">file:///.assets/animation/icon.ani.zip</attr>
+                        <attr name="text">帧动画</attr>
+                    </item>
+                    <item type="image" desc="Nine-Patch图片">
+                        <attr name="img.0">file:///.assets/nine-patch/combo-edit-active.9.png</attr>
+                        <attr name="text">Nine-Patch图片</attr>
+                    </item>
+                    <!--
+                    格式：
+                        @color:COLOR_VALUE
+                        @color:COLOR_VALUE,radiusX,radius
+                        @color:COLOR_VALUE,ltRadius,rtRadius,rbRadius,lbRadius
+                        @color:COLOR_VALUE,ltX,ltY,rtX,rtY,rbX,rbY,lbX,lbY
+                    -->
+                    <item type="image" desc="单色图片">
+                        <attr name="img.0">@color:FF00FF00,4,4,8,8</attr>
+                        <attr name="text">单色图片</attr>
+                    </item>
+                    <item type="image" desc="png图片">
+                        <attr name="img.0">file:///.assets/star/star-a3.png</attr>
+                        <attr name="text">png图片</attr>
+                    </item>
+                    <item type="image" desc="jpg图片">
+                        <attr name="img.0">file:///.assets/jpg/store_entrance.jpg</attr>
+                        <attr name="text">jpg图片</attr>
+                    </item>
+
+                    <!-- mode 图层缩放模式。center居中，stretch拉伸（默认）-->
+                    <item type="image" desc="center mode图片">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="text">center mode图片</attr>
+                    </item>
+                    <item type="image" desc="stretch mode图片">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="img.0.mode">stretch</attr>
+                        <attr name="text">stretch mode图片</attr>
+                    </item>
+
+                    <item type="image" desc="image.0 显示, image.1 显示">
+                        <attr name="img.0">@color:FFFFFFFF</attr>
+                        <attr name="img.0.width">100</attr>
+                        <attr name="img.0.height">200</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">0,0.5</attr>
+                        <attr name="img.1">@color:FF00FF00</attr>
+                        <attr name="img.1.width">100</attr>
+                        <attr name="img.1.height">200</attr>
+                        <attr name="img.1.mode">center</attr>
+                        <attr name="img.1.align">1,0.5</attr>
+                        <attr name="text">image.0 显示, image.1 显示</attr>
+                    </item>
+                    <item type="image" desc="image.0 隐藏, image.1 显示">
+                        <attr name="img.0">@color:FFFFFFFF</attr>
+                        <attr name="img.0.width">100</attr>
+                        <attr name="img.0.height">200</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">0,0.5</attr>
+                        <attr name="img.0.visible">false</attr>
+                        <attr name="img.1">@color:FF00FF00</attr>
+                        <attr name="img.1.width">100</attr>
+                        <attr name="img.1.height">200</attr>
+                        <attr name="img.1.mode">center</attr>
+                        <attr name="img.1.align">1,0.5</attr>
+                        <attr name="text">image.0 隐藏, image.1 显示</attr>
+                    </item>
+                    <item type="image" desc="image.0 显示, image.1 隐藏">
+                        <attr name="img.0">@color:FFFFFFFF</attr>
+                        <attr name="img.0.width">100</attr>
+                        <attr name="img.0.height">200</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">0,0.5</attr>
+                        <attr name="img.1">@color:FF00FF00</attr>
+                        <attr name="img.1.width">100</attr>
+                        <attr name="img.1.height">200</attr>
+                        <attr name="img.1.mode">center</attr>
+                        <attr name="img.1.align">1,0.5</attr>
+                        <attr name="img.1.visible">false</attr>
+                        <attr name="text">image.0 显示, image.1 隐藏</attr>
+                    </item>
+
+                    <!--
+                        width/height图层宽高。只有宽高时，保持比例缩放。图片元素自动大小时（元素的width/height为空或auto），图片元素自动适应最大的图层尺寸；如果有文本内容，且文本尺寸大于所有图层，则使用文本尺寸。
+                        如果图层尺寸为match_content，则此图层的width或height不参与图片元素的尺寸计算。
+                    -->
+                    <item type="image" desc="固定宽高图片">
+                        <attr name="img.0">file:///.assets/png/about_logo.png</attr>
+                        <attr name="img.0.width">200</attr>
+                        <attr name="img.0.height">200</attr>
+                        <attr name="text">固定宽高图片</attr>
+                    </item>
+                    <item type="image" desc="自适应宽高图片">
+                        <attr name="width">match_content</attr>
+                        <attr name="height">match_content</attr>
+                        <attr name="img.0">file:///.assets/png/about_logo.png</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="text">自适应宽高图片</attr>
+                    </item>
+
+                    <!--
+                    round-rect图层圆角，格式：
+                        x-radius，y-radius
+                        left-top, right-top, right-bottom,left-bottom
+                        ltX, ltY, rtX, rtY, rbX, rbY, lbX, lbY
+                    -->
+                    <item type="image" desc="圆角图片">
+                        <attr name="img.0">file:///.assets/films/15.jpg</attr>
+                        <attr name="img.0.round-rect">16,16,32,32</attr>
+                        <attr name="text">圆角图片</attr>
+                    </item>
+
+                    <!-- shadow图层投影。水平偏移，竖直偏移，尺寸，颜色
+                        备注：目前图片投影配合圆角才有效果
+                     -->
+                    <item type="image" desc="图片投影">
+                        <attr name="img.0">file:///.assets/films/14.jpg</attr>
+                        <attr name="img.0.round-rect">16,16,32,32</attr>
+                        <attr name="img.0.shadow">8,4,8,FFFF0000</attr>
+                        <attr name="text">图片投影</attr>
+                    </item>
+
+                    <!-- padding 图片边距，（top，left，right，bottom），负值会使图片放大。-->
+                    <item type="image" desc="设置图片padding">
+                        <attr name="img.0">@color:FFFFFFFF</attr>
+                        <attr name="img.0.padding">10,20,30,-15</attr>
+                        <attr name="text">图片padding</attr>
+                        <style name="border">2,FF00FF00</style>
+                    </item>
+
+                    <!--
+                        fade-in 图片淡入效果，当图片加载成功时淡入。默认值为false。
+                        也可以指定动画时长（单位：ms）如：500，默认为300。
+                    -->
+                    <item type="image" desc="设置图片过渡动画">
+                        <attr name="img.0">@color:FFFFFFFF</attr>
+                        <attr name="img.0.fade-in">1000</attr>
+                        <attr name="text">图片淡入</attr>
+                    </item>
+
+                    <!-- 指定最大图层数量，默认为4，最大值为8 -->
+                    <item type="image" desc="8层layer图片">
+                        <attr name="max-layers">8</attr>
+                        <attr name="img.0">@color:FFFFFFFF</attr>
+                        <attr name="img.0.width">200</attr>
+                        <attr name="img.0.height">200</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">1,1</attr>
+                        <attr name="img.1">@color:FFFF0000</attr>
+                        <attr name="img.1.width">175</attr>
+                        <attr name="img.1.height">175</attr>
+                        <attr name="img.1.mode">center</attr>
+                        <attr name="img.1.align">1,1</attr>
+                        <attr name="img.2">@color:FF00FF00</attr>
+                        <attr name="img.2.width">150</attr>
+                        <attr name="img.2.height">150</attr>
+                        <attr name="img.2.mode">center</attr>
+                        <attr name="img.2.align">1,1</attr>
+                        <attr name="img.3">@color:FF0000FF</attr>
+                        <attr name="img.3.width">125</attr>
+                        <attr name="img.3.height">125</attr>
+                        <attr name="img.3.mode">center</attr>
+                        <attr name="img.3.align">1,1</attr>
+                        <attr name="img.4">@color:FFFFA500</attr>
+                        <attr name="img.4.width">100</attr>
+                        <attr name="img.4.height">100</attr>
+                        <attr name="img.4.mode">center</attr>
+                        <attr name="img.4.align">1,1</attr>
+                        <attr name="img.5">@color:FF800080</attr>
+                        <attr name="img.5.width">75</attr>
+                        <attr name="img.5.height">75</attr>
+                        <attr name="img.5.mode">center</attr>
+                        <attr name="img.5.align">1,1</attr>
+                        <attr name="img.6">@color:FF00FFFF</attr>
+                        <attr name="img.6.width">50</attr>
+                        <attr name="img.6.height">50</attr>
+                        <attr name="img.6.mode">center</attr>
+                        <attr name="img.6.align">1,1</attr>
+                        <attr name="img.7">@color:FFD2B48C</attr>
+                        <attr name="img.7.width">25</attr>
+                        <attr name="img.7.height">25</attr>
+                        <attr name="img.7.mode">center</attr>
+                        <attr name="img.7.align">1,1</attr>
+                        <attr name="text">image.0 白色，1 红色，2绿色，3蓝色, 4 橙色，5 紫色，6 青色，7 茶色</attr>
+                    </item>
+
+                    <!--
+                        元素match_content时不考虑text的尺寸
+                        布尔类型，默认为false
+                        格式：宽/高 或 宽，高
+                    -->
+                    <item type="image" desc="考虑text的尺寸">
+                        <attr name="width">match_content</attr>
+                        <attr name="height">match_content</attr>
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">0.5,0.5</attr>
+
+                        <attr name="text">考虑text的尺寸</attr>
+
+                        <style name="do-not-match-text">false</style>
+                    </item>
+                    <item type="image" desc="不考虑text的尺寸">
+                        <attr name="width">match_content</attr>
+                        <attr name="height">match_content</attr>
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">0.5,0.5</attr>
+                        <attr name="text">不考虑text的尺寸</attr>
+
+                        <style name="do-not-match-text">true</style>
+                    </item>
+
+                    <!--
+                    layout-mode:布局模式
+                        ltr 默认值，从左向右布局
+                        rtl 从右向左布局，自动翻转x对齐方式及左/右padding。
+                    -->
+                    <item type="image" desc="从左向右布局">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">0,1</attr>
+
+                        <attr name="text">从左向右布局</attr>
+                    </item>
+                    <item type="image" desc="从右向左布局">
+                        <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                        <attr name="img.0.mode">center</attr>
+                        <attr name="img.0.align">0,1</attr>
+                        <attr name="text">从右向左布局</attr>
+
+                        <style name="layout-mode">rtl</style>
+                    </item>
+
+                    <!-- 在IXulWorkerHandler中处理 -->
+                    <item type="image" desc="scale:网络图片">
+                        <attr name="img.0">scale:http://2img.imgo.tv/preview/internettv/sp_images/itv/2015/dianying/111425/20150514103525700-new.jpg</attr>
+                        <attr name="text">scale:网络图片</attr>
+                    </item>
+
+                    <!-- 在IXulWorkerHandler中处理 -->
+                    <item type="image" desc="处理图片：平行四边形">
+                        <attr name="img.0">effect:parallelogram:file:///.assets/png/dongman.png</attr>
+                        <attr name="text">处理图片：平行四边形</attr>
+                    </item>
+
+                    <!--在IXulWorkerHandler中处理-->
+                    <item type="image" desc="处理图片：菱形">
+                        <attr name="img.0">effect:hexagon:file:///.assets/png/dongman.png</attr>
+                        <attr name="text">处理图片：菱形</attr>
+                    </item>
+
+                    <!--在IXulWorkerHandler中处理-->
+                    <item type="image" desc="手动加载图片">
+                        <attr name="img.0">manual_image</attr>
+                        <attr name="text">手动加载图片</attr>
+                    </item>
+
+                </area>
+            </area>
+        </layout>
+
+        <selector>
+            <select type="image">
+                <attr name="width">200</attr>
+                <attr name="height">200</attr>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFF0000</style>
+                <style name="font-align">0.5,1</style>
+                <attr name="marquee">500,1000,500,30%</attr>
+                <style name="margin">20</style>
+            </select>
+            <select type="image" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_slider_demo" desc="Slider demo">
+        <binding id="slider_items">
+            <items>
+                <item>
+                    <name>item1</name>
+                </item>
+                <item>
+                    <name>item2</name>
+                </item>
+                <item>
+                    <name>item3</name>
+                </item>
+                <item>
+                    <name>item4</name>
+                </item>
+                <item>
+                    <name>item5</name>
+                </item>
+            </items>
+        </binding>
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <area type="slider" desc="slider基本使用">
+                    <style name="padding">0,36</style>
+                    <attr name="width">600</attr>
+                    <attr name="height">80</attr>
+                    <!-- 循环模式。默认为false。当元素大于2个及长度/宽度超出可见范围时，自动循环滚动所有元素。-->
+                    <!--<focus mode="loop"/>-->
+                    <!-- 自动跟随焦点滚动。enabled/disabled。默认为enabled -->
+                    <attr name="auto-scroll">true</attr>
+                    <!-- 子元素在X,Y方向的对齐方式。如： 0.5,0.5表示居中对齐 -->
+                    <attr name="align">0.5,1</attr>
+                    <!-- 是否使用指示器。enabled/disabled
+                    当slider在某一方向上可以滚动时，显示相应方向的指示器图片。
+                    -->
+                    <attr name="indicator">true</attr>
+                    <!--
+                    width, height, x-align, y-align, image-url
+                    width, height, image-url
+                    image-url
+                    -->
+                    <attr name="indicator.left">30,30,file:///.assets/indicator/left-arrow.png</attr>
+                    <attr name="indicator.right">30,30,file:///.assets/indicator/right-arrow.png</attr>
+                    <attr name="scrollbar">simple,1.0,-1,4.0,2.0,80FFFFFF,2.0,FF000000</attr>
+                    <!-- 设置slider的左右优先焦点边距不小于item的左右margin，可避免左右indicator无法自动消失 -->
+                    <style name="preferred-focus-padding">0,20</style>
+
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="name"/>
+                        </item>
+                    </template>
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="name"/>
+                        </item>
+                    </template>
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="name"/>
+                        </item>
+                    </template>
+
+                </area>
+
+                <!--
+                方向。水平（horizontal）/竖直（vertical）
+                反向水平/竖直布局：reverse-horizontal/reverse-vertical
+                反向布局仅做简单布局用，子元素不应该动态改变布局（尺寸），否则可能会引起布局错乱。
+                -->
+                <area type="slider" desc="水平slider">
+                    <attr name="direction">horizontal</attr>
+
+                    <template binding="#slider_items/item">
+                        <item type="label">
+                            <attr name="text" binding="=水平{name}"/>
+                        </item>
+                    </template>
+                </area>
+                <area type="slider" desc="反向水平slider">
+                    <attr name="direction">reverse-horizontal</attr>
+
+                    <template binding="#slider_items/item">
+                        <item type="label">
+                            <attr name="text" binding="=反向水平{name}"/>
+                        </item>
+                    </template>
+                </area>
+                <area type="slider">
+                    <attr name="direction">horizontal</attr>
+
+                    <area type="slider" desc="竖直slider">
+                        <attr name="direction">vertical</attr>
+
+                        <template binding="#slider_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=竖直{name}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider" desc="反向竖直slider">
+                        <attr name="direction">reverse-vertical</attr>
+
+                        <template binding="#slider_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=反向竖直{name}"/>
+                            </item>
+                        </template>
+                    </area>
+                </area>
+
+                <!-- auto-scroll, 自动跟随焦点滚动。enabled/disabled。默认为enabled -->
+                <area type="slider" desc="自动滚动" class="slider_fix_width">
+                <attr name="auto-scroll">true</attr>
+
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="=自动滚动{name}"/>
+                        </item>
+                    </template>
+                </area>
+                <area type="slider" desc="手动滚动" class="slider_fix_width">
+                    <attr name="auto-scroll">false</attr>
+
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="=手动滚动{name}"/>
+                        </item>
+                    </template>
+                </area>
+
+                <area type="slider" desc="焦点锁定模式" class="slider_fix_width">
+                    <!--
+                    焦点锁定模式。参数：alignment [,align-point]
+                    此样式使slider在必要时，自动对焦点元素调用makeChildVisible方法，将焦点元素固定在特定位置。
+                    -->
+                    <attr name="lock-focus">0.5,0.5</attr>
+
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="=焦点锁定{name}"/>
+                        </item>
+                    </template>
+                </area>
+
+                <area type="slider" desc="子元素裁剪" class="slider_fix_width">
+                    <!-- 绘制时是否裁减子级元素（true/false）-->
+                    <style name="clip-children">false</style>
+
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="=子元素裁剪{name}"/>
+                        </item>
+                    </template>
+                </area>
+
+                <area type="slider" desc="焦点裁剪" class="slider_fix_width">
+                    <!-- 绘制时是否裁减焦点元素（true/false）-->
+                    <style name="clip-focus">false</style>
+
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable,label_scale">
+                            <attr name="text" binding="=焦点裁剪{name}"/>
+                        </item>
+                    </template>
+                </area>
+
+                <area type="slider" desc="优先焦点边距模式" class="slider_fix_width">
+                    <!--
+                    设置优先焦点边距，即焦点四边到容器有效焦点区域的最小距离。格式同padding
+                    在条件允许的情况下，尽可能把子元素焦点移动到符合padding限制的位置显示。仅对slider有效。
+                    -->
+                    <style name="preferred-focus-padding">10,20,30,40</style>
+
+                    <template binding="#slider_items/item">
+                        <item type="label" class="label_focusable">
+                            <attr name="text" binding="=优先焦点边距{name}"/>
+                        </item>
+                    </template>
+                </area>
+
+            </area>
+        </layout>
+        <selector>
+            <select type="slider">
+                <style name="margin">20</style>
+                <style name="border">2,FFFFFFFF</style>
+            </select>
+            <select type="label">
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select class="label_focusable">
+                <focus mode="focusable"/>
+                <style name="border">2,FFFFFFFF</style>
+            </select>
+            <select class="label_focusable" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select class="label_scale" state="focused">
+                <attr name="width">600</attr>
+            </select>
+            <select class="slider_fix_width">
+                <attr name="width">500</attr>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_page_slider_demo" desc="Page slider demo">
+        <binding id="pages">
+            <pages>
+                <page>
+                    <name>page1</name>
+                </page>
+                <page>
+                    <name>page2</name>
+                </page>
+                <page>
+                    <name>page3</name>
+                </page>
+            </pages>
+        </binding>
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+
+                <area type="page_slider" desc="page slider水平布局">
+                    <!-- 动画速度，-1为无动画 -->
+                    <attr name="animation-speed">500</attr>
+                    <!-- 动画效果，slide为滑动，flip为翻转。默认为slide -->
+                    <attr name="animation-type">flip</attr>
+                    <!--
+                     页面切换模式，
+                        none，不切换（仅由代码控制切换）
+                        focus，跟随焦点切换（默认）
+                        auto，自动切换（不支持）
+                    -->
+                    <attr name="switching-mode">focus</attr>
+                    <!--绘制时是否裁减子级元素（true/false） 默认为true-->
+                    <style name="clip-children">false</style>
+                    <!-- 绘制时是否裁减焦点元素（true/false） 默认为false -->
+                    <style name="clip-focus">false</style>
+                    <!--页面切换自动回收图片，auto/disabled。默认为auto-->
+                    <attr name="image-gc">true</attr>
+
+                    <!-- 是否显示指示器，enabled/disabled。默认为disabled -->
+                    <attr name="indicator">enabled</attr>
+                    <!--
+                    参数格式：
+                    对齐参数(0~1)，默认样式
+                    对齐参数(0~1)，当前页样式，默认样式
+
+                    可用的样式有下三种：
+                    短线：dash, 宽，高，边距，颜色
+                    点：dot, 直径，边距，颜色
+                    图片：image，宽，高，边距，地址
+
+                    示例：
+                     0, dash,16,4,0,FF00FF00,dot,6,0,FF008000
+                    -->
+                    <attr name="indicator.style">0.70,image,27,33,-6.5,file:///.assets/indicator/indicator-focused.png,dot,12,5.5,FF00FF00</attr>
+                    <!-- indicator区域对齐方式（x-align, y-align）。范围0~1之间。 -->
+                    <attr name="indicator.align">0.5,0</attr>
+                    <!--所有indicator元素的基本间隔-->
+                    <attr name="indicator.gap">6</attr>
+
+                    <template binding="#pages/page">
+                        <area type="slider" class="page_area,page_area_scale">
+                            <item type="image">
+                                <attr name="text" binding="=水平滑动{name}"/>
+                            </item>
+                        </area>
+                    </template>
+                </area>
+
+                <area type="page_slider" desc="page slider垂直布局">
+                    <attr name="direction">vertical</attr>
+                    <attr name="animation-speed">500</attr>
+                    <attr name="animation-type">slide</attr>
+                    <attr name="switching-mode">none</attr>
+                    <style name="clip-children">true</style>
+                    <style name="clip-focus">true</style>
+                    <attr name="image-gc">disabled</attr>
+                    <attr name="indicator">enabled</attr>
+                    <attr name="indicator.style">0.70,image,27,33,-6.5,file:///.assets/indicator/indicator-focused.png,dash,24,15,8,FF00FF00</attr>
+                    <attr name="indicator.align">1,0.5</attr>
+                    <attr name="indicator.gap">6</attr>
+
+                    <template binding="#pages/page">
+                        <area type="slider" class="page_area">
+                            <item type="image">
+                                <attr name="text" binding="=垂直翻转{name}"/>
+                            </item>
+                        </area>
+                    </template>
+                </area>
+            </area>
+        </layout>
+        <selector>
+            <select type="page_slider">
+                <style name="margin">20</style>
+                <attr name="width">400</attr>
+                <attr name="height">200</attr>
+                <style name="border">2,FFFFFFFF</style>
+            </select>
+            <select class="page_area">
+                <focus mode="focusable"/>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="align">0.5,0.5</attr>
+            </select>
+            <select class="page_area" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select type="image">
+                <style name="font-size">32</style>
+                <style name="font-align">0.5,1</style>
+                <style name="font-color">FFFF0000</style>
+                <style name="border">2,FFFFFFFF</style>
+                <attr name="img.3">file:///.assets/star/star-a1.png</attr>
+                <attr name="img.3.width">100</attr>
+                <attr name="img.3.height">100</attr>
+            </select>
+            <select type="image" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select class="page_area_scale" state="focused">
+                <attr name="width">500</attr>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_grid_demo" desc="Grid demo">
+        <binding id="grid_items">
+            <items>
+                <item>
+                    <name>item1</name>
+                </item>
+                <item>
+                    <name>item2</name>
+                </item>
+                <item>
+                    <name>item3</name>
+                </item>
+                <item>
+                    <name>item4</name>
+                </item>
+                <item>
+                    <name>item5</name>
+                </item>
+                <item>
+                    <name>item6</name>
+                </item>
+            </items>
+        </binding>
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <area type="grid" desc="Grid区域">
+                    <attr name="direction">horizontal</attr>
+                    <attr name="width">match_parent</attr>
+                    <attr name="height">match_content</attr>
+                    <style name="margin">0</style>
+                    <style name="border"></style>
+
+                    <area type="grid" desc="水平布局">
+                        <attr name="direction">horizontal</attr>
+
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=水平{name}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="grid" desc="垂直布局">
+                        <attr name="direction">vertical</attr>
+
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=垂直{name}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <!-- 无焦点模式，元素不可获取焦点。area默认为此模式。-->
+                    <area type="grid" desc="nofocus焦点模式">
+                        <focus mode="nofocus"/>
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=nofocus_{name}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <!-- 有焦点模式，元素可获取焦点。item默认为此模式。-->
+                    <area type="grid" desc="focusable焦点模式">
+                        <focus mode="focusable"/>
+                        <!-- -->
+                        <item type="label">
+                            <focus mode="nofocus"/>
+                            <attr name="text" binding="=focusable_item0"/>
+                        </item>
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=focusable_{name}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <!-- 邻近模式。焦点移动时，优先选择最近的焦点元素。默认值。-->
+                    <area type="grid" desc="nearby焦点模式">
+                        <focus mode="nearby"/>
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=nearby_{name}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <!-- 优先级查找。默认值。 -->
+                    <area type="grid" desc="priority焦点模式">
+                        <focus mode="priority"/>
+                        <item type="label">
+                            <focus mode="focusable" priority="1"/>
+                            <attr name="text">priority_item0</attr>
+                        </item>
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=priority_{name}"/>
+                            </item>
+                        </template>
+                        <item type="label">
+                            <focus mode="focusable" priority="2"/>
+                            <attr name="text">priority_item7</attr>
+                        </item>
+                    </area>
+
+                    <!-- 动态模式。区块中的焦点元素使用动态优先级，上次的焦点元素具有最高优先级。 -->
+                    <area type="grid" desc="dynamic焦点模式">
+                        <focus mode="dynamic"/>
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=dynamic_{name}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <!-- 循环模式。区块中的焦点自动循环(仅slider, grid支持)。 -->
+                    <area type="grid" desc="dynamic焦点模式">
+                        <focus mode="loop"/>
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=loop_{name}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <!-- 自动换行模式。区块中当前方向无目标焦点时，自动查找下一行焦点元素。（仅grid支持） -->
+                    <area type="grid" desc="wrap焦点模式">
+                        <focus mode="wrap"/>
+                        <template binding="#grid_items/item">
+                            <item type="label">
+                                <attr name="text" binding="=wrap_{name}"/>
+                            </item>
+                        </template>
+                    </area>
+                </area>
+            </area>
+        </layout>
+        <selector>
+            <select type="grid">
+                <attr name="width">600</attr>
+                <attr name="height">300</attr>
+                <style name="margin">20</style>
+                <style name="border">2,FFFFFFFF</style>
+            </select>
+            <select type="label">
+                <focus mode="focusable"/>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select type="label" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_group_demo" desc="Group demo">
+        <binding id="group_items">
+            <items>
+                <item>
+                    <name>item1</name>
+                </item>
+                <item>
+                    <name>item2</name>
+                </item>
+                <item>
+                    <name>item3</name>
+                </item>
+                <item>
+                    <name>item4</name>
+                </item>
+                <item>
+                    <name>item5</name>
+                </item>
+            </items>
+        </binding>
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <area type="grid">
+                    <!-- 单选容器 -->
+                    <area type="radio" desc="单选区域" class="group_area">
+                        <!--
+                         选中元素的识别class名称。
+                        具有此class的元素被认为是选中状态。元素选中后会自动添加此class，取消选中时会自动删除此class。
+                        默认值为group-checked。
+                        -->
+                        <attr name="checked-class">group_item_checked</attr>
+                        <area type="slider">
+                            <attr name="direction">vertical</attr>
+
+                            <template binding="#group_items/item">
+                                <item type="label">
+                                    <attr name="text" binding="=radio_{name}"/>
+                                </item>
+                            </template>
+                        </area>
+                    </area>
+                    <!-- 多选容器 -->
+                    <area type="check" desc="多选区域" class="group_area">
+                        <attr name="checked-class">group_item_checked</attr>
+                        <area type="slider">
+                            <attr name="direction">vertical</attr>
+
+                            <template binding="#group_items/item">
+                                <item type="label">
+                                    <attr name="text" binding="=check_{name}"/>
+                                </item>
+                            </template>
+                        </area>
+                    </area>
+                </area>
+                <area type="group" desc="多分组区域" class="group_area">
+                    <!--
+                    用于指定分组(一个group组件可以定义多个不同的子分组)，为分组的xml描述信息。
+                    如无分组信息，则默认所有子元素为分组成员。工作模式由Group元素类型(type=check或radio)决定。
+                    Group默认为多选模式(check)。
+                    为一条或多条如下分组描述信息：
+                    <group>mode,group-class,checked-class</group>
+                    mode表示分组的类型，目前支持多选（check）及单选（radio）模式。
+                    group-class表示分组的识别class名，具有此class的元素才被认为是分组的成员。
+                    checked-class为选中元素的识别class名称。具有此class的元素被认为是选中状态。
+                    元素选中后会自动添加此class，取消选中时会自动删除此class。
+                    -->
+                    <attr name="group">
+                        <group>radio,group-radio,group_item_checked</group>
+                        <group>check,group-check,group_item_checked</group>
+                    </attr>
+                    <area type="slider">
+                        <attr name="direction">vertical</attr>
+
+                        <template binding="#group_items/item">
+                            <item type="label" class="group-radio">
+                                <attr name="text" binding="=radio_{name}"/>
+                            </item>
+                        </template>
+
+                        <template binding="#group_items/item">
+                            <item type="label" class="group-check">
+                                <attr name="text" binding="=check_{name}"/>
+                            </item>
+                        </template>
+                    </area>
+                </area>
+            </area>
+
+        </layout>
+        <selector>
+            <select class="group_area">
+                <style name="margin">20</style>
+                <style name="border">2,FFFFFFFF</style>
+            </select>
+            <select type="label">
+                <focus mode="focusable"/>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select type="label" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select class="group_item_checked">
+                <style name="border">4,FFFF0000</style>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_custom_demo" desc="Custom demo">
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <item type="custom" id="custom_edit_box">
+                    <attr name="class">EditBox</attr>
+                    <attr name="hint-text">请输入文字！</attr>
+                    <attr name="width">400</attr>
+                    <attr name="height">100</attr>
+                    <style name="margin">20</style>
+                    <style name="font-color">FF0000FF</style>
+                    <style name="font-size">32</style>
+                    <style name="border">4,FFFF0000</style>
+                </item>
+            </area>
+        </layout>
+    </page>
+
+    <page id="page_layer_demo" desc="Layer demo">
+        <binding id="layer_items">
+            <layer_items>
+                <layer_item>
+                    <name>opacity</name>
+                    <class>class_opacity</class>
+                </layer_item>
+                <layer_item>
+                    <name>translate-x</name>
+                    <class>class_translate-x</class>
+                </layer_item>
+                <layer_item>
+                    <name>translate-y</name>
+                    <class>class_translate-y</class>
+                </layer_item>
+                <layer_item>
+                    <name>translate</name>
+                    <class>class_translate</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate-x</name>
+                    <class>class_rotate-x</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate-y</name>
+                    <class>class_rotate-y</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate-z</name>
+                    <class>class_rotate-z</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate</name>
+                    <class>class_rotate</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate-center-x</name>
+                    <class>class_rotate-center-x</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate-center-y</name>
+                    <class>class_rotate-center-y</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate-center-z</name>
+                    <class>class_rotate-center-z</class>
+                </layer_item>
+                <layer_item>
+                    <name>rotate-center</name>
+                    <class>class_rotate-center</class>
+                </layer_item>
+                <layer_item>
+                    <name>lighting-color-filter</name>
+                    <class>class_lighting-color-filter</class>
+                </layer_item>
+                <layer_item>
+                    <name>round-rect</name>
+                    <class>class_round-rect</class>
+                </layer_item>
+                <layer_item>
+                    <name>layer_mask_1</name>
+                    <class>class_layer_mask_show</class>
+                </layer_item>
+                <layer_item>
+                    <name>layer_mask_2</name>
+                    <class>class_layer_mask_show</class>
+                </layer_item>
+                <layer_item>
+                    <name>layer_mask_3</name>
+                    <class>class_layer_mask_show</class>
+                </layer_item>
+            </layer_items>
+        </binding>
+        <layout>
+            <area type="check" desc="Layer变换选项">
+                <attr name="checked-class">layer_item_checked</attr>
+
+                <area type="slider" desc="选项列表">
+                    <attr name="direction">vertical</attr>
+                    <attr name="width">600</attr>
+                    <attr name="height">match_parent</attr>
+                    <style name="border">2,FFFFFFFF</style>
+
+                    <template binding="#layer_items/layer_item">
+                        <item type="image" class="layer_item">
+                            <attr name="text" binding="name"/>
+                            <data name="layer_class" binding="class"/>
+                        </item>
+                    </template>
+                </area>
+            </area>
+
+            <area type="layer" id="layer_demo">
+                <attr name="x">840</attr>
+                <attr name="y">260</attr>
+                <attr name="animation-duration">1000</attr>
+                <style name="border">2,FFFFFFFF</style>
+
+                <item id="@layer-mask" type="image" class="layer_mask_init,layer_mask_1">
+                    <attr name="img.0">file:///.assets/nine-patch/mask.9.png</attr>
+                </item>
+
+                <item id="@layer-mask" type="image" class="layer_mask_init,layer_mask_2">
+                    <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                </item>
+
+                <item id="@layer-mask" type="image" class="layer_mask_init,layer_mask_3">
+                    <attr name="img.0">file:///.assets/animation/icon.ani.zip</attr>
+                </item>
+
+                <item type="image">
+                    <attr name="img.0">file:///.assets/png/dongman.png</attr>
+
+                    <attr name="text">Layer变换效果展示</attr>
+                    <style name="font-size">32</style>
+                    <style name="font-color">FFFFFFFF</style>
+                    <style name="font-align">0.5,1</style>
+                    <attr name="marquee">500,1000,500,30%</attr>
+                </item>
+            </area>
+        </layout>
+        <selector>
+            <select type="image">
+                <attr name="width">200</attr>
+                <attr name="height">200</attr>
+            </select>
+            <select class="layer_item">
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_content</attr>
+
+                <style name="padding">20</style>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+
+                <!-- 白色分隔线 -->
+                <attr name="img.3">@color:FFFFFFFF</attr>
+                <attr name="img.3.width">600</attr>
+                <attr name="img.3.height">1</attr>
+                <attr name="img.3.mode">center</attr>
+                <attr name="img.3.align">0,1</attr>
+
+                <action event="checked" type="script/javascript">handleLayerItem</action>
+                <action event="unchecked" type="script/javascript">handleLayerItem</action>
+            </select>
+            <select class="layer_item" state="focused">
+                <style name="border">2,FF00FF00</style>
+            </select>
+            <select class="layer_item_checked">
+                <style name="background-color">FF0000FF</style>
+            </select>
+            <select class="layer_mask_init">
+                <attr name="img.0.visible">false</attr>
+            </select>
+
+            <!-- Layer变换 -->
+            <select class="class_opacity">
+                <!-- 不透明度。范围0.0 ~1.0 -->
+                <style name="opacity">0.3</style>
+            </select>
+            <select class="class_translate-x">
+                <!-- 平移变换x -->
+                <style name="translate-x">20</style>
+            </select>
+            <select class="class_translate-y">
+                <!-- 平移变换y -->
+                <style name="translate-y">20</style>
+            </select>
+            <select class="class_translate">
+                <!-- 平移变换。参数 dXY或dX, dY -->
+                <style name="translate">20,20</style>
+            </select>
+
+            <select class="class_rotate-x">
+                <!-- 旋转变换x。参数格式：X 或 X, bX -->
+                <style name="rotate-x">20,0.4</style>
+            </select>
+            <select class="class_rotate-y">
+                <!-- 旋转变换y。参数格式：Y 或 Y, bY -->
+                <style name="rotate-y">20,0.8</style>
+            </select>
+            <select class="class_rotate-z">
+                <!-- 旋转变换z。参数格式：Z 或 Z, bZ -->
+                <style name="rotate-z">20,20</style>
+            </select>
+            <select class="class_rotate">
+                <!--
+                旋转变换。参数格式：
+                X,Y 或
+                X,Y,Z 或
+                X,Y, bX, bY 或
+                X,Y, Z, bX, bY,bZ
+                其中，X,Y,Z(逆时针)为旋转角度；bX, bY, bZ为旋转中心偏移，bX, bY为百分比，bZ为像素。
+                 -->
+                <style name="rotate">30,60,45,0.3,0.6,10</style>
+            </select>
+
+            <select class="class_rotate-center-x">
+                <!-- 旋转变换中心bX -->
+                <style name="rotate-center-x">0.2</style>
+            </select>
+            <select class="class_rotate-center-y">
+                <!-- 旋转变换中心bY -->
+                <style name="rotate-center-y">0.3</style>
+            </select>
+            <select class="class_rotate-center-z">
+                <!-- 旋转变换中心bZ -->
+                <style name="rotate-center-z">15</style>
+            </select>
+            <select class="class_rotate-center">
+                <!-- 旋转变换中心。参数格式：bX, bY 或 bX, bY, bZ -->
+                <style name="rotate-center">0.4,0.8,20</style>
+            </select>
+
+            <select class="class_lighting-color-filter">
+                <!-- 颜色过滤。mulColor  或 mulColor, addColor -->
+                <style name="lighting-color-filter">FFFFFF22,808080</style>
+            </select>
+
+            <select class="class_round-rect">
+                <!--
+                圆角。格式
+                WH
+                W, H
+                lt, rt, rb, lb
+                ltW, ltH, rtW, rbH, rbW, rbH, lbW, lbH
+                -->
+                <style name="round-rect">16,32</style>
+            </select>
+
+            <select class="class_layer_mask_show">
+                <attr name="img.0.visible">true</attr>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_component_demo" desc="Component Demo">
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <area type="component" id="component_switch" desc="Component动态切换">
+                    <attr name="component">component_static</attr>
+                </area>
+                <area type="component" desc="Component Area">
+                    <attr name="component">component_area</attr>
+                    <attr name="x">20</attr>
+                    <attr name="y">20</attr>
+                    <style name="border">2,FFFFFFFF</style>
+                </area>
+            </area>
+        </layout>
+
+        <selector>
+            <select type="component">
+                <style name="padding">20</style>
+            </select>
+
+            <select type="image">
+                <attr name="width">200</attr>
+                <attr name="height">200</attr>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="border">2,FFFFFFFF</style>
+                <style name="font-align">0.5,1</style>
+                <attr name="marquee">500,1000,500,30%</attr>
+                <action event="click" type="script/javascript">switchComponent</action>
+            </select>
+            <select type="image" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+        </selector>
+    </page>
+
+    <component id="component_static">
+        <action event="componentChanged" type="script/javascript">
+            var children = this.children;
+            children[0].setAttr("text", "点击切换component");
+        </action>
+        <item type="image">
+            <attr name="img.0">file:///.assets/png/dongman.png</attr>
+        </item>
+    </component>
+
+    <component id="component_area">
+        <area type="slider">
+            <attr name="direction">vertical</attr>
+            <item type="label">
+                <attr name="text">Component item1</attr>
+            </item>
+            <item type="label">
+                <attr name="text">Component item2</attr>
+            </item>
+            <item type="label">
+                <attr name="text">Component item3</attr>
+            </item>
+        </area>
+        <selector>
+            <select type="label">
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+            </select>
+        </selector>
+    </component>
+
+    <component id="component_dynamic">
+        <action event="componentChanged" type="script/javascript">
+            var children = this.children;
+            children[0].setAttr("text", "component_dynamic");
+        </action>
+        <item type="image">
+            <attr name="img.0">file:///.assets/jpg/store_entrance.jpg</attr>
+            <style name="font-color">FFFF0000</style>
+        </item>
+    </component>
+
+    <page id="page_massive_demo">
+        <binding id="massive-data">
+            <data>
+                <item>1928374 923 923 49238 47193487123 420983 4719023847</item>
+                <item>2</item>
+                <item>3</item>
+                <item>4</item>
+                <item>5</item>
+                <item>6</item>
+            </data>
+        </binding>
+        <layout>
+            <area id="slider-area" class="normal-slider" type="slider">
+                <attr name="direction">vertical</attr>
+                <attr name="x">30</attr>
+                <attr name="y">50</attr>
+                <style name="border">2,FF903030</style>
+                <style name="padding">5</style>
+                <attr name="scrollbar">simple</attr>
+                <area id="massive-area" type="massive" binding="#massive-data/"
+                      class="massive-cls-h-grid">
+                    <attr name="minimum-item">32</attr>
+                    <action event="bindingFinished" type="script/javascript">
+                        this.findFirstItemByClass("massive-item").requestFocus();
+                    </action>
+                    <template id="@item-template">
+                        <item type="label" class="massive-item">
+                            <attr name="text" binding="/"/>
+                        </item>
+                    </template>
+                </area>
+            </area>
+
+            <area type="group">
+                <attr name="x">600</attr>
+                <attr name="y">50</attr>
+                <attr name="group">
+                    <group>radio,group-1,switch-button-checked</group>
+                    <group>radio,group-2,switch-button-checked</group>
+                </attr>
+                <area type="slider">
+                    <attr name="direction">vertical</attr>
+                    <area type="slider">
+                        <item type="label" class="switch-label">
+                            <attr name="text">Direction:</attr>
+                        </item>
+                        <item type="label" class="switch-button,group-1">
+                            <attr name="text">VERTICAL</attr>
+                            <action event="checked" type="script/javascript">
+                                var massiveArea = this.ownerPage.findItemById("massive-area");
+                                var sliderArea = massiveArea.findParentById("slider-area");
+                                var arrangement = massiveArea.getAttr("arrangement");
+                                var addClass;
+                                if ( arrangement == "grid" || arrangement == "grid-fixed" ) {
+                                sliderArea.setAttr("direction", "horizontal");
+                                addClass = "massive-cls-v-grid";
+                                } else {
+                                sliderArea.setAttr("direction", "vertical");
+                                addClass = "massive-cls-v-linear";
+                                }
+                                massiveArea.removeClass("massive-cls-v-grid");
+                                massiveArea.removeClass("massive-cls-h-grid");
+                                massiveArea.removeClass("massive-cls-v-linear");
+                                massiveArea.removeClass("massive-cls-h-linear");
+                                massiveArea.addClass(addClass);
+                                sliderArea.scrollTo(0, false);
+                            </action>
+                        </item>
+                        <item type="label" class="switch-info">
+                            <attr name="text">/</attr>
+                        </item>
+                        <item type="label" class="switch-button,group-1,switch-button-checked">
+                            <attr name="text">HORIZONTAL</attr>
+                            <action event="checked" type="script/javascript">
+                                var massiveArea = this.ownerPage.findItemById("massive-area");
+                                var sliderArea = massiveArea.findParentById("slider-area");
+                                var arrangement = massiveArea.getAttr("arrangement");
+                                var addClass;
+                                if ( arrangement == "grid" || arrangement == "grid-fixed" ) {
+                                sliderArea.setAttr("direction", "vertical");
+                                addClass = "massive-cls-h-grid";
+                                } else {
+                                sliderArea.setAttr("direction", "horizontal");
+                                addClass = "massive-cls-h-linear";
+                                }
+
+                                massiveArea.removeClass("massive-cls-v-grid");
+                                massiveArea.removeClass("massive-cls-h-grid");
+                                massiveArea.removeClass("massive-cls-v-linear");
+                                massiveArea.removeClass("massive-cls-h-linear");
+                                massiveArea.addClass(addClass);
+                                sliderArea.scrollTo(0, false);
+                            </action>
+                        </item>
+                    </area>
+                    <area type="slider">
+                        <item type="label" class="switch-label">
+                            <attr name="text">Arrangement:</attr>
+                        </item>
+                        <item type="label" class="switch-button,group-2">
+                            <attr name="text">LINEAR</attr>
+                            <action event="checked" type="script/javascript">
+                                var massiveArea = this.ownerPage.findItemById("massive-area");
+                                var sliderArea = massiveArea.findParentById("slider-area");
+                                var direction = massiveArea.getAttr("direction");
+                                var addClass;
+                                if ( direction == "vertical") {
+                                sliderArea.setAttr("direction", "vertical");
+                                addClass = "massive-cls-v-linear";
+                                } else {
+                                sliderArea.setAttr("direction", "horizontal");
+                                addClass = "massive-cls-h-linear";
+                                }
+                                massiveArea.removeClass("massive-cls-v-grid");
+                                massiveArea.removeClass("massive-cls-h-grid");
+                                massiveArea.removeClass("massive-cls-v-linear");
+                                massiveArea.removeClass("massive-cls-h-linear");
+                                massiveArea.addClass(addClass);
+                                sliderArea.scrollTo(0, false);
+                            </action>
+                        </item>
+                        <item type="label" class="switch-info">
+                            <attr name="text">/</attr>
+                        </item>
+                        <item type="label" class="switch-button,group-2,switch-button-checked">
+                            <attr name="text">GRID</attr>
+                            <action event="checked" type="script/javascript">
+                                var massiveArea = this.ownerPage.findItemById("massive-area");
+                                var sliderArea = massiveArea.findParentById("slider-area");
+                                var direction = massiveArea.getAttr("direction");
+                                var addClass;
+                                if ( direction == "vertical") {
+                                sliderArea.setAttr("direction", "horizontal");
+                                addClass = "massive-cls-v-grid";
+                                } else {
+                                sliderArea.setAttr("direction", "vertical");
+                                addClass = "massive-cls-h-grid";
+                                }
+                                massiveArea.removeClass("massive-cls-v-grid");
+                                massiveArea.removeClass("massive-cls-h-grid");
+                                massiveArea.removeClass("massive-cls-v-linear");
+                                massiveArea.removeClass("massive-cls-h-linear");
+                                massiveArea.addClass(addClass);
+                                sliderArea.scrollTo(0, false);
+                            </action>
+                        </item>
+                    </area>
+                    <area type="grid">
+                        <attr name="direction">horizontal</attr>
+                        <attr name="width">match_parent</attr>
+                        <item type="label" class="switch-button-2">
+                            <attr name="text">ADD 10 ITEMs</attr>
+                            <action event="click" type="script/javascript">
+                                this.blinkClass("switch-button-press-down");
+                                this.dispatchEvent("add-items", "user_cmd", "10");
+                            </action>
+                        </item>
+                        <item type="label" class="switch-button-2">
+                            <attr name="text">ADD 1000 ITEMs</attr>
+                            <action event="click" type="script/javascript">
+                                this.blinkClass("switch-button-press-down");
+                                this.dispatchEvent("add-items", "user_cmd", "1000");
+                            </action>
+                        </item>
+                        <item type="label" class="switch-button-2">
+                            <attr name="text">CLEAN ITEMs</attr>
+                            <action event="click" type="script/javascript">
+                                this.blinkClass("switch-button-press-down");
+                                this.dispatchEvent("clean-items", "user_cmd");
+                            </action>
+                        </item>
+                        <item type="label" class="switch-button-2">
+                            <attr name="text">UPDATE ITEMs</attr>
+                            <action event="click" type="script/javascript">
+                                this.blinkClass("switch-button-press-down");
+                                this.dispatchEvent("update-items", "user_cmd");
+                            </action>
+                        </item>
+                        <item type="label" class="switch-button-2">
+                            <attr name="text">RESIZE</attr>
+                            <action event="click" type="script/javascript">
+                                this.blinkClass("switch-button-press-down");
+                                var sliderArea = this.ownerPage.findItemById("slider-area");
+                                if (sliderArea.hasClass("small-slider")) {
+                                    sliderArea.removeClass("small-slider");
+                                } else {
+                                    sliderArea.addClass("small-slider");
+                                }
+
+
+                            </action>
+                        </item>
+                        <item type="label" class="switch-button-2">
+                            <attr name="text">MAKE CHILD VISIBLE</attr>
+                            <action event="click" type="script/javascript">
+                                this.blinkClass("switch-button-press-down");
+                                this.dispatchEvent("make-child-visible", "user_cmd");
+                            </action>
+                        </item>
+                    </area>
+                </area>
+            </area>
+        </layout>
+        <selector>
+            <select class="normal-slider">
+                <attr name="width">510</attr>
+                <attr name="height">510</attr>
+
+            </select>
+           <select class="small-slider">
+                <attr name="width">310</attr>
+                <attr name="height">310</attr>
+
+            </select>
+            <select class="switch-label">
+                <style name="font-color">CCFFFFFF</style>
+                <style name="font-size">24</style>
+                <style name="padding-right">5</style>
+                <style name="font-align">1,0.45</style>
+                <attr name="width">220</attr>
+            </select>
+            <select class="switch-info">
+                <style name="font-color">CCFFFFFF</style>
+                <style name="font-size">24</style>
+                <style name="padding">0,4</style>
+            </select>
+            <select class="switch-button">
+                <focus mode="focusable"/>
+                <style name="font-color">CCFFFFFF</style>
+                <style name="font-size">24</style>
+            </select>
+            <select class="switch-button" state="focused">
+                <style name="font-style-underline">true</style>
+            </select>
+
+            <select class="switch-button-2">
+                <focus mode="focusable"/>
+                <style name="margin">5</style>
+                <style name="border">2,CCFFFFFF,4,4</style>
+                <style name="padding">8,24,24,8</style>
+                <style name="font-color">CCFFFFFF</style>
+                <style name="font-size">24</style>
+                <attr name="animation-moving">true</attr>
+                <attr name="animation">enabled</attr>
+                <attr name="animation-duration">50</attr>
+            </select>
+            <select class="switch-button-2" state="focused">
+                <style name="font-style-underline">true</style>
+            </select>
+
+            <select class="switch-button-press-down">
+                <attr name="y">3</attr>
+            </select>
+            <select class="switch-button-checked">
+                <style name="font-weight">2.0</style>
+                <style name="font-color">FFFFFFFF</style>
+            </select>
+            <select class="massive-item">
+                <focus mode="focusable"/>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-size">32</style>
+                <style name="font-align">0.5,0.48</style>
+                <attr name="width">90</attr>
+                <attr name="height">120</attr>
+                <style name="margin">10,10,10,20</style>
+                <style name="padding">10</style>
+                <style name="border">2,FF808080</style>
+            </select>
+            <select class="massive-item" state="focused">
+                <style name="border">2,FF80FF80</style>
+                <style name="font-color">FFFF0000</style>
+                <attr name="marquee">500,100,1000,30%</attr>
+            </select>
+
+            <select class="massive-cls-v-grid">
+                <attr name="width">auto</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="arrangement">grid-fixed</attr>
+                <attr name="direction">vertical</attr>
+            </select>
+            <select class="massive-cls-h-grid">
+                <attr name="width">match_parent</attr>
+                <attr name="height">auto</attr>
+                <attr name="arrangement">grid-fixed</attr>
+                <attr name="direction">horizontal</attr>
+            </select>
+            <select class="massive-cls-v-linear">
+                <attr name="width">match_parent</attr>
+                <attr name="height">auto</attr>
+                <attr name="arrangement">linear-fixed</attr>
+                <attr name="direction">vertical</attr>
+            </select>
+            <select class="massive-cls-h-linear">
+                <attr name="width">auto</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="arrangement">linear-fixed</attr>
+                <attr name="direction">horizontal</attr>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_binding_demo" desc="Binding demo">
+        <binding id="basic">
+            <root>
+                <item name="item1">
+                    <text>item1</text>
+                </item>
+                <item name="item2">
+                    <text>item2</text>
+                </item>
+                <item name="item3">
+                    <text>item3</text>
+                </item>
+            </root>
+        </binding>
+        <binding id="network_source">http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=0&MediaAssetsId=movie&Tag=26</binding>
+        <binding id="json_souce">
+            [{"text":"item1"},{"text":"item2"},{"text":"item3"}]
+        </binding>
+        <binding id="filter_items">
+            <filter_items>
+                <item type="label" name="label1"/>
+                <item type="image" name="image1"/>
+                <item type="label" name="label2"/>
+                <item type="image" name="image2"/>
+                <item type="label" name="label3"/>
+                <item type="image" name="image3"/>
+            </filter_items>
+        </binding>
+
+        <!--
+        绑定数据源加载成功，仅页面元素有效。
+        对于间接绑定数据源无效。
+        参数：
+        arguments[0] ：binding节点id
+        -->
+        <action event="bindingReady" type="usr_cmd">onBindingReady</action>
+
+        <!-- 绑定数据源加载失败，仅页面元素有效。-->
+        <action event="bindingError" type="usr_cmd">onBindingError</action>
+
+        <!-- 页面布局加载成功，仅页面元素有效 -->
+        <action event="load" type="usr_cmd">onLoad</action>
+
+        <!-- 页面所有数据绑定完成，仅页面元素有效 -->
+        <action event="ready" type="usr_cmd">onReady</action>
+
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <area type="grid">
+                    <area type="slider">
+                        <template binding="#basic/item">
+                            <item type="label">
+                                <!--
+                                赋值选择器。即用“?”处的选择器的值作为选择器的结果。
+                                如：={/item}-value，当/item的值为“test”时，节点绑定的数据为“test-value”。
+                                注意：这里的{}不可嵌套。
+                                -->
+                                <attr name="text" binding="=基本绑定-{text}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <area type="slider">
+                        <!-- 第0,1,2个item节点，等价于item[0~2]。如果同一索引出现多次则自动合并。-->
+                        <template binding="#network_source/item[1~3]">
+                            <item type="label">
+                                <attr name="text" binding="=网络源—{[=name]}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <area type="slider">
+                        <template binding="#api_n36/meta_data[id=4.0tool]/page[0]/item_data[1~3]">
+                            <item type="label">
+                                <attr name="text" binding="=全局文件源—{[=name]}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <area type="slider">
+                        <!-- JSON数组在无对应名称时，会将其命名为array。其值被命名为value。-->
+                        <template binding="#json_souce/value">
+                            <item type="label">
+                                <!-- JSON对象在无对应名称时，会将其命名为object。-->
+                                <attr name="text" binding="=json源—{text}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <area type="slider">
+                        <!--
+                        第0个item节点，如果索引为负值表示从最后一个节点开始计数。如item[-1]表示最后一个item节点。
+                        -->
+                        <template binding="#basic/item[0]">
+                            <item type="label">
+                                <attr name="text" binding="=binding item[0]—{text}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <!-- 除了第0个item外的其它item节点 -->
+                        <template binding="#basic/item[1~]">
+                            <item type="label">
+                                <attr name="text" binding="=binding item[1~]—{text}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <!--
+                        内容为value的item节点
+                        当value：
+                        形如 =regexp=时使用正则表达式匹配内容
+                        形如~regexp~时使用正则表达式忽略大小写匹配内容
+                        -->
+                        <template binding="#basic/item/text<~Item[13]~>">
+                            <item type="label">
+                                <!-- /, 根级元素-->
+                                <attr name="text" binding="=binding item/text<~Item[13]~>—{/}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <!-- 除了第0个item外的其它item节点 -->
+                        <template binding="#basic/item[name=item2]">
+                            <item type="label">
+                                <attr name="text" binding="=binding item[name=item2]—{text}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <!--
+                        所有abc下的第0个item，节点数目最多和abc的数目相同。
+                        -->
+                        <template binding="#basic/item[1]/text">
+                            <item type="label">
+                                <!--父级节点-->
+                                <attr name="text" binding="=binding item[1]/text :parent/text—{:parent/text}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <template binding="#basic/item[1]">
+                            <item type="label">
+                                <!-- 下一个兄弟节点 -->
+                                <attr name="text" binding="=binding item[1] :next/text—{:next/text}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <template binding="#basic/item[1]">
+                            <item type="label">
+                                <!-- 上一个兄弟节点 -->
+                                <attr name="text" binding="=binding item[1] :prev/text—{:prev/text}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <area type="slider">
+                        <template binding="#filter_items/item">
+                            <!--
+                            属性过滤器
+                            [type=image]表示type属性值为image的数据
+                            [type]表示有type属性的数据
+                            -->
+                            <item type="label" filter="[type=image]">
+                                <attr name="text" binding="=filter=[type=image]-{[=name]}"/>
+                            </item>
+                        </template>
+                    </area>
+
+                    <area type="slider">
+                        <template binding="#filter_items/item">
+                            <!--
+                            [2N+1]表示索引为奇数的数据
+                            -->
+                            <item type="label" filter="[3N+1]">
+                                <attr name="text" binding="=filter=[3N+1]-{[=name]}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <template binding="#filter_items/item">
+                            <!--
+                            位置过滤器（从0开始）
+                            -->
+                            <item type="label" filter="[4]">
+                                <attr name="text" binding="=filter=[4]-{[=name]}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <area type="slider">
+                        <template binding="#filter_items/item">
+                            <!--
+                            位置过滤器（从0开始）
+                            [-1]表示过滤最后一个数据
+                            [1,2,3]表示过滤第1,2,3个数据
+                            [1~8]表示第1到8个数据，闭区间
+                            [2N+1]表示索引为奇数的数据
+                            -->
+                            <item type="label" filter="[-4~]">
+                                <attr name="text" binding="=filter=[-4~]-{[=name]}"/>
+                            </item>
+                        </template>
+                    </area>
+                </area>
+                <area id="slider_binding_event" type="slider">
+                    <attr name="direction">horizontal</attr>
+                    <attr name="width">match_parent</attr>
+                    <attr name="height">200</attr>
+
+                    <!--
+                    设置template为增量式数据绑定模式。默认为false。
+                    此模式将向父级元素发送incrementalBindingUpdate / incrementalBindingFinished事件
+                    格式：
+                    true/enabled 等价于 1, 200
+                    delay-time
+                    pre-create-num, delay-time
+                    -->
+                    <template id="template_id" binding="#network_source/item" incremental="5,200">
+                        <item type="image" class="poster_item">
+                            <attr name="img.0" binding="[=img_v]"/>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                    </template>
+
+
+                    <!--
+                    增量数据绑定更新事件（仅template组件的父级容器可收到此事件）
+                    参数：
+                    arguments[0] ：template组件的id
+                    arguments[1] ：当前绑定数据索引
+                    arguments[2] ：总数据条目数
+                    arguments[3] ：当前创建的对象，对象创建失败时此值为空
+                    -->
+                    <action event="incrementalBindingUpdate" type="script/javascript">
+                        logger.d("BindingEvent: ", "incrementalBindingUpdate id:", arguments[0], " idx:", arguments[1], "/", arguments[2], " obj:", arguments[3]);
+                    </action>
+
+                    <!--
+                    增量数据绑定完成事件（仅template组件的父级容器可收到此事件）
+                    参数：
+                    arguments[0] ：template组件的id
+                    -->
+                    <action event="incrementalBindingFinished" type="script/javascript">
+                        logger.d("BindingEvent: ", "incrementalBindingFinished id:", arguments[0]);
+                    </action>
+
+                    <action event="bindingFinished" type="script/javascript">
+                        logger.d("BindingEvent: ", "parent binding finished");
+                    </action>
+
+                    <action event="bindingUpdated" type="script/javascript">
+                        logger.d("BindingEvent: ", "parent binding updated");
+                    </action>
+                </area>
+
+                <item type="label" class="class_refresh_label">
+                    <attr name="text">点击刷新网络源绑定</attr>
+                </item>
+            </area>
+        </layout>
+        <selector>
+            <select class="class_refresh_label">
+                <style name="border">2,FFFFFFFF</style>
+                <action event="click" type="usr_cmd">onClick</action>
+            </select>
+            <select type="label">
+                <focus mode="focusable"/>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select type="label" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select type="slider">
+                <attr name="direction">vertical</attr>
+                <style name="border">2,FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select class="poster_item">
+                <attr name="width">200</attr>
+                <attr name="height">200</attr>
+                <attr name="marquee">500,100,1000,30%</attr>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-align">0.5,1</style>
+                <style name="margin">0,20</style>
+
+                <!-- 元素数据绑定已经更新 -->
+                <action event="bindingUpdated" type="usr_cmd">onBindingUpdated</action>
+
+                <!-- 元素数据绑定已经完成 -->
+                <action event="bindingFinished" type="usr_cmd">onBindingFinished</action>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_script_demo" desc="脚本 demo">
+        <binding id="script_items">
+            <script_items>
+                <item name="item1"/>
+                <item name="item2"/>
+                <item name="item3"/>
+                <item name="item4"/>
+                <item name="item5"/>
+                <item name="item6"/>
+            </script_items>
+        </binding>
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <item type="label" desc="标题" class="page_title">
+                    <attr name="text">请查看log输出信息，TAG为：ScriptDemo: </attr>
+                </item>
+
+                <item type="label" desc="logger对象" class="label_focusable" binding="#script_items/item[name=item2]">
+                    <attr name="text">点击logger对象</attr>
+                    <action event="click" type="script/javascript">
+                        logger.d("ScriptDemo:", " logger.d");
+                        logger.w("ScriptDemo:", " logger.w");
+                        logger.e("ScriptDemo:", " logger.e");
+                    </action>
+                </item>
+
+                <area id="label_parent_id" type="grid" class="label_parent_class">
+                    <item id="label_view_object" type="label" desc="View对象" class="label_focusable">
+                        <attr name="text">点击查看View对象</attr>
+                        <action event="click" type="script/javascript">logViewObject</action>
+                        <action event="focus" type="script/javascript">
+                            logger.d("ScriptDemo:", " View get focus.");
+                        </action>
+                        <action event="blur" type="script/javascript">
+                            logger.d("ScriptDemo:", " View lose focus.");
+                        </action>
+                        <action event="bindingReady" type="usr_cmd">test_event</action>
+                        <data name="bindingReady_data">test_data</data>
+                    </item>
+                </area>
+
+                <area type="grid">
+                    <area id="area_id" class="area_border">
+                        <!-- Area.setDynamicFocus(view) 使用此方法的容器必须支持dynamic焦点模式 -->
+                        <focus mode="dynamic"/>
+                        <action event="area_event" type="script/javascript">logAreaObject</action>
+                        <item id="item1" type="label" class="label_focusable">
+                            <attr name="text">area item1</attr>
+                        </item>
+
+                        <item id="item2" type="label" class="label_focusable">
+                            <attr name="x">160</attr>
+                            <attr name="text">area item2</attr>
+                        </item>
+                    </area>
+                    <item type="label" desc="查看area对象" class="label_focusable">
+                        <attr name="text">点击查看area对象</attr>
+                        <action event="click" type="script/javascript">
+                            logger.d("ScriptDemo:", " fire area_event.");
+                            this.parent.findItemById("area_id").fireEvent("area_event");
+                        </action>
+                    </item>
+                </area>
+
+                <area type="grid">
+                    <area id="slider_id" type="slider" class="area_border">
+                        <attr name="width">400</attr>
+                        <attr name="scrollbar">simple,1.0,1000,4.0,2.0,80FFFFFF,2.0,FF000000</attr>
+                        <action event="slider_event" type="script/javascript">logSliderObject</action>
+                        <template binding="#script_items/item">
+                            <item type="label" class="label_focusable">
+                                <attr name="text" binding="=slider {[=name]}"/>
+                            </item>
+                        </template>
+                    </area>
+                    <item type="label" desc="查看slider对象" class="label_focusable">
+                        <attr name="text">点击查看slider对象</attr>
+                        <action event="click" type="script/javascript">
+                            logger.d("ScriptDemo:", " fire slider_event.");
+                            this.parent.findItemById("slider_id").fireEvent("slider_event");
+                        </action>
+                    </item>
+                </area>
+            </area>
+
+
+        </layout>
+        <selector>
+            <select type="label">
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+            <select class="page_title">
+                <style name="font-size">48</style>
+                <style name="font-weight">2</style>
+                <style name="font-color">FFFF0000</style>
+            </select>
+            <select class="label_focusable">
+                <focus mode="focusable"/>
+            </select>
+            <select class="label_focusable" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select class="quiver-item">
+                <style name="quiver">8,0.0,300,3</style>
+            </select>
+
+            <select class="area_border">
+                <style name="border">2,FFFFFFFF</style>
+                <style name="margin">20</style>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_custom_render_demo" desc="Custom render demo" screen="1920x1080">
+        <layout>
+            <area>
+                <item type="custom_render" class="custom_render_item">
+                    <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                    <!-- 自定义render属性 -->
+                    <attr name="indicator-animation-duration">500</attr>
+                    <attr name="indicator-animation-count">2</attr>
+                </item>
+            </area>
+        </layout>
+
+        <selector>
+            <select class="custom_render_item">
+                <attr name="x">100</attr>
+                <attr name="y">100</attr>
+                <attr name="width">90</attr>
+                <attr name="height">90</attr>
+                <style name="margin">100</style>
+                <style name="background-image">@color:88888888,45,45</style>
+                <attr name="animation-sizing">true</attr>
+                <attr name="animation">enabled</attr>
+
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-align">1.0,0.5</style>
+
+                <attr name="img.0.width">45</attr>
+                <attr name="img.0.height">45</attr>
+                <attr name="img.0.mode">center</attr>
+                <attr name="img.0.align">0,0.5</attr>
+                <attr name="img.0.padding">0,22</attr>
+
+                <action event="click" type="script/javascript">
+                    this.dispatchEvent("onItemClick", "", "");
+                    var DISPLAY_CLASS = "custom_render_item_display";
+
+                    if ( this.getAttr("animation") == "enabled") {
+                        this.setAttr("animation", "disabled");
+                        this.setAttr("text", "");
+                        this.removeClass(DISPLAY_CLASS);
+                    } else {
+                        this.setAttr("animation", "enabled");
+                    }
+
+                </action>
+                <action event="animationFinished" type="script/javascript">
+                    logger.d("CUSTOM RENDER: ", "DISPLAY_CLASS is added.")
+                    var DISPLAY_CLASS = "custom_render_item_display";
+                    this.addClass(DISPLAY_CLASS);
+                    this.setAttr("text", "自定义render测试文本");
+                </action>
+            </select>
+
+            <select class="custom_render_item_display">
+                <!-- 匹配文字宽度 -->
+                <attr name="width">match_content</attr>
+                <style name="padding">0,90,45,0</style>
+            </select>
+        </selector>
+    </page>
+
+    <selector>
+        <select class="vertical_scroll_slider">
+            <attr name="direction">vertical</attr>
+            <attr name="width">match_parent</attr>
+            <attr name="height">match_parent</attr>
+        </select>
+    </selector>
+
+</starcor.xul>

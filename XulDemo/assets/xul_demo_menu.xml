@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<meta_data_list>
+    <meta_data id="menu_main_page">
+        <category_item name="综合页面 Demo">
+            <demo_item>
+                <name>Combined list Demo</name>
+                <item_data>page_combined_list</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Video list Demo</name>
+                <item_data>page_video_list</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Float Animation Demo</name>
+                <item_data>float_animation_demo_page</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Focus Animation Demo</name>
+                <item_data>focus_animation_demo</item_data>
+                <layout>xul_focus_animation_demo.xml</layout>
+            </demo_item>
+            <demo_item>
+                <name>Max/Min Width/Height Demo</name>
+                <item_data>max_min_width_height_demo</item_data>
+                <layout>xul_max_min_width_height_demo.xml</layout>
+            </demo_item>
+            <demo_item>
+                <name>Detail Page A Demo</name>
+                <item_data>detail_page_a_demo</item_data>
+                <behavior>behavior_massive_demo</behavior>
+            </demo_item>
+            <demo_item>
+                <name>Text slider Demo</name>
+                <item_data>page_text_slider_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Selector slider Demo</name>
+                <item_data>page_selector_slider</item_data>
+                <behavior>behavior_selector_slider_demo</behavior>
+            </demo_item>
+        </category_item>
+        <category_item name="扩展组件 Demo">
+            <demo_item>
+                <name>Label 组件 Demo</name>
+                <item_data>page_label_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Spanned Label 组件 Demo</name>
+                <item_data>page_spanned_label_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Image 组件 Demo</name>
+                <item_data>page_image_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Slider 组件 Demo</name>
+                <item_data>page_slider_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Page slider 组件 Demo</name>
+                <item_data>page_page_slider_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Grid 组件 Demo</name>
+                <item_data>page_grid_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Group 组件 Demo</name>
+                <item_data>page_group_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Layer 组件 Demo</name>
+                <item_data>page_layer_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Component 组件 Demo</name>
+                <item_data>page_component_demo</item_data>
+            </demo_item>
+            <demo_item>
+                <name>Massive 容器 Demo</name>
+                <item_data>page_massive_demo</item_data>
+                <behavior>behavior_massive_demo</behavior>
+            </demo_item>
+            <demo_item>
+                <name>Massive 容器 LTR Demo</name>
+                <item_data>page_massive_ltr_demo</item_data>
+                <layout>xul_massive_ltr_demo.xml</layout>
+            </demo_item>
+        </category_item>
+        <category_item name="自定义组件和Render Demo">
+            <demo_item>
+                <name>Custom 组件 Demo</name>
+                <item_data>page_custom_demo</item_data>
+                <behavior>behavior_custom_view_demo</behavior>
+            </demo_item>
+            <demo_item>
+                <name>Custom render demo</name>
+                <item_data>page_custom_render_demo</item_data>
+            </demo_item>
+        </category_item>
+        <category_item name="数据绑定和选择器 Demo">
+            <demo_item>
+                <name>数据绑定和选择器 Demo</name>
+                <item_data>page_binding_demo</item_data>
+                <behavior>behavior_binding_demo</behavior>
+            </demo_item>
+            <demo_item>
+                <name>Component异步数据绑定</name>
+                <item_data>page_component_async_binding</item_data>
+            </demo_item>
+        </category_item>
+        <category_item name="脚本使用 Demo">
+            <demo_item>
+                <name>脚本使用 Demo</name>
+                <item_data>page_script_demo</item_data>
+            </demo_item>
+        </category_item>
+        <category_item name="动画 Demo">
+            <demo_item>
+                <name>动画 Demo</name>
+                <item_data>page_animation_demo</item_data>
+            </demo_item>
+        </category_item>
+        <category_item name="焦点模式 Demo">
+            <demo_item>
+                <name>焦点模式 Demo</name>
+                <item_data>page_focus_demo</item_data>
+            </demo_item>
+        </category_item>
+    </meta_data>
+</meta_data_list>

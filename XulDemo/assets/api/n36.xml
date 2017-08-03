@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<meta_data_list>
+    <meta_data id="4.0menu" name="v40_menu">
+        <page page="1">
+            <item_data
+                    img_default="file:///.assets/epg/00-normal.png/zh-cn"
+                    img_select="" name="综艺" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/01-normal.png/zh-cn"
+                    img_select="" name="电视剧" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/02-normal.png/zh-cn"
+                    img_select="" name="电视剧" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/03-normal.png/zh-cn"
+                    name="时移" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/04-normal.png/zh-cn"
+                    img_select="" name="音乐" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/05-normal.png/zh-cn"
+                    img_select="" name="电影" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/06-normal.png/zh-cn"
+                    img_select="" name="动漫" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/07-normal.png/zh-cn"
+                    img_select="" name="体育" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/08-normal.png/zh-cn"
+                    img_select="" name="专题" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/09-normal.png/zh-cn"
+                    img_select="" name="回看" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/10-normal.png/zh-cn"
+                    img_select="" name="时尚" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/13-normal.png/zh-cn"
+                    img_select="" name="品牌" info="">
+                <action></action>
+            </item_data>
+            <item_data
+                    img_default="file:///.assets/epg/14-normal.png/zh-cn"
+                    img_select="" name="财经" info="">
+                <action></action>
+            </item_data>
+        </page>
+    </meta_data>
+    <meta_data id="4.0tool" name="caidan">
+        <page page="1">
+            <item_data name="用户中心"/>
+            <item_data name="开通vip"/>
+            <item_data name="我的片单"/>
+            <item_data name="服务"/>
+            <item_data name="搜索"/>
+        </page>
+    </meta_data>
+
+    <meta_data id="4.0recom" name="poster">
+        <page page="1">
+            <item_data name="1"
+                       img_default="file:///.assets/films/1.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="2"
+                       img_default="file:///.assets/films/2.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="3"
+                       img_default="file:///.assets/films/3.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="4"
+                       img_default="file:///.assets/films/4.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="5"
+                       img_default="file:///.assets/films/5.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="6"
+                       img_default="file:///.assets/films/6.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="7"
+                       img_default="file:///.assets/films/7.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+        </page>
+        <page page="2">
+            <item_data name="8"
+                       img_default="file:///.assets/films/8.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="9"
+                       img_default="file:///.assets/films/9.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="10"
+                       img_default="file:///.assets/films/10.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="11"
+                       img_default="file:///.assets/films/11.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="12"
+                       img_default="file:///.assets/films/12.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="13"
+                       img_default="file:///.assets/films/13.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="14"
+                       img_default="file:///.assets/films/14.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+        </page>
+        <page page="3">
+            <item_data name="15"
+                       img_default="file:///.assets/films/15.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+            <item_data name="16"
+                       img_default="file:///.assets/films/16.jpg">
+                <action></action>
+                <arg_list></arg_list>
+            </item_data>
+        </page>
+    </meta_data>
+</meta_data_list>

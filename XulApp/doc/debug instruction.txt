@@ -1,0 +1,142 @@
+调试指令说明
+
+XulDebugServer提供了基本的远程调试功能, 通过HTTP可以与调试器交互.
+
+默认服务端口为 9999
+
+例如:
+http://192.168.0.1:9999/api/list-pages
+
+
+当前可以支持如下的接口
+
+1. 列举所有页面
+/api/list-pages
+
+2. 获取页面快照
+/api/take-snapshot/页面id
+
+3. 获取页面布局信息
+/api/get-layout/页面id[?skip-prop=true&with-binding-data=true&with-position=true]
+
+参数说明：
+	skip-prop            true/false, 跳过元素属性， 默认为false
+	with-binding-data    true/false, 显示绑定数据， 默认为false
+	with-position        true/false, 显示元素位置， 默认为false
+
+4. 获取元素详情
+/api/get-item/元素id[?skip-prop=true&with-children=true&with-binding-data=true&with-position=true]
+
+参数说明：
+	skip-prop            true/false, 跳过元素属性， 默认为false
+	with-children        true/false, 显示子级元素， 默认为false
+	with-binding-data    true/false, 显示绑定数据， 默认为false
+	with-position        true/false, 显示元素位置， 默认为false
+
+5. 给元素添加样式
+/api/add-class/元素id/CLASS
+
+6. 删除元素样式
+/api/remove-class/元素id/CLASS
+
+7. 设置元素样式, 设置空值将删除当前样式
+/api/set-style/元素id/KEY[/VALUE]
+
+8. 设置元素属性, 设置空值将删除当前属性
+/api/set-attr/元素id/KEY[/VALUE]
+
+9. 设置元素为焦点
+/api/request-focus/元素id
+
+10. 参考Page.pushStates
+/api/push-states/元素id/动作[/动作参数][/元素2id/动作2[/动作2参数]...]
+
+11. 参考Page.popStates
+/api/pop-states/页面id
+/api/drop-states/页面id
+
+12. 获取应用资源
+/api/get-assets/资源路径
+
+13. 给当前页面发送按键, 可一次发送多组不同按键
+/api/send-key/{click|down|up},键0[,键1[,键2...]]
+说明:
+	down表示按下
+	up表示松开
+	click表示点击,即down+up
+	"键"可以为键名或键值, 如: up, down, left, right, ok, enter, back, menu
+
+
+14. 列举用户对象
+/api/list-user-objects
+
+15. 获取用户对象信息
+/api/get-user-object/用户对象id
+
+16. 关闭页面
+/api/close-page/页面id
+
+17. 启动当前应用默认activity
+/api/start-activity
+
+18. 启动指定activity
+/api/start-activity/ACTIVITY名[/ACTION[/CATEGORY]][?参数1=值1[&参数2=值2...]]
+说明:
+	所有参数将加到Intent中
+
+19. 在UI上显示元素位置信息
+/api/highlight-item/元素id
+
+20. 查询数据
+/api/query-data/数据源[?参数1=值1[&参数2=值2...]]
+/api/pull-data/数据源[?参数1=值1[&参数2=值2...]]
+/api/invoke-data/数据源[?参数1=值1[&参数2=值2...]]
+
+21. 触发元素事件
+/api/fire-event/ui元素id/事件名[/参数1[/参数2...]]
+
+22. 获取trace.txt
+/api/get-trace
+
+23. 获取logcat信息
+/api/get-logcat
+
+24. 获取HPROF文件
+/api/dump-heap 或 /api/dump-heap/用户定义hprof文件名
+
+25. 清空缓存数据
+/api/clear-all-caches 或 /api/clear-caches/domainID
+
+26. DataService操作
+通过 /api/list-user-objects 得到DataService的ID
+使用 /api/get-user-object/[DataService-ID] 列举可用的数据源
+
+/api/get-user-object/[DataService-ID]/{query|pull|insert|update|delete}/数据源[?参数1=值1[&参数2=值2...]]
+/api/get-user-object/[DataService-ID]/invoke/数据源/功能名[?参数1=值1[&参数2=值2...]]
+
+参数说明:
+insert, update及invoke操作中,所有以set-开头的参数都会被认做有名数据项
+insert, 及invoke操作中,所有名为-add-value的参数都会被认做无名数据项
+其它的参数则被认做条件
+
+27.PluginManager操作
+通过 /api/list-user-objects 得到PluginManager的ID
+使用 /api/get-user-object/[PluginManager-ID] 列举已加载的所有插件
+/api/get-user-object/[PluginManager-ID]/get-all-plugin-files 获取本地缓存的所有插件文件
+
+
+/api/get-user-object/[PluginManager-ID]/delete-all-plugin-files 删除本地缓存的所有插件文件
+/api/get-user-object/[PluginManager-ID]/delete-plugin-file/[插件的名称:name]  //将机顶盒中存储的插件文件删除
+
+/api/get-user-object/[PluginManager-ID]/get-all-configs 获取插件配置清单文件
+/api/get-user-object/[PluginManager-ID]/get-config/[config-id] 获取插件配置
+
+/api/get-user-object/[PluginManager-ID]/pull-file/[插件的名称:name]  //将机顶盒中存储的插件文件导出
+
+/api/get-user-object/[PluginManager-ID]/list-plugin-page/[插件的名称:name] //列举插件所有的页面
+/api/get-user-object/[PluginManager-ID]/open-page/[页面Id:page-id] //打开page-id页面
+
+/api/clear-all-plugins //清空所有的插件、文件并退出应用
+/api/delete-plugin/[插件的名称:name] //删除指定的插件并退出应用
+
+

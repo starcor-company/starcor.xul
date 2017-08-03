@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<starcor.xul xmlns="http://www.starcor.cn/XUL" screen="1920x1080">
+    <page id="page_animation_demo">
+        <binding id="items">
+            <items>
+                <item name="item1"></item>
+                <item name="item2"></item>
+                <item name="item3"></item>
+                <item name="item4"></item>
+                <item name="item5"></item>
+            </items>
+        </binding>
+        <layout>
+            <area type="slider" class="vertical_scroll_slider">
+                <item type="image" desc="Sizing动画" class="anim_sizing">
+                    <attr name="text">sizing 动画</attr>
+                    <attr name="img.0">@color:FF880000</attr>
+                    <!-- 元素width/height变换动画，默认为false -->
+                    <attr name="animation-sizing">true</attr>
+                </item>
+
+                <item type="image" desc="Moving动画" class="anim_x_move">
+                    <attr name="text">moving 动画</attr>
+                    <attr name="img.0">@color:FF008800</attr>
+                    <!-- 元素x/y变换动画，默认为false -->
+                    <attr name="animation-moving">true</attr>
+                </item>
+
+                <item type="image" desc="Scale动画" class="anim_scale">
+                    <attr name="text">scale 动画</attr>
+                    <attr name="img.0">@color:FF000088</attr>
+
+                    <!-- 启用元素缩放动画。enabled/disabled，默认为enabled -->
+                    <style name="animation-scale">true</style>
+                    <!-- 元素缩放。
+                        scalar，[x-alignment，y-alignment]
+                        scalar-x，scalar-y，[x-alignment，y-alignment]
+                        scalar为元素缩放比例，如：1.2表示放大20%
+                        x-alignment，y-alignment表示缩放对齐模式，可选值为：
+                        left，top，right，bottom，v-center，h-center，center或对齐位置的值。默认值为center。
+                        如：1.2，left，v-center表示放大20%，水平左对齐，上下居中对齐。其等价值形式为 1.2，0，0.5。
+                        行/行块模式对齐时，水平对齐参数将不起任何作用！
+                    -->
+                    <!--<style name="scale">1</style>-->
+                </item>
+
+
+                <!--
+                动画模式：mode [: param1 [, param2 [, …] ] ]
+                模式如下：
+                linear（线性，默认值）y = x
+                bouncing回弹，参数：speed, freq, slope, strength
+                sin，参数：slope | y=(sin⁡((x^(2.0/slope)-0.5)π)+1)/2
+                pow，参数：e | y=x^2e
+                shaking，参数：freq, offset, delta, strength, grow
+                    g=1*grow+(1-grow)*(cos⁡(x*2*π+π)+1)/2
+                    y=g*cos⁡(x*freq*4*π+offset*π)/2*strength
+                constant（匀速），参数：speed, start-duration, end-duration
+                   speed参数为px，表示一个动画周期内移动多少px
+                   start-duration为启动时间，默认为0ms
+                   end-duration为结束时间，默认为0ms
+
+                -->
+                <item type="image" desc="animation-mode: linear 动画" class="anim_x_move">
+                    <attr name="text">animation-mode: linear 动画</attr>
+                    <attr name="img.0">@color:FFFF0000</attr>
+                    <attr name="animation-moving">true</attr>
+                    <attr name="animation-mode">linear</attr>
+                </item>
+                <item type="image" desc="animation-mode: constant 动画" class="anim_x_move">
+                    <attr name="text">animation-mode: constant 动画</attr>
+                    <attr name="img.0">@color:FF00FF00</attr>
+                    <attr name="animation-moving">true</attr>
+                    <attr name="animation-mode">constant:300,100,50</attr>
+                </item>
+                <item type="image" desc="animation-mode: sin 动画" class="anim_x_move">
+                    <attr name="text">animation-mode: sin 动画</attr>
+                    <attr name="img.0">@color:FF0000FF</attr>
+                    <attr name="animation-moving">true</attr>
+                    <attr name="animation-mode">sin:1.6</attr>
+                </item>
+                <item type="image" desc="animation-mode: pow 动画" class="anim_x_move">
+                    <attr name="text">animation-mode: pow 动画</attr>
+                    <attr name="img.0">@color:FFFF0000</attr>
+                    <attr name="animation-moving">true</attr>
+                    <attr name="animation-mode">pow:0.2</attr>
+                </item>
+                <item type="image" desc="animation-mode: shaking 动画" class="anim_x_move">
+                    <attr name="text">animation-mode: shaking 动画</attr>
+                    <attr name="img.0">@color:FF00FF00</attr>
+                    <attr name="animation-moving">true</attr>
+                    <attr name="animation-mode">shaking:3,1.0,0,1,1</attr>
+                </item>
+                <item type="image" desc="animation-mode: bouncing 动画" class="anim_x_move">
+                    <attr name="text">animation-mode: bouncing 动画</attr>
+                    <attr name="img.0">@color:FF0000FF</attr>
+                    <attr name="animation-moving">true</attr>
+                    <attr name="animation-mode">bouncing:200,10,0.5,0.5</attr>
+                </item>
+
+                <!--
+                quiver
+                    元素抖动效果，参数：
+                    dx,dy
+                    dx,dy,duration
+                    当dx、dy绝对值大于等于1.0时，表示抖动偏移象素。小于1.0时表示百分比偏移。
+                quiver-mode
+                    指定quiver效果动画算法，格式请参考animation-mode属性。默认值为pow:0.15
+                -->
+                <item type="image" desc="quiver 动画" class="anim_quiver">
+                    <attr name="text">quiver 动画</attr>
+                    <attr name="img.0">@color:FF440000</attr>
+                </item>
+
+                <item type="image" desc="gif图片">
+                    <attr name="width">match_content</attr>
+                    <attr name="height">match_content</attr>
+                    <attr name="img.0">file:///.assets/gif/gun.gif</attr>
+                    <attr name="text">gif图片</attr>
+                </item>
+                <!-- 部分支持svg图片，但资源占用较大。-->
+                <item type="image" desc="svg图片">
+                    <attr name="img.0">file:///.assets/svg/Tux.svg</attr>
+                    <attr name="text">svg图片</attr>
+                </item>
+                <!--
+                    帧动画文件是一个自定义内容的zip压缩包，由一张/组图片及相应的动画描述元数据组成。
+                    帧动画的文件名必须以.ani或.ani.zip结尾。
+                -->
+                <item type="image" desc="帧动画">
+                    <attr name="img.0">file:///.assets/animation/icon.ani.zip</attr>
+                    <attr name="text">帧动画</attr>
+                </item>
+
+                <!-- animation-speed & animation-type 仅适用于page slider，请参考page slider demo-->
+                <!--
+                animation-speed	动画速度，-1为无动画
+                animation-type	动画效果，slide为滑动，flip为翻转。默认为slide
+                -->
+
+                <!-- Layer动画， 请参考layer demo -->
+
+                <area type="grid" desc="marquee动画">
+                    <!-- 单行滚动文本 -->
+                    <item id="label_marquee" desc="滚动文本" type="image">
+                        <attr name="text">滚动文本</attr>
+
+                        <!-- 文本自动滚动
+                            参数：
+                            speed，delay，interval，space
+                            mode，speed，delay，interval，space
+                            mode为滚动模式，默认为超长滚动
+                                 inverse表示反向滚动
+                            speed为文本滚动速度（单位ms）。单字（中文）滚动的时间
+                            delay启动延迟（单位ms）
+                            interval两次滚动时间间隔（单位ms）
+                            space首尾间距（象素或可视区域百分比）
+                        -->
+                        <attr name="marquee">500,1000,500,30%</attr>
+                    </item>
+                    <item id="label_marquee_left" desc="向左滚动文本" type="image">
+                        <attr name="text">向左滚动文本向左滚动文本</attr>
+
+                        <attr name="marquee">500,1000,500,30%</attr>
+                    </item>
+                    <item id="label_marquee_right" desc="向右滚动文本" type="image">
+                        <attr name="text">向右滚动文本向右滚动文本</attr>
+
+                        <attr name="marquee">inverse,500,1000,500,30%</attr>
+                    </item>
+                </area>
+
+
+                <area type="grid" desc="scroll动画">
+                    <focus mode="dynamic,priority"></focus>
+                    <attr name="width">match_parent</attr>
+                    <area id="slider_scroll" type="slider" desc="scroll动画-启用"
+                          class="anim_scroll_slider">
+                        <attr name="animation-duration">1000</attr>
+                        <template binding="#items/item">
+                            <item type="image">
+                                <focus mode="nofocus"></focus>
+                                <attr name="text" binding="[=name]"></attr>
+                            </item>
+                        </template>
+                    </area>
+                    <item type="image">
+                        <focus priority="1"></focus>
+                        <attr name="text">点击滚动 有动画</attr>
+                        <action event="click" type="script/javascript">
+                            this.parent.findItemById("slider_scroll").scrollTo(1000,true);
+                        </action>
+                    </item>
+                    <item type="image">
+                        <attr name="text">还原</attr>
+                        <action event="click" type="script/javascript">
+                            this.parent.findItemById("slider_scroll").scrollTo(0);
+                        </action>
+                    </item>
+                    <item type="image">
+                        <attr name="text">点击滚动 无动画</attr>
+                        <action event="click" type="script/javascript">
+                            this.parent.findItemById("slider_scroll").scrollTo(1000,false);
+                        </action>
+                    </item>
+                </area>
+            </area>
+        </layout>
+
+        <selector>
+            <select type="image">
+                <attr name="width">200</attr>
+                <attr name="height">200</attr>
+                <attr name="marquee">500,1000,500,30%</attr>
+                <attr name="animation-duration">1000</attr>
+                <style name="margin">20</style>
+                <style name="font-size">36</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-align">0.5,1</style>
+            </select>
+            <select type="image" state="focused">
+                <style name="border">8,FF444444</style>
+            </select>
+            <select class="anim_sizing" state="focused">
+                <attr name="width">300</attr>
+                <attr name="height">300</attr>
+            </select>
+            <select class="anim_x_move" state="focused">
+                <attr name="x">600</attr>
+            </select>
+            <select class="anim_scale" state="focused">
+                <style name="scale">1.2,1.5,0,0.5</style>
+            </select>
+            <select class="anim_quiver" state="focused">
+                <style name="quiver">8,16,900</style>
+                <style name="quiver-mode">pow:0.3</style>
+            </select>
+            <select class="anim_scroll_slider">
+                <style name="margin">20</style>
+                <style name="border">4,FF0000FF</style>
+                <attr name="width">500</attr>
+            </select>
+        </selector>
+    </page>
+</starcor.xul>

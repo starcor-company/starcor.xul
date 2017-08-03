@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<provinces>
+    <item id="province0" name="自定义省份">
+        <item_data>cities_data_0.xml</item_data>
+    </item>
+    <item id="province1" name="省份1">
+        <item_data>cities_data_1.xml</item_data>
+    </item>
+    <item id="province2" name="省份2">
+        <item_data>cities_data_2.xml</item_data>
+    </item>
+    <item id="province3" name="省份3">
+        <item_data>cities_data_3.xml</item_data>
+    </item>
+    <item id="province4" name="省份4">
+        <item_data>cities_data_1.xml</item_data>
+    </item>
+    <item id="province5" name="省份5">
+        <item_data>cities_data_2.xml</item_data>
+    </item>
+    <item id="province6" name="省份6">
+        <item_data>cities_data_3.xml</item_data>
+    </item>
+    <item id="province7" name="省份7">
+        <item_data>cities_data_1.xml</item_data>
+    </item>
+    <item id="province8" name="省份8">
+        <item_data>cities_data_2.xml</item_data>
+    </item>
+    <item id="province9" name="省份9">
+        <item_data>cities_data_3.xml</item_data>
+    </item>
+    <item id="province10" name="省份10">
+        <item_data>cities_data_1.xml</item_data>
+    </item>
+    <item id="province11" name="省份11">
+        <item_data>cities_data_2.xml</item_data>
+    </item>
+    <item id="province12" name="省份12">
+        <item_data>cities_data_3.xml</item_data>
+    </item>
+    <item id="province13" name="省份13">
+        <item_data>cities_data_1.xml</item_data>
+    </item>
+    <item id="province14" name="省份14">
+        <item_data>cities_data_2.xml</item_data>
+    </item>
+    <item id="province15" name="省份15">
+        <item_data>cities_data_3.xml</item_data>
+    </item>
+</provinces>

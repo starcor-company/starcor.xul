@@ -1,0 +1,76 @@
+<starcor.xul screen="1920x1080" xmlns="http://www.starcor.cn/XUL">
+	<page id="page_massive_ltr_demo">
+		<binding id="ltr-data">
+			<root>
+				<item>
+					<text>1</text>
+				</item>
+				<item>
+					<text>2</text>
+				</item>
+				<item>
+					<text>3</text>
+				</item>
+				<item>
+					<text>4</text>
+				</item>
+				<item>
+					<text>5</text>
+				</item>
+				<item>
+					<text>6</text>
+				</item>
+				<item>
+					<text>7</text>
+				</item>
+				<item>
+					<text>8</text>
+				</item>
+				<item>
+					<text>9</text>
+				</item>
+				<item>
+					<text>10</text>
+				</item>
+				<item>
+					<text>11</text>
+				</item>
+				<item>
+					<text>12</text>
+				</item>
+			</root>
+		</binding>
+		<layout>
+			<area id="ltr_massive" type="massive" binding="#ltr-data">
+				<attr name="arrangement">grid-fixed</attr>
+				<attr name="direction">reverse-horizontal</attr>
+				<template id="@item-template">
+					<item type="label" class="massive-item">
+						<focus mode="focusable"/>
+						<style name="font-color">FFFFFFFF</style>
+						<style name="font-size">32</style>
+						<style name="padding">16</style>
+						<style name="margin">4</style>
+						<style name="font-align">0.5,0.5</style>
+						<attr name="width">100</attr>
+						<attr name="height">100</attr>
+						<attr name="text" binding="text"/>
+					</item>
+				</template>
+			</area>
+		</layout>
+		<selector>
+			<select id="ltr_massive">
+				<style name="border">1,FFFF0000</style>
+				<attr name="width">600</attr>
+				<attr name="height">400</attr>
+			</select>
+			<select class="massive-item">
+				<style name="border">1,FF808080</style>
+			</select>
+			<select class="massive-item" state="focused">
+				<style name="border">2,FFFF0000</style>
+			</select>
+		</selector>
+	</page>
+</starcor.xul>

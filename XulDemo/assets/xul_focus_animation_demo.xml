@@ -1,0 +1,202 @@
+<?xml version="1.1" encoding="utf-8"?>
+<starcor.xul screen="1920x1080" xmlns="http://www.starcor.cn/XUL">
+	<page id="focus_animation_demo">
+		<binding id="data-items">
+			<data>
+				<item>
+					<text>1 abcde</text>
+				</item>
+				<item>
+					<text>2 abcde</text>
+				</item>
+				<item>
+					<text>3 abcde</text>
+				</item>
+				<item>
+					<text>4 abcde</text>
+				</item>
+				<item>
+					<text>5 abcde</text>
+				</item>
+				<item>
+					<text>6 abcde</text>
+				</item>
+				<item>
+					<text>7 abcde</text>
+				</item>
+				<item>
+					<text>8 abcde
+8 abcde
+8 abcde
+					</text>
+				</item>
+				<item>
+					<text>9 abcde</text>
+				</item>
+				<item>
+					<text>10 abcde</text>
+				</item>
+				<item>
+					<text>1 abcde</text>
+				</item>
+				<item>
+					<text>2 abcde</text>
+				</item>
+				<item>
+					<text>3 abcde</text>
+				</item>
+				<item>
+					<text>4 abcde</text>
+				</item>
+				<item>
+					<text>5 abcde</text>
+				</item>
+				<item>
+					<text>6 abcde</text>
+				</item>
+				<item>
+					<text>7 abcde</text>
+				</item>
+				<item>
+					<text>8 abcde
+8 abcde
+8 abcde
+					</text>
+				</item>
+				<item>
+					<text>9 abcde</text>
+				</item>
+				<item>
+					<text>10 abcde</text>
+				</item>
+				<item>
+					<text>1 abcde</text>
+				</item>
+				<item>
+					<text>2 abcde</text>
+				</item>
+				<item>
+					<text>3 abcde</text>
+				</item>
+				<item>
+					<text>4 abcde</text>
+				</item>
+				<item>
+					<text>5 abcde</text>
+				</item>
+				<item>
+					<text>6 abcde</text>
+				</item>
+				<item>
+					<text>7 abcde</text>
+				</item>
+				<item>
+					<text>8 abcde
+8 abcde
+8 abcde
+					</text>
+				</item>
+				<item>
+					<text>9 abcde</text>
+				</item>
+				<item>
+					<text>10 abcde</text>
+				</item>
+				<item>
+					<text>1 abcde</text>
+				</item>
+				<item>
+					<text>2 abcde</text>
+				</item>
+				<item>
+					<text>3 abcde</text>
+				</item>
+				<item>
+					<text>4 abcde</text>
+				</item>
+				<item>
+					<text>5 abcde</text>
+				</item>
+				<item>
+					<text>6 abcde</text>
+				</item>
+				<item>
+					<text>7 abcde</text>
+				</item>
+				<item>
+					<text>8 abcde
+8 abcde
+8 abcde</text>
+				</item>
+				<item>
+					<text>9 abcde</text>
+				</item>
+				<item>
+					<text>10 abcde</text>
+				</item>
+			</data>
+		</binding>
+		<layout>
+			<area type="slider">
+				<attr name="x">30</attr>
+				<attr name="y">0</attr>
+				<attr name="height">match_parent</attr>
+				<attr name="width">600</attr>
+				<attr name="direction">vertical</attr>
+				<style name="border">1,FFFF0000</style>
+				<style name="background-color">8F606060</style>
+				<area class="massive-parent">
+					<item id="selection-item" class="selection-item"/>
+					<item id="focus-item" class="focus-item"/>
+					<area type="massive" binding="#data-items/">
+						<attr name="arrangement">linear</attr>
+						<attr name="minimum-item">50</attr>
+						<template id="@item-template">
+							<item class="item" type="image">
+								<attr name="text" binding="text"/>
+							</item>
+						</template>
+					</area>
+				</area>
+			</area>
+		</layout>
+		<selector>
+			<select class="selection-item">
+				<focus mode="nofocus"/>
+				<attr name="width">match_parent</attr>
+				<style name="background-color">FF000000</style>
+			</select>
+			<select class="focus-item">
+				<focus mode="nofocus"/>
+				<attr name="width">match_parent</attr>
+				<attr name="animation-moving">true</attr>
+				<attr name="animation-sizing">true</attr>
+				<style name="background-color">FF6080F0</style>
+			</select>
+			<select class="item">
+				<attr name="width">match_parent</attr>
+				<style name="padding">16,32</style>
+				<style name="font-color">80FFFFFF</style>
+				<style name="font-size">32</style>
+				<attr name="multi-line">true</attr>
+				<action event="focus" type="script/javascript">
+					var massiveParent = this.findParentByClass("massive-parent");
+					var slider = this.findParentByType("slider");
+					var focusItem = massiveParent.findItemById("focus-item");
+					focusItem.setAttr("y", parseInt(this.viewY) + slider.scrollPos + slider.scrollDelta - slider.viewY );
+					focusItem.setAttr("height", this.viewHeight);
+				</action>
+				<action event="click" type="script/javascript">
+					var massiveParent = this.findParentByClass("massive-parent");
+					var slider = this.findParentByType("slider");
+					var selectionItem = massiveParent.findItemById("selection-item");
+					selectionItem.setAttr("y", parseInt(this.viewY) + slider.scrollPos + slider.scrollDelta - slider.viewY );
+					selectionItem.setAttr("height", this.viewHeight);
+				</action>
+			</select>
+			<select class="item" state="focused">
+				<style name="font-color">FFFFFFFF</style>
+			</select>
+		</selector>
+	</page>
+</starcor.xul>

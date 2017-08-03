@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	xmlns="http://www.starcor.cn/XUL"
+	targetNamespace="http://www.starcor.cn/XUL"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="starcor.xul" type="starcor.xulType"/>
+	<xs:complexType name="anyContent" mixed="true">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:any maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="bindingType" mixed="true">
+		<xs:complexContent mixed="true">
+			<xs:extension base="anyContent">
+				<xs:attribute type="xs:string" name="id" use="required"/>
+				<xs:attribute type="xs:string" name="binding" use="optional"/>
+				<xs:attribute type="xs:boolean" name="preload" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="templateType">
+		<xs:group ref="templateContentGroup" minOccurs="1" maxOccurs="unbounded"/>
+		<xs:attribute type="xs:string" name="binding" use="optional"/>
+		<xs:attribute type="xs:string" name="desc" use="optional"/>
+		<xs:attribute type="xs:string" name="id" use="optional"/>
+		<xs:attribute type="xs:string" name="incremental" use="optional"/>
+	</xs:complexType>
+	<xs:group name="templateContentGroup">
+		<xs:choice>
+			<xs:element type="attrType" name="attr" minOccurs="0"/>
+			<xs:element type="templateItemType" name="item" minOccurs="0"/>
+			<xs:element type="templateAreaType" name="area" minOccurs="0"/>
+		</xs:choice>
+	</xs:group>
+	<xs:complexType name="templateAreaType" mixed="true">
+		<xs:complexContent>
+			<xs:extension base="areaType">
+				<xs:attribute type="xs:string" name="filter" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="templateItemType" mixed="true">
+		<xs:complexContent>
+			<xs:extension base="itemType">
+				<xs:attribute type="xs:string" name="filter" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="focusType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute type="focusModeList" name="mode" use="optional"/>
+				<xs:attribute type="xs:integer" name="priority" use="optional"/>
+				<xs:attribute type="xs:boolean" name="focused" use="optional"/>
+				<xs:attribute type="xs:string" name="binding" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="itemType" mixed="true">
+		<xs:choice maxOccurs="unbounded" minOccurs="0">
+			<xs:element type="styleType" name="style"/>
+			<xs:element type="focusType" name="focus"/>
+			<xs:element type="attrType" name="attr"/>
+			<xs:element type="dataType" name="data"/>
+			<xs:element type="actionType" name="action"/>
+		</xs:choice>
+		<xs:attribute type="itemTypes" name="type" use="optional"/>
+		<xs:attribute type="xs:string" name="class" use="optional"/>
+		<xs:attribute type="xs:string" name="id" use="optional"/>
+		<xs:attribute type="xs:string" name="desc" use="optional"/>
+		<xs:attribute type="xs:string" name="binding" use="optional"/>
+	</xs:complexType>
+	<xs:simpleType name="itemTypes">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="image"/>
+			<xs:enumeration value="spanned_label"/>
+			<xs:enumeration value="label"/>
+			<xs:enumeration value="custom"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="areaTypes">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="massive"/>
+			<xs:enumeration value="slider"/>
+			<xs:enumeration value="group"/>
+			<xs:enumeration value="radio"/>
+			<xs:enumeration value="check"/>
+			<xs:enumeration value="grid"/>
+			<xs:enumeration value="layer"/>
+			<xs:enumeration value="page_slider"/>
+			<xs:enumeration value="component"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="dataType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute type="xs:string" name="name" use="required"/>
+				<xs:attribute type="xs:string" name="binding" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="attrType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute type="attrNameValues" name="name" use="required"/>
+				<xs:attribute type="xs:string" name="binding" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="styleType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute type="styleNames" name="name" use="required"/>
+				<xs:attribute type="xs:string" name="binding" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="styleNames">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="font-face"/>
+			<xs:enumeration value="font-size"/>
+			<xs:enumeration value="font-color"/>
+			<xs:enumeration value="font-weight"/>
+			<xs:enumeration value="font-scale-x"/>
+			<xs:enumeration value="font-shadow"/>
+			<xs:enumeration value="font-align"/>
+			<xs:enumeration value="font-style-underline"/>
+			<xs:enumeration value="font-style-strike"/>
+			<xs:enumeration value="font-style-italic"/>
+			<xs:enumeration value="font-resample"/>
+			<xs:enumeration value="font-render"/>
+			<xs:enumeration value="start-indent"/>
+			<xs:enumeration value="end-indent"/>
+			<xs:enumeration value="do-not-match-text"/>
+			<xs:enumeration value="background-image"/>
+			<xs:enumeration value="background-color"/>
+			<xs:enumeration value="border"/>
+			<xs:enumeration value="margin"/>
+			<xs:enumeration value="margin-left"/>
+			<xs:enumeration value="margin-right"/>
+			<xs:enumeration value="margin-bottom"/>
+			<xs:enumeration value="margin-top"/>
+			<xs:enumeration value="padding"/>
+			<xs:enumeration value="padding-left"/>
+			<xs:enumeration value="padding-right"/>
+			<xs:enumeration value="padding-bottom"/>
+			<xs:enumeration value="padding-top"/>
+			<xs:enumeration value="display"/>
+			<xs:enumeration value="z-index"/>
+			<xs:enumeration value="scale"/>
+			<xs:enumeration value="animation-scale"/>
+			<xs:enumeration value="position"/>
+			<xs:enumeration value="border-dash-pattern"/>
+			<xs:enumeration value="fix-half-char"/>
+			<xs:enumeration value="animation-text-change"/>
+			<xs:enumeration value="preferred-focus-padding"/>
+			<xs:enumeration value="hint-text-color"/>
+			<xs:enumeration value="line-height"/>
+
+			<xs:enumeration value="clip-children"/>
+			<xs:enumeration value="clip-focus"/>
+
+			<xs:enumeration value="layout-mode"/>
+
+			<xs:enumeration value="opacity"/>
+			<xs:enumeration value="translate"/>
+			<xs:enumeration value="translate-x"/>
+			<xs:enumeration value="translate-y"/>
+			<xs:enumeration value="rotate"/>
+			<xs:enumeration value="quiver">
+				<xs:annotation>
+					<xs:documentation>元素抖动效果，参数：<br/>
+						dx,dy<br/>
+						dx,dy,duration<br/>
+						dx,dy,duration,repeat<br/>
+						dx,dy,duration,repeat,repeat-strength<br/>
+						当dx、dy绝对值大于等于1.0时，表示抖动偏移象素。小于1.0时表示百分比偏移。<br/>
+						repeat 定义元素抖动循环次数, 默认为1<br/>
+						repeat-strength定义元素循环强度变化比例, 默认为1</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="quiver-mode"/>
+			<xs:enumeration value="rotate-x"/>
+			<xs:enumeration value="rotate-y"/>
+			<xs:enumeration value="rotate-z"/>
+			<xs:enumeration value="rotate-center"/>
+			<xs:enumeration value="rotate-center-x"/>
+			<xs:enumeration value="rotate-center-y"/>
+			<xs:enumeration value="rotate-center-z"/>
+			<xs:enumeration value="lighting-color-filter"/>
+			<xs:enumeration value="round-rect"/>
+			<xs:enumeration value="max-width"/>
+			<xs:enumeration value="max-height"/>
+			<xs:enumeration value="min-width"/>
+			<xs:enumeration value="min-height"/>
+
+			<xs:enumeration value="preload"/>
+			<xs:enumeration value="keep-focus-visible"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="actionType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute type="xs:string" name="name" use="optional"/>
+				<xs:attribute type="eventNames" name="event" use="required"/>
+				<xs:attribute type="actionTypes" name="type" use="required"/>
+				<xs:attribute type="xs:string" name="binding" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="pageTypeBase">
+		<xs:sequence>
+			<xs:group ref="pagePropGroup" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element type="scriptType" name="script" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element type="layoutType" name="layout" minOccurs="1"/>
+			<xs:element type="selectorType" name="selector" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pageType">
+		<xs:complexContent>
+			<xs:extension base="pageTypeBase">
+				<xs:attribute type="xs:string" name="id" use="required"/>
+				<xs:attribute type="xs:string" name="desc"/>
+				<xs:attribute type="resolutionType" name="screen" default="1920x1080"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:group name="pagePropGroup">
+		<xs:choice>
+			<xs:element type="bindingType" name="binding"/>
+			<xs:element type="actionType" name="action"/>
+			<xs:element type="pageAttrType" name="attr"/>
+		</xs:choice>
+	</xs:group>
+	<xs:complexType name="pageAttrType">
+		<xs:simpleContent>
+			<xs:extension base="xs:unsignedInt">
+				<xs:attribute type="pageAttrNameType" name="name" use="required"/>
+				<xs:attribute type="xs:string" name="binding" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="pageAttrNameType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="x"/>
+			<xs:enumeration value="y"/>
+			<xs:enumeration value="width"/>
+			<xs:enumeration value="height"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="areaType" mixed="true">
+		<xs:sequence>
+			<xs:group ref="areaContentGroup" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="desc" use="optional"/>
+		<xs:attribute type="areaTypes" name="type" use="optional"/>
+		<xs:attribute type="xs:string" name="id" use="optional"/>
+		<xs:attribute type="xs:string" name="class" use="optional"/>
+		<xs:attribute type="xs:string" name="binding" use="optional"/>
+	</xs:complexType>
+	<xs:group name="areaContentGroup">
+		<xs:choice>
+			<xs:element type="templateType" name="template" minOccurs="0"/>
+			<xs:element type="attrType" name="attr" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element type="itemType" name="item" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element type="areaType" name="area" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element type="styleType" name="style" minOccurs="0"/>
+			<xs:element type="actionType" name="action" minOccurs="0"/>
+			<xs:element type="dataType" name="data" minOccurs="0"/>
+			<xs:element type="focusType" name="focus" minOccurs="0"/>
+		</xs:choice>
+	</xs:group>
+	<xs:complexType name="layoutType" mixed="true">
+		<xs:group ref="layoutContentGroup" minOccurs="1" maxOccurs="unbounded"/>
+	</xs:complexType>
+	<xs:group name="layoutContentGroup">
+		<xs:choice>
+			<xs:element type="styleType" name="style"/>
+			<xs:element type="itemType" name="item"/>
+			<xs:element type="templateType" name="template"/>
+			<xs:element type="areaType" name="area"/>
+			<xs:element type="attrType" name="attr"/>
+			<xs:element type="actionType" name="action"/>
+			<xs:element type="focusType" name="focus"/>
+		</xs:choice>
+	</xs:group>
+	<xs:complexType name="starcor.xulType">
+		<xs:sequence>
+			<xs:element type="bindingType" name="binding" maxOccurs="unbounded" minOccurs="0"/>
+			<xs:group ref="xulEntitiesGroup" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element type="selectorType" name="selector" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute type="resolutionType" name="screen" default="1920x1080"/>
+	</xs:complexType>
+	<xs:group name="xulEntitiesGroup">
+		<xs:choice>
+			<xs:element type="pageType" name="page" maxOccurs="unbounded" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element type="componentType" name="component" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element type="scriptType" name="script" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:group>
+	<xs:complexType name="scriptType" mixed="true">
+		<xs:attribute type="xs:string" name="id" use="optional"/>
+		<xs:attribute type="xs:string" name="desc" use="optional"/>
+		<xs:attribute type="xs:string" name="type" use="required" default="script/javascript"/>
+		<xs:attribute type="xs:string" name="src" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="componentType" mixed="true">
+		<xs:sequence>
+			<xs:group ref="areaContentGroup" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element type="selectorType" name="selector" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute type="xs:string" name="id" use="required"/>
+		<xs:attribute type="xs:string" name="desc" use="optional"/>
+	</xs:complexType>
+	<xs:simpleType name="resolutionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1920x1080"/>
+			<xs:enumeration value="1280x720"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="selectType" mixed="true">
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element type="styleType" name="style"/>
+			<xs:element type="attrType" name="attr"/>
+			<xs:element type="focusType" name="focus"/>
+			<xs:element type="actionType" name="action"/>
+		</xs:choice>
+		<xs:attribute type="xs:string" name="desc" use="optional"/>
+		<xs:attribute type="xs:string" name="class" use="optional"/>
+		<xs:attribute type="stateValues" name="state" use="optional"/>
+		<xs:attribute type="xs:string" name="id" use="optional"/>
+		<xs:attribute type="typeValues" name="type" use="optional"/>
+	</xs:complexType>
+	<xs:simpleType name="typeValues">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="slider"/>
+			<xs:enumeration value="group"/>
+			<xs:enumeration value="radio"/>
+			<xs:enumeration value="check"/>
+			<xs:enumeration value="grid"/>
+			<xs:enumeration value="layer"/>
+			<xs:enumeration value="page_slider"/>
+			<xs:enumeration value="component"/>
+
+			<xs:enumeration value="image"/>
+			<xs:enumeration value="spanned_label"/>
+			<xs:enumeration value="label"/>
+			<xs:enumeration value="custom"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="stateValues">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="focused"/>
+			<xs:enumeration value="disabled"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="selectorType" mixed="true">
+		<xs:sequence>
+			<xs:element type="selectType" name="select" maxOccurs="unbounded" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="eventNames">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="appEvents:.*"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="click">
+						<xs:annotation>
+							<xs:documentation>点击事件</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="focus">
+						<xs:annotation>
+							<xs:documentation>获得焦点</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="blur">
+						<xs:annotation>
+							<xs:documentation>失去焦点</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="checked">
+						<xs:annotation>
+							<xs:documentation>group子元素被设置为选中状态</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="unchecked">
+						<xs:annotation>
+							<xs:documentation>group子元素被设置为非选中状态</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="load">
+						<xs:annotation>
+							<xs:documentation>布局加载完成，仅针对page元素有效</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="ready">
+						<xs:annotation>
+							<xs:documentation>page数据加载完成 或 元素布局/属性初始化完成</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="bindingFinished">
+						<xs:annotation>
+							<xs:documentation>数据绑定完成，仅初始化时触发</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="bindingUpdated">
+						<xs:annotation>
+							<xs:documentation>数据绑定更新，仅refreshBinding触发</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="bindingReady">
+						<xs:annotation>
+							<xs:documentation>绑定数据源已经加载成功</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="bindingError">
+						<xs:annotation>
+							<xs:documentation>绑定数据源加载失败</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="incrementalBindingUpdate">
+						<xs:annotation>
+							<xs:documentation>增量数据绑定更新</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="incrementalBindingFinished">
+						<xs:annotation>
+							<xs:documentation>增量数据绑定结束</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="loadImageSuccess">
+						<xs:annotation>
+							<xs:documentation>加载图片成功</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="loadImageFailed">
+						<xs:annotation>
+							<xs:documentation>加载图片失败</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="pageChanged">
+						<xs:annotation>
+							<xs:documentation>page_slider页面切换事件</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="indicatorChanged">
+						<xs:annotation>
+							<xs:documentation>slider indicator切换事件</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="componentChanged">
+						<xs:annotation>
+							<xs:documentation>component属性变更事件</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="componentInstanced">
+						<xs:annotation>
+							<xs:documentation>component实例化事件</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="scrollStopped">
+						<xs:annotation>
+							<xs:documentation>slider组件滚动停止事件
+								参数：
+								arguments[0] ：当前位置（scrollPos）
+								arguments[1] ：最大滚动范围（scrollRange）
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="massiveUpdated">
+						<xs:annotation>
+							<xs:documentation>massive容器子元素更新</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="actionTypes">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="script/javascript"/>
+			<xs:enumeration value="usr_cmd"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="focusModeList">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="focusable">
+						<xs:annotation>
+							<xs:documentation>焦点模式</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="nofocus">
+						<xs:annotation>
+							<xs:documentation>无焦点模式</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="loop">
+						<xs:annotation>
+							<xs:documentation>循环焦点模式</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="nearby">
+						<xs:annotation>
+							<xs:documentation>临近焦点查找</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="dynamic">
+						<xs:annotation>
+							<xs:documentation>动态焦点查找，仅对area有意义</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="priority">
+						<xs:annotation>
+							<xs:documentation>优先级焦点查找</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="wrap">
+						<xs:annotation>
+							<xs:documentation>焦点换行查找</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern
+						value="(focusable|nofocus|loop|wrap|nearby|dynamic|priority)(,|focusable|nofocus|loop|wrap|nearby|dynamic|priority)*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+
+	<xs:simpleType name="attrNameValues">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value=".*"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="x"/>
+					<xs:enumeration value="y"/>
+					<xs:enumeration value="width"/>
+					<xs:enumeration value="height"/>
+
+					<xs:enumeration value="align"/>
+
+					<xs:enumeration value="img.0"/>
+					<xs:enumeration value="img.1"/>
+					<xs:enumeration value="img.2"/>
+					<xs:enumeration value="img.3"/>
+					<xs:enumeration value="img.0.mode"/>
+					<xs:enumeration value="img.1.mode"/>
+					<xs:enumeration value="img.2.mode"/>
+					<xs:enumeration value="img.3.mode"/>
+					<xs:enumeration value="img.0.visible"/>
+					<xs:enumeration value="img.1.visible"/>
+					<xs:enumeration value="img.2.visible"/>
+					<xs:enumeration value="img.3.visible"/>
+					<xs:enumeration value="img.0.round-rect"/>
+					<xs:enumeration value="img.1.round-rect"/>
+					<xs:enumeration value="img.2.round-rect"/>
+					<xs:enumeration value="img.3.round-rect"/>
+					<xs:enumeration value="img.0.padding"/>
+					<xs:enumeration value="img.1.padding"/>
+					<xs:enumeration value="img.2.padding"/>
+					<xs:enumeration value="img.3.padding"/>
+					<xs:enumeration value="img.0.width"/>
+					<xs:enumeration value="img.1.width"/>
+					<xs:enumeration value="img.2.width"/>
+					<xs:enumeration value="img.3.width"/>
+					<xs:enumeration value="img.0.height"/>
+					<xs:enumeration value="img.1.height"/>
+					<xs:enumeration value="img.2.height"/>
+					<xs:enumeration value="img.3.height"/>
+					<xs:enumeration value="img.0.align"/>
+					<xs:enumeration value="img.1.align"/>
+					<xs:enumeration value="img.2.align"/>
+					<xs:enumeration value="img.3.align"/>
+					<xs:enumeration value="img.0.shadow"/>
+					<xs:enumeration value="img.1.shadow"/>
+					<xs:enumeration value="img.2.shadow"/>
+					<xs:enumeration value="img.3.shadow"/>
+					<xs:enumeration value="img.0.auto-hide"/>
+					<xs:enumeration value="img.1.auto-hide"/>
+					<xs:enumeration value="img.2.auto-hide"/>
+					<xs:enumeration value="img.3.auto-hide"/>
+
+					<xs:enumeration value="img.0.pixfmt">
+						<xs:annotation>
+							<xs:documentation>设置图层像素格式
+								default, 默认
+								rgba32,
+								rgb565,
+								rgb24</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="img.1.pixfmt">
+						<xs:annotation>
+							<xs:documentation>设置图层像素格式
+								default, 默认
+								rgba32,
+								rgb565,
+								rgb24</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="img.2.pixfmt">
+						<xs:annotation>
+							<xs:documentation>设置图层像素格式
+								default, 默认
+								rgba32,
+								rgb565,
+								rgb24</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="img.3.pixfmt">
+						<xs:annotation>
+							<xs:documentation>设置图层像素格式
+								default, 默认
+								rgba32,
+								rgb565,
+								rgb24</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+
+					<xs:enumeration value="max-layers"/>
+
+					<xs:enumeration value="enabled">
+						<xs:annotation>
+							<xs:documentation>是否可用，true/false， 默认为true</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="animation">
+						<xs:annotation>
+							<xs:documentation>layer 启用/禁用动画 enabled/disabled</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="animation-speed">
+						<xs:annotation>
+							<xs:documentation>page_slider 翻页动画速度 -1表示禁用动画</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="animation-type">
+						<xs:annotation>
+							<xs:documentation>page_slider 动画效果，slide为滑动，flip为翻转。默认为slide</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="animation-duration">
+						<xs:annotation>
+							<xs:documentation>layer 动画时长</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="animation-mode">
+						<xs:annotation>
+							<xs:documentation>layer 动画模式。可选模式：linear</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="switching-mode">
+						<xs:annotation>
+							<xs:documentation>page_slider 页面切换模式，
+								none，不切换（仅由代码控制切换）
+								focus，跟随焦点切换（默认）
+								auto，自动切换（不支持）
+							</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="animation-sizing"/>
+					<xs:enumeration value="animation-moving"/>
+					<xs:enumeration value="direction"/>
+					<xs:enumeration value="loop"/>
+					<xs:enumeration value="lock-focus"/>
+					<xs:enumeration value="lock-dynamic-focus"/>
+
+					<xs:enumeration value="component"/>
+
+					<xs:enumeration value="text"/>
+					<xs:enumeration value="multi-line"/>
+					<xs:enumeration value="auto-wrap"/>
+					<xs:enumeration value="marquee"/>
+					<xs:enumeration value="ellipsis"/>
+
+					<xs:enumeration value="indicator"/>
+					<xs:enumeration value="indicator.style"/>
+					<xs:enumeration value="indicator.align"/>
+					<xs:enumeration value="indicator.gap"/>
+					<xs:enumeration value="indicator.left"/>
+					<xs:enumeration value="indicator.right"/>
+					<xs:enumeration value="indicator.up"/>
+					<xs:enumeration value="indicator.down"/>
+					<xs:enumeration value="scrollbar"/>
+					<xs:enumeration value="auto-scroll"/>
+
+					<xs:enumeration value="incremental"/>
+
+					<xs:enumeration value="arrangement"/>
+					<xs:enumeration value="minimum-item"/>
+					<xs:enumeration value="cache-pages"/>
+
+					<xs:enumeration value="checked-class"/>
+					<xs:enumeration value="group"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+</xs:schema>

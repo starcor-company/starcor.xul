@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<starcor.xul screen="1920x1080" xmlns="http://www.starcor.cn/XUL">
+	<page id="max_min_width_height_demo">
+		<layout>
+
+			<area type="grid">
+				<attr name="direction">vertical</attr>
+				<attr name="height">match_parent</attr>
+
+				<item class="limit-max-width" type="label">
+					<attr name="text">TEXT 992年，Mary J. Blige分布第一张个人唱片《What's the 411?》。1996年凭借歌曲“I'll Be There For You/You're All I Need To Get</attr>
+					<attr name="multi-line">true</attr>
+					<attr name="auto-wrap">true</attr>
+				</item>
+
+				<item class="limit-max-width" type="label">
+					<attr name="text">keep minimum height</attr>
+					<attr name="multi-line">true</attr>
+					<attr name="auto-wrap">true</attr>
+				</item>
+
+				<item class="limit-max-width" type="label">
+					<attr name="multi-line">true</attr>
+					<attr name="auto-wrap">true</attr>
+				</item>
+
+				<area class="limit-max-width">
+					<style name="border">2,8F00FF00</style>
+					<style name="margin">20</style>
+					<item type="label">
+						<attr name="text">TEST</attr>
+					</item>
+				</area>
+
+				<item class="limit-max-width" type="image">
+					<attr name="img.0">file:///.assets/png/about_logo.png</attr>
+				</item>
+
+				<item class="limit-max-width" type="image">
+					<attr name="img.0">file:///.assets/png/about_logo.png</attr>
+					<attr name="img.0.mode">center</attr>
+					<attr name="img.0.width">80</attr>
+				</item>
+
+				<item class="limit-max-width" type="image">
+					<attr name="img.0">file:///.assets/png/about_logo.png</attr>
+					<attr name="img.0.mode">center</attr>
+					<attr name="img.0.width">500</attr>
+				</item>
+
+			</area>
+		</layout>
+		<selector>
+			<select type="image">
+				<style name="border">2,4FFFFFFF</style>
+			</select>
+			<select class="limit-max-width">
+				<style name="margin">20</style>
+				<style name="max-width">390</style>
+				<style name="min-width">180</style>
+				<style name="min-height">60</style>
+				<style name="font-color">FFFFFFFF</style>
+				<style name="font-size">36</style>
+				<style name="font-align">0.5,0.5</style>
+			</select>
+			<select type="label">
+				<focus mode="focusable"/>
+				<style name="font-color">FFFFFFFF</style>
+				<style name="font-size">36</style>
+				<style name="font-align">0.5,0.5</style>
+				<style name="border">2,4FFFFFFF</style>
+			</select>
+			<select state="focused" type="label">
+				<style name="border">8,FF0000FF</style>
+			</select>
+			<select class="limit-max-width" state="focused" type="image">
+				<style name="max-width">9999</style>
+				<style name="min-width">0</style>
+				<style name="min-height">0</style>
+				<style name="border">8,FF0000FF</style>
+			</select>
+		</selector>
+	</page>
+</starcor.xul>

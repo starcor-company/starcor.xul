@@ -1,0 +1,1389 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<starcor.xul xmlns="http://www.starcor.cn/XUL" screen="1920x1080">
+    <page id="page_combined_list">
+        <binding id="data">
+            <root>
+                <group>
+                    <item>
+                        <name>group1</name>
+                    </item>
+                    <item>
+                        <name>group2</name>
+                    </item>
+                    <item>
+                        <name>group3</name>
+                    </item>
+                </group>
+                <content>
+                    <page>
+                        <row>
+                            <item>
+                                <name>page1_row1_content1</name>
+                            </item>
+                            <item>
+                                <name>page1_row1_content2</name>
+                            </item>
+                            <item>
+                                <name>page1_row1_content3</name>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <name>page1_row2_content1</name>
+                            </item>
+                            <item>
+                                <name>page1_row2_content2</name>
+                            </item>
+                            <item>
+                                <name>page1_row2_content3</name>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <name>page1_row3_content1</name>
+                            </item>
+                            <item>
+                                <name>page1_row3_content2</name>
+                            </item>
+                            <item>
+                                <name>page1_row3_content3</name>
+                            </item>
+                        </row>
+                    </page>
+                    <page>
+                        <row>
+                            <item>
+                                <name>page2_row1_content1</name>
+                            </item>
+                            <item>
+                                <name>page2_row1_content2</name>
+                            </item>
+                            <item>
+                                <name>page2_row1_content3</name>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <name>page2_row2_content1</name>
+                            </item>
+                            <item>
+                                <name>page2_row2_content2</name>
+                            </item>
+                            <item>
+                                <name>page2_row2_content3</name>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <name>page2_row3_content1</name>
+                            </item>
+                            <item>
+                                <name>page2_row3_content2</name>
+                            </item>
+                            <item>
+                                <name>page2_row3_content3</name>
+                            </item>
+                        </row>
+                    </page>
+                    <page>
+                        <row>
+                            <item>
+                                <name>page3_row1_content1</name>
+                            </item>
+                            <item>
+                                <name>page3_row1_content2</name>
+                            </item>
+                            <item>
+                                <name>page3_row1_content3</name>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <name>page3_row2_content1</name>
+                            </item>
+                            <item>
+                                <name>page3_row2_content2</name>
+                            </item>
+                            <item>
+                                <name>page3_row2_content3</name>
+                            </item>
+                        </row>
+                        <row>
+                            <item>
+                                <name>page3_row3_content1</name>
+                            </item>
+                            <item>
+                                <name>page3_row3_content2</name>
+                            </item>
+                            <item>
+                                <name>page3_row3_content3</name>
+                            </item>
+                        </row>
+                    </page>
+                </content>
+            </root>
+        </binding>
+        <layout>
+            <area type="slider">
+                <attr name="direction">vertical</attr>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+
+                <area binding="#data">
+                    <area type="massive" desc="Group slider" binding="group">
+                        <attr name="width">300</attr>
+                        <style name="background-color">FF444444</style>\
+                        <attr name="arrangement">linear-fixed</attr>
+                        <attr name="direction">vertical</attr>
+
+                        <template id="@item-template">
+                            <item type="label" class="group_item">
+                                <attr name="text" binding="name"></attr>
+                            </item>
+                        </template>
+                    </area>
+
+                    <area type="page_slider" desc="content page slider" binding="content">
+                        <attr name="x">300</attr>
+                        <attr name="width">match_parent</attr>
+                        <attr name="loop">false</attr>
+
+                        <template binding="page">
+                            <area type="slider" class="content_page">
+                                <template binding="row">
+                                    <area type="slider" class="content_row">
+                                        <template binding="item">
+                                            <item type="label" class="content_item">
+                                                <attr name="text" binding="name"></attr>
+                                            </item>
+                                        </template>
+                                    </area>
+                                </template>
+                            </area>
+                        </template>
+                    </area>
+                </area>
+            </area>
+        </layout>
+        <selector>
+            <select type="label">
+                <focus mode="focusable"></focus>
+                <attr name="width">match_parent</attr>
+                <attr name="height">600</attr>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-size">36</style>
+                <style name="font-align">0.5,0.5</style>
+            </select>
+            <select type="label" state="focused">
+                <style name="border">4,FF0000FF</style>
+            </select>
+            <select class="group_item">
+                <style name="margin">30</style>
+            </select>
+            <select class="content_item">
+                <attr name="width">500</attr>
+                <style name="margin">0,30</style>
+            </select>
+            <select class="content_row">
+                <attr name="width">match_parent</attr>
+                <style name="margin">30,0</style>
+                <attr name="auto-scroll">false</attr>
+            </select>
+            <select class="content_page">
+                <attr name="direction">vertical</attr>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_video_list">
+        <binding id="test_data">
+            <root>
+                <group>
+                    <name>频道1</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=0&MediaAssetsId=movie&Tag=26</data>
+                </group>
+                <group>
+                    <name>频道2</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=1&MediaAssetsId=movie&Tag=26</data>
+                </group>
+                <group>
+                    <name>频道3</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=2&MediaAssetsId=movie&Tag=26</data>
+                </group>
+                <group>
+                    <name>频道4 频道滚动 频道滚动 频道滚动 频道滚动 频道滚动</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=3&MediaAssetsId=movie&Tag=26</data>
+                </group>
+                <group>
+                    <name>频道1</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=0&MediaAssetsId=movie&Tag=26</data>
+                </group>
+                <group>
+                    <name>频道2</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=1&MediaAssetsId=movie&Tag=26</data>
+                </group>
+                <group>
+                    <name>频道3</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=2&MediaAssetsId=movie&Tag=26</data>
+                </group>
+                <group>
+                    <name>频道4 频道滚动 频道滚动 频道滚动 频道滚动 频道滚动</name>
+                    <data>http://interface.hifuntv.com/mgtv/MAPindex/GetMediaAssetsItemList?PageSize=32&BussId=1000111&UserId=mgtvmac080027A5BE64&IncludeCategory=0&OutputType=xml&SortType=time&Version=4.3.3.200.2.MG.0.0_Beta&CategoryId=1000001&MacId=08-00-27-A5-BE-64&UserAgent=nn_player%2Fstd%2F1.0.0&Mac=08-00-27-A5-BE-64&PageIndex=3&MediaAssetsId=movie&Tag=26</data>
+                </group>
+            </root>
+        </binding>
+        <binding id="video_list_data"></binding>
+        <layout>
+            <action event="ready" type="script/javascript">
+                logger.d("VideoListPage: page is ready!")
+                var groupSlider = this.findItemById("area_group_slider");
+                var firstGroupItem = groupSlider.children[0];
+                firstGroupItem.requestFocus();
+                firstGroupItem.fireEvent("click");
+                logger.d("VideoListPage: Selected group item is ", firstGroupItem.text)
+            </action>
+
+            <area type="slider" desc="root_layout">
+                <area type="radio" desc="单选区域" class="group_area">
+                    <attr name="checked-class">group_item_checked</attr>
+
+                    <area id="area_group_slider" type="slider" class="group_slider">
+                        <template binding="#test_data/group">
+                            <item type="label" class="group_label">
+                                <attr name="text" binding="name"></attr>
+                                <data name="userdata" binding="data"></data>
+                            </item>
+                        </template>
+                    </area>
+                </area>
+
+
+                <area id="area_video_list">
+                    <attr name="width">match_parent</attr>
+                    <style name="background-color">FF2F2D29</style>
+
+                    <area id="area_page_indicator" type="slider">
+                        <attr name="y">74</attr>
+                        <attr name="width">match_parent</attr>
+                        <attr name="direction">reverse-horizontal</attr>
+
+                        <item id="label_total_page" type="label" class="label_page_indicator">
+                            <style name="margin">0,0,30,0</style>
+                            <style name="font-color">FF8a867d</style>
+
+                            <!-- Test 情设置正确的值-->
+                            <attr name="text">20</attr>
+                        </item>
+                        <item id="label_separator" type="label" class="label_page_indicator">
+                            <style name="font-color">FF8a867d</style>
+                            <attr name="text">/</attr>
+                        </item>
+                        <item id="label_current_page" type="label" class="label_page_indicator">
+                            <style name="font-color">FFFEB200</style>
+
+                            <!-- Test 情设置正确的值-->
+                            <attr name="text">1</attr>
+                        </item>
+                    </area>
+
+                    <area id="area_video_list_slider" type="slider" class="video_list_slider">
+                        <area id="area_video_list" type="massive" binding="#video_list_data/">
+                            <attr name="width">match_parent</attr>
+                            <attr name="height">auto</attr>
+                            <attr name="arrangement">grid-fixed</attr>
+                            <attr name="direction">horizontal</attr>
+                            <attr name="minimum-item">20</attr>
+                            <attr name="cache-pages">1.5</attr>
+
+                            <template id="@item-template" incremental="4,100">
+                                <item filter="[0]" class="poster_item" type="image">
+                                    <!-- 需要在代码中处理 scale：标志-->
+                                    <attr name="img.2" binding="=scale:{[=img_v]}"/>
+                                    <attr name="text" binding="[=name]"/>
+                                    <focus mode="focusable" priority="1"></focus>
+                                </item>
+                                <item class="poster_item" type="image">
+                                    <!-- 需要在代码中处理 scale：标志-->
+                                    <attr name="img.2" binding="=scale:{[=img_v]}"/>
+                                    <attr name="text" binding="[=name]"/>
+                                </item>
+                            </template>
+                        </area>
+
+                    </area>
+                </area>
+            </area>
+        </layout>
+        <selector>
+            <select class="group_slider">
+                <focus mode="dynamic"></focus>
+                <attr name="width">444</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="direction">vertical</attr>
+                <style name="background-color">FF1C1A18</style>
+                <style name="padding">90,0</style>
+            </select>
+            <select class="video_list_slider">
+                <focus mode="dynamic"></focus>
+                <attr name="y">110</attr>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="direction">vertical</attr>
+                <attr name="scrollbar">simple</attr>
+                <style name="padding">40,118,20,40</style>
+
+                <action event="bindingUpdated" type="script/javascript">
+                    // 刷新影片列表后，回滚到初始位置
+                    this.scrollTo(0,false);
+                    // 清除旧的优先级
+                    this.setDynamicFocus(null);
+                </action>
+            </select>
+            <select class="label_page_indicator">
+                <style name="font-size">36</style>
+            </select>
+            <select class="group_label">
+                <focus mode="focusable"></focus>
+                <attr name="width">match_parent</attr>
+                <attr name="height">96</attr>
+                <style name="padding">0,86</style>
+                <style name="font-size">36</style>
+                <style name="font-align">0,0.5</style>
+                <style name="font-color">FF89887E</style>
+                <attr name="marquee">1000,1000,1000,50%</attr>
+                <action event="checked" type="script/javascript">
+                    // group_label 被选中
+                    logger.d("VideoListPage: group_label is checked");
+
+                    // 刷新影片列表
+                    var newDataUrl = this.getData("userdata");
+                    logger.d("VideoListPage: new data url is ", newDataUrl);
+                    this.ownerPage.refreshBinding("video_list_data", newDataUrl);
+                </action>
+            </select>
+            <select class="group_label" state="focused">
+                <style name="font-size">40</style>
+                <style name="font-color">FFFFFFFF</style>
+            </select>
+            <select class="poster_item">
+                <attr name="width">260</attr>
+                <attr name="height">348</attr>
+
+                <attr name="img.0">file:///.assets/poster/poster_bkg.9.png</attr>
+                <attr name="img.0.padding">-5</attr>
+                <attr name="img.0.auto-hide">below</attr>
+                <attr name="img.1">file:///.assets/poster/poster_icon_small.png</attr>
+                <attr name="img.1.mode">center</attr>
+                <attr name="img.1.width">96</attr>
+                <attr name="img.1.height">96</attr>
+                <attr name="img.1.auto-hide">below</attr>
+                <attr name="img.2.reuse">true</attr>
+                <attr name="img.2.fade-in">true</attr>
+
+                <style name="font-size">36</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-align">0.5,1.0</style>
+                <style name="padding">0,0,0,16</style>
+                <style name="margin">20,36</style>
+            </select>
+            <select class="poster_item" state="focused">
+                <style name="border">4,FFFF00FF,5,5</style>
+            </select>
+            <select class="group_item_checked">
+                <style name="background-color">88888888</style>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_text_slider_demo" desc="Text slider demo">
+        <binding id="items">
+            <data>
+                <item>
+                    <title>测试标题</title>
+                    <content>test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容 test content 测试内容</content>
+                </item>
+                <item>
+                    <title>习近平如约到延边 按朝鲜族习俗脱鞋进屋</title>
+                    <content>新华网北京7月16日电  据新华社客户端报道，让延边朝鲜族自治州州长李景浩感到惊喜的是，习近平总书记真的在百忙之中来到延边考察调研了。
+
+                        4个月前，也就是今年的3月9日，习近平在参加十二届全国人大三次会议吉林代表团审议时，李景浩代表邀请总书记到延边去看看，习近平说，我一直想去延边看一看，下次到吉林一定去。</content>
+                </item>
+                <item>
+                    <title>新疆红军师万人千车整建制开进中印边境演习</title>
+                    <content>据《解放军报》7月16日报道，直属于新疆军区的某红军师万人千车跨越2000公里，开赴昆仑山雪域高原，该地属于中印西部边境的阿里地区。部队在新疆军区陆航旅支援下，先期投送侦察兵，这次行动全面锤炼了部队的运输保障和机动作战能力。</content>
+                </item>
+                <item>
+                    <title>创业板指冲破2800点关口 仅2股下跌</title>
+                    <content>网易财经7月17日讯 创业板指今日高开0.93%，报2651.44点。创业板指高开高走，强势上涨，最高升至2788.30点。截至发稿，创业板指涨6.58%，报2800.04点。
+
+                        个股中共339只个股上涨，天泽信息、宜安科技等逾90股涨停。昌红科技等涨逾8%。
+
+                        下跌股票仅2只，赢时胜、暴风科技2股跌停。</content>
+                </item>
+                <item>
+                    <title>还原画质真相 小米电视2S对比索尼W800B</title>
+                    <content>昨日下午14时，小米公司在京发布了其电视新品，它延续二代血统并被命名为小米电视2S。这台号称三年磨一剑的小米电视新品拥有近乎全金属外壳的豪华工艺和用料、首次达到NTSC 85%以上广色域覆盖，还运用了支持60帧4K视频解码能力的SOC，总之是一台小米式“发烧”、“顶配”和“高性价比”的产品。</content>
+                </item>
+            </data>
+        </binding>
+        <layout>
+            <area type="slider">
+                <focus mode="loop"/>
+                <attr name="x">50</attr>
+                <attr name="y">50</attr>
+                <attr name="height">600</attr>
+                <attr name="direction">vertical</attr>
+                <attr name="lock-focus">0.5</attr>
+                <style name="preferred-focus-padding">64,0,0,32</style>
+                <template binding="#items/item">
+                    <area class="item-container" type="layer">
+                        <item type="label" class="title-label,item-font">
+                            <attr name="text" binding="title"/>
+                        </item>
+                        <item type="label" class="content-label,item-font">
+                            <attr name="text" binding="content"/>
+                        </item>
+                    </area>
+                </template>
+                <area desc="place-holder"><attr name="height">120</attr></area>
+            </area>
+        </layout>
+        <selector>
+            <select class="item-container">
+                <style name="border">0,FF767AAA,12,12</style>
+                <style name="background-color">FF33334B</style>
+                <style name="margin">12</style>
+                <attr name="width">800</attr>
+                <attr name="height">94</attr>
+                <attr name="animation-duration">200</attr>
+                <attr name="animation-sizing">true</attr>
+            </select>
+            <select class="item-font">
+                <style name="font-size">22</style>
+                <style name="font-color">CCFFFFFF</style>
+            </select>
+            <select class="title-label">
+                <attr name="width">match_parent</attr>
+                <attr name="height">46</attr>
+                <style name="padding">12,16,6</style>
+            </select>
+            <select class="content-label">
+                <focus mode="focusable"/>
+                <attr name="animation-duration">200</attr>
+                <attr name="animation-sizing">true</attr>
+                <style name="font-color">E056586f</style>
+                <attr name="y">46</attr>
+                <attr name="width">match_parent</attr>
+                <attr name="height">34</attr>
+                <style name="padding">2,16,24,6</style>
+                <action event="focus" type="script/javascript">
+                    this.parent.addClass("item-container-focused");
+                </action>
+                <action event="blur" type="script/javascript">
+                    this.parent.removeClass("item-container-focused");
+                </action>
+                <action event="click" type="script/javascript">
+                    var parent = this.parent;
+                    if ( parent.hasClass("item-container-expanded") ) {
+                    parent.removeClass("item-container-expanded");
+                    this.removeClass("content-label-expanded");
+                    } else {
+                    parent.addClass("item-container-expanded");
+                    this.addClass("content-label-expanded");
+                    }
+                </action>
+            </select>
+
+            <select class="item-container-focused">
+                <style name="border">4,FF767AAA,12,12</style>
+            </select>
+
+            <select class="item-container-expanded">
+                <attr name="height">180</attr>
+            </select>
+
+            <select class="content-label-expanded">
+                <attr name="height">130</attr>
+                <style name="padding">8,16,24,8</style>
+                <attr name="multi-line">true</attr>
+                <attr name="auto-wrap">true</attr>
+                <attr name="scrollbar">none</attr>
+            </select>
+            <select class="content-label-expanded" state="focused">
+                <attr name="scrollbar">simple,1.015,3000,4.0,2.0,80FFFFFF,2.0,FF000000</attr>
+                <style name="background-color">FF292A3C</style>
+            </select>
+        </selector>
+    </page>
+
+    <page id="page_selector_slider" desc="Selector slider demo">
+        <binding id="provinces">file:///.assets/provinces/provinces_data.xml</binding>
+        <binding id="cities">file:///.assets/provinces/cities_data_1.xml</binding>
+        <layout>
+            <area desc="selector_area">
+                <attr name="x">444</attr>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+                <style name="background-color">FF2b2c37</style>
+
+                <item type="image" desc="水平显示背景区域 ">
+                    <focus mode="nofocus"/>
+                    <attr name="x">198</attr>
+                    <attr name="y">495</attr>
+                    <attr name="height">90</attr>
+                    <attr name="width">770</attr>
+                    <style name="background-image">@color:FF272931,45,45</style>
+
+                    <!--中部分隔线-->
+                    <attr name="img.1">@color:FF404967</attr>
+                    <attr name="img.1.width">1</attr>
+                    <attr name="img.1.height">38</attr>
+                    <attr name="img.1.mode">center</attr>
+                    <attr name="img.1.align">0.5,0.5</attr>
+                </item>
+
+                <area id="province_area" type="layer" desc="省份选择区域">
+                    <attr name="x">198</attr>
+
+                    <item id="@layer-mask" type="image" class="layer_mask_image"/>
+
+                    <item id="display_label" type="label" class="font_style,display_label,hide_item"/>
+
+                    <area id="indicator_area" type="component" class="indicator_area"/>
+
+                    <area type="radio">
+                        <attr name="checked-class">selector_item_checked</attr>
+
+                        <area id="slider_area" type="slider" class="selector_slider">
+                            <area desc="place-holder" class="place_holder"/>
+
+                            <item id="edit_box_label" type="label" class="selector_item,font_style,province_checked,hide_item"/>
+
+                            <template binding="#provinces/item">
+                                <item filter="[0]" id="custom_edit_box" type="custom" desc="自定义输入框" class="edit_box,selector_item,font_style,province_checked">
+                                    <attr name="class">EditBox</attr>
+                                    <attr name="hint-text" binding="[=name]"/>
+                                    <data name="userdata" binding="item_data"/>
+                                    <style name="font-color">FF9b9ccd</style>
+                                    <style name="font-size">40</style>
+                                    <style name="background-color">FF2b2c37</style>
+                                    <style name="padding">4,30</style>
+                                </item>
+
+                                <item type="label" class="selector_item,font_style,province_checked">
+                                    <attr name="text" binding="[=name]"/>
+                                    <data name="userdata" binding="item_data"/>
+                                </item>
+                            </template>
+
+                            <area desc="place-holder" class="place_holder"/>
+                        </area>
+                    </area>
+                </area>
+
+                <area id="city_area" type="layer" desc="城市选择区域">
+                    <attr name="x">688</attr>
+
+                    <item id="@layer-mask" type="image" class="layer_mask_image"/>
+
+                    <item id="display_label" type="label" class="font_style,display_label"/>
+
+                    <area id="indicator_area" type="component" class="indicator_area,hide_item"/>
+
+                    <area type="radio">
+                        <attr name="checked-class">selector_item_checked</attr>
+
+                        <area id="slider_area" type="slider" class="selector_slider,hide_item">
+                            <area desc="place-holder" class="place_holder"/>
+
+                            <template binding="#cities/item">
+                                <item  filter="[0]" type="label" class="selector_item,font_style,selector_item_checked,first_city_item">
+                                    <attr name="text" binding="[=name]"/>
+                                </item>
+                                <item type="label" class="selector_item,font_style">
+                                    <attr name="text" binding="[=name]"/>
+                                </item>
+                            </template>
+
+                            <area desc="place-holder" class="place_holder"/>
+                        </area>
+                    </area>
+                </area>
+
+                <item id="select_button" type="label" desc="选定按钮" class="font_style">
+                    <focus mode="focusable"/>
+                    <attr name="x">1010</attr>
+                    <attr name="y">495</attr>
+                    <attr name="width">260</attr>
+                    <attr name="height">90</attr>
+                    <attr name="text">确定</attr>
+                    <style name="background-image">@color:FF22242C,45,45</style>
+
+                    <!-- TODO: 用户选定省份和城市，请在代码中处理业务逻辑 -->
+                    <action event="click" type="usr_cmd">onDecide</action>
+                </item>
+            </area>
+        </layout>
+
+        <selector>
+            <select class="selector_slider">
+                <attr name="direction">vertical</attr>
+                <attr name="width">match_content</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="align">0.5,0.5</attr>
+                <attr name="lock-focus">0.5</attr>
+                <style name="padding">100,0</style>
+
+                <!-- province slider 滚动结束时需要检查editBox是否正常处理 -->
+                <action event="scrollStopped" type="script/javascript">
+                    // 滚动结束 处理输入框
+                    var editBoxLabel = this.findItemById("edit_box_label");
+                    if ((editBoxLabel != null) && (this.scrollPos == 0)) {
+                        // 已经滚动到editBox
+                        if (!editBoxLabel.hasClass("hide_item")) {
+                            // 需要显示edit box
+                            editBoxLabel.fireEvent("click");
+                        }
+                    }
+                </action>
+            </select>
+            <select class="font_style">
+                <attr name="marquee">1000,1000,1000,50%</attr>
+                <style name="padding">0,45</style>
+
+                <style name="font-color">FF9b9ccd</style>
+                <style name="font-size">40</style>
+                <style name="font-align">0.5,0.5</style>
+            </select>
+            <select class="indicator_area">
+                <attr name="y">452</attr>
+                <attr name="component">selector_indicator</attr>
+            </select>
+            <select class="selector_item">
+                <focus mode="focusable" focused="true"/>
+                <attr name="width">280</attr>
+                <attr name="height">90</attr>
+                <action event="focus" type="script/javascript">
+                    this.fireEvent("click");
+
+                    var HIDE_ITEM_CLASS = "hide_indicator_image";
+                    var slider = this.parent;
+                    var children = slider.children;
+                    logger.d("Demo: children count=", children.length);
+
+                    // 获取对应的indicator image parent
+                    var layerArea = slider.parent.parent;
+                    var indicatorParent = layerArea.findItemById("indicator_area");
+
+                    // 首项不显示上箭头，末项不显示下箭头，其他项上下箭头均显示
+                    var indicatorUp = indicatorParent.findItemById("indicator_image_up");
+                    var indicatorDown = indicatorParent.findItemById("indicator_image_down");
+                    // children[0] 和 children[-1] 为placeholder，children[1] edit_box_label 需要排除
+                    var firstItem;
+                    var editBoxItem = slider.findItemsByClass("edit_box");
+                    logger.d("Demo: editBoxItem count=", editBoxItem.length);
+                    if ((editBoxItem.length > 0) && (this == children[1] || this == children[2])) {
+                        logger.d("Demo: indicatorUp hides", " slider has editbox item.");
+                        indicatorUp.addClass(HIDE_ITEM_CLASS);
+                    } else if (this == children[1]) {
+                        logger.d("Demo: indicatorUp hides");
+                        indicatorUp.addClass(HIDE_ITEM_CLASS);
+                    } else {
+                        indicatorUp.removeClass(HIDE_ITEM_CLASS);
+                    }
+
+                    // 当前项目为第一个时，仍然需要判断是否为最后一项
+                    if (this == children[children.length-2]) {
+                        logger.d("Demo: indicatorDown hides");
+                        indicatorDown.addClass(HIDE_ITEM_CLASS);
+                    } else {
+                        indicatorDown.removeClass(HIDE_ITEM_CLASS);
+                    }
+                </action>
+                <action event="blur" type="script/javascript">
+                    var HIDE_ITEM_CLASS = "hide_item";
+                    var slider = this.parent;
+                    logger.d("Demo: item lose focus");
+
+                    var focusItem = this.ownerPage.currentFocus;
+                    if (!focusItem.isChildOf(slider)) {
+                        // slider 失去焦点，需要隐藏slider，显示display label
+                        logger.d("Demo: currentFocus id=", focusItem.id);
+
+                        slider.addClass(HIDE_ITEM_CLASS);
+
+                        var layerArea = slider.parent.parent;
+                        var indicator = layerArea.findItemById("indicator_area");
+                        indicator.addClass(HIDE_ITEM_CLASS);
+
+                        var displayLabel = layerArea.findItemById("display_label");
+                        displayLabel.removeClass(HIDE_ITEM_CLASS);
+                        displayLabel.setAttr("text", this.getAttr("text"));
+                    }
+                </action>
+            </select>
+            <select class="edit_box" state="focused">
+                <style name="border">4,FF8da4ed,45,45</style>
+            </select>
+            <select id="custom_edit_box">
+                <action event="unchecked" type="script/javascript">
+                    var editBoxLabel = this.parent.findItemById("edit_box_label");
+
+                    var text = this.getAttr("text");
+                    if (text == "") {
+                        text = this.getAttr("hint-text");
+                    }
+                    logger.d("Demo: custom_edit_box unchecked text=", text);
+                    editBoxLabel.setAttr("text", text);
+                    editBoxLabel.removeClass("hide_item");
+                    this.addClass("hide_item");
+                </action>
+            </select>
+            <select id="edit_box_label">
+                <action event="click" type="script/javascript">
+                    var editBox = this.parent.findItemById("custom_edit_box");
+                    var slider = editBox.parent;
+                    if (editBox.parent.scrollDelta != 0) {
+                        // 滚动尚未结束，等待滚动结束时再继续
+                        return;
+                    }
+
+                    logger.d("Demo: edit_box_label checked.");
+                    this.addClass("hide_item");
+
+                    // 使用pushStates可使requestFocus即刻生效
+                    this.ownerPage.pushStates(editBox, "removeClass", "hide_item",
+                        editBox, "requestFocus");
+                    this.ownerPage.popStates(true);
+                    logger.d("Demo: editBox get focus.");
+                </action>
+            </select>
+            <select class="hide_item">
+                <style name="display">none</style>
+            </select>
+            <select class="hide_indicator_image">
+                <attr name="img.0.visible">false</attr>
+            </select>
+            <select class="selector_item_checked">
+                <style name="margin">43,2</style>
+                <style name="font-color">FFFFFFFF</style>
+            </select>
+            <select class="province_checked">
+                <!-- 选中省份后切换右边城市 -->
+                <action event="checked" type="usr_cmd">onProvinceChecked</action>
+            </select>
+            <select class="first_city_item">
+                <!-- 初始化city display label值 -->
+                <action event="bindingUpdated" type="script/javascript">
+                    var slider = this.parent;
+                    var layerArea = slider.parent.parent;
+                    var displayLabel = layerArea.findItemById("display_label");
+                    displayLabel.setAttr("text", this.getAttr("text"));
+                    this.dispatchEvent("bindingUpdated", "usr_cmd", "onCityItemUpdated");
+                </action>
+            </select>
+            <select id="select_button" state="focused">
+                <style name="border">4,FF8da4ed,45,45</style>
+            </select>
+            <select class="layer_mask_image">
+                <focus mode="nofocus"/>
+                <attr name="width">match_content</attr>
+                <attr name="height">match_parent</attr>
+                <style name="padding">100,0</style>
+                <attr name="img.0">file:///.assets/png/selector_slider_mask.png</attr>
+            </select>
+            <select class="display_label">
+                <focus mode="focusable"/>
+                <attr name="y">495</attr>
+                <attr name="width">280</attr>
+                <attr name="height">90</attr>
+
+                <action event="focus" type="script/javascript">
+                    logger.d("Demo: display label get focus, id=", this.id);
+
+                    // 隐藏display label
+                    var HIDE_ITEM_CLASS = "hide_item";
+                    this.addClass(HIDE_ITEM_CLASS);
+
+                    // 显示slider 和 indicator
+                    var indicator = this.parent.findItemById("indicator_area");
+                    logger.d("Demo: indicator id=", indicator.id);
+
+                    var slider = this.parent.findItemById("slider_area");
+                    logger.d("Demo: slider id=", slider.id);
+
+                    // 让选中项重新获得焦点
+                    var checkedItems = slider.findItemsByClass("selector_item_checked");
+                    this.ownerPage.pushStates(indicator, "removeClass", HIDE_ITEM_CLASS,
+                        slider, "removeClass", HIDE_ITEM_CLASS,
+                        checkedItems[0], "requestFocus");
+                    this.ownerPage.popStates(true);
+                    logger.d("Demo: checkedItems[0]=", checkedItems[0].getAttr("text"));
+                    logger.d("Demo: slider and indicator show.");
+                </action>
+            </select>
+            <select class="place_holder">
+                <attr name="height">352</attr>
+            </select>
+        </selector>
+    </page>
+
+    <component id="selector_indicator">
+        <area type="slider">
+            <attr name="direction">vertical</attr>
+            <attr name="width">280</attr>
+            <attr name="height">176</attr>
+
+            <item id="indicator_image_up" type="image" class="indicator_image">
+                <attr name="img.0">file:///.assets/indicator/up-arrow.png</attr>
+            </item>
+
+            <item type="image" class="display_bg_image">
+            </item>
+
+            <item id="indicator_image_down"  type="image" class="indicator_image">
+                <attr name="img.0">file:///.assets/indicator/down-arrow.png</attr>
+            </item>
+        </area>
+        <selector>
+            <select class="indicator_image">
+                <focus mode="nofocus"/>
+                <attr name="width">28</attr>
+                <attr name="height">20</attr>
+                <style name="margin">10,126</style>
+            </select>
+            <select class="display_bg_image">
+                <focus mode="nofocus"/>
+                <attr name="width">match_parent</attr>
+                <attr name="height">90</attr>
+                <style name="margin">10,0</style>
+                <style name="background-image">@color:FF7F99E9,45,45</style>
+            </select>
+        </selector>
+    </component>
+
+    <script type="script/javascript" src="file:///.assets/detail_page_a_demo.js"/>
+    <component id="poster-with-mirror">
+        <action event="componentChanged" type="script/javascript">PWM_component_changed</action>
+        <area type="layer" class="PWM-poster-item">
+            <item type="image" class="PWM-poster-image"/>
+            <area type="layer" class="PWM-poster-mirror">
+                <item id="@layer-mask" type="image" class="PWM-poster-mirror-mask"/>
+                <item type="image" class="PWM-poster-image"/>
+            </area>
+        </area>
+        <selector>
+            <select class="PWM-poster-mirror-mask">
+                <attr name="img.0">file:///.assets/common/mirror-mask.9.png</attr>
+            </select>
+            <select class="PWM-poster-mirror">
+                <style name="rotate-x">180</style>
+                <style name="lighting-color-filter">FF808080</style>
+            </select>
+            <select class="PWM-poster-image">
+                <focus mode="nofocus"/>
+            </select>
+        </selector>
+    </component>
+    <component id="star-component">
+        <action event="componentChanged" type="script/javascript">STAR_component_changed</action>
+        <item type="image">
+            <focus mode="nofocus"/>
+            <attr name="max-layers">5</attr>
+            <attr name="width">1</attr>
+            <attr name="height">1</attr>
+            <attr name="img.0.mode">center</attr>
+            <attr name="img.1.mode">center</attr>
+            <attr name="img.2.mode">center</attr>
+            <attr name="img.3.mode">center</attr>
+            <attr name="img.4.mode">center</attr>
+        </item>
+    </component>
+    <component id="user-comment">
+        <action event="componentChanged" type="script/javascript">UCC_component_changed</action>
+        <item type="image" class="UCC-avatar"/>
+        <item type="spanned_label" class="UCC-comment"/>
+        <selector>
+            <select class="UCC-avatar">
+                <focus mode="nofocus"/>
+                <attr name="width">match_parent</attr>
+                <attr name="height">96</attr>
+                <attr name="img.0.mode">center</attr>
+                <attr name="img.0.width">96</attr>
+                <attr name="img.0.height">96</attr>
+                <attr name="img.0.align">0,0</attr>
+                <style name="padding">2,100,0,0</style>
+                <style name="font-color">80FFFFFF</style>
+                <style name="font-size">20</style>
+            </select>
+            <select class="UCC-comment">
+                <attr name="x">100</attr>
+                <attr name="y">30</attr>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-size">20</style>
+                <attr name="width">match_parent</attr>
+            </select>
+        </selector>
+    </component>
+
+    <page id="detail_page_a_demo" screen="1280x720">
+        <binding id="func-btns">
+            <buttons>
+                <button>
+                    <icon>file:///.assets/animation/icon.ani.zip</icon>
+                    <text>播放</text>
+                    <action>do-play</action>
+                </button>
+                <button>
+                    <icon>file:///.assets/animation/icon.ani.zip</icon>
+                    <text>选集</text>
+                    <action>switch-to-episodes</action>
+                </button>
+                <button>
+                    <icon>file:///.assets/animation/icon.ani.zip</icon>
+                    <text>推荐</text>
+                    <action>switch-to-recommendation</action>
+                </button>
+                <button>
+                    <icon>file:///.assets/animation/icon.ani.zip</icon>
+                    <text>短评</text>
+                    <action>switch-to-comments</action>
+                </button>
+                <button>
+                    <icon>file:///.assets/animation/icon.ani.zip</icon>
+                    <text>剧照</text>
+                    <action>switch-to-film-stills</action>
+                </button>
+                <button>
+                    <icon>file:///.assets/animation/icon.ani.zip</icon>
+                    <text>演员</text>
+                    <action>switch-to-actors</action>
+                </button>
+                <button>
+                    <icon>file:///.assets/animation/icon.ani.zip</icon>
+                    <text>收藏</text>
+                    <action>do-add-favorite</action>
+                </button>
+            </buttons>
+        </binding>
+        <binding id="episodes">
+            <data>
+                <item><text>1</text></item>
+                <item><text>2</text></item>
+                <item><text>3</text></item>
+                <item><text>4</text></item>
+                <item><text>5</text></item>
+                <item><text>6</text></item>
+                <item><text>7</text></item>
+                <item><text>8</text></item>
+                <item><text>9</text></item>
+                <item><text>10</text></item>
+                <item><text>11</text></item>
+                <item><text>12</text></item>
+                <item><text>13</text></item>
+                <item><text>14</text></item>
+                <item><text>15</text></item>
+                <item><text>16</text></item>
+                <item><text>17</text></item>
+                <item><text>18</text></item>
+                <item><text>19</text></item>
+                <item><text>20</text></item>
+                <item><text>21</text></item>
+                <item><text>22</text></item>
+                <item><text>23</text></item>
+                <item><text>24</text></item>
+                <item><text>25</text></item>
+                <item><text>26</text></item>
+            </data>
+        </binding>
+        <layout>
+            <item id="@float-focus-item" type="image"/>
+            <item type="image">
+                <focus mode="nofocus"/>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+                <attr name="img.0">file:///.assets/detail_page_a/bkg.jpg</attr>
+                <attr name="img.0.fade-in">true</attr>
+                <attr name="img.1">file:///.assets/detail_page_a/full_screen_mask.png</attr>
+
+                <attr name="img.2">@color:A0FFFFFF</attr>
+                <attr name="img.2.mode">center</attr>
+                <attr name="img.2.width">1100</attr>
+                <attr name="img.2.height">1</attr>
+                <attr name="img.2.align">0.5,0.6</attr>
+            </item>
+
+            <item type="spanned_label">
+                <attr name="x">360</attr>
+                <attr name="y">200</attr>
+                <attr name="text"><![CDATA[冰与火的青春    <small><small>(48集全)</small></small>]]></attr>
+                <style name="font-size">46</style>
+                <style name="font-color">F8FFFFFF</style>
+                <style name="font-shadow">-1,2,3,FF000000</style>
+            </item>
+
+            <area type="component">
+                <attr name="x">360</attr>
+                <attr name="y">280</attr>
+                <attr name="component">star-component</attr>
+                <attr name="star-size">32</attr>
+                <attr name="star-num">2.5</attr>
+            </area>
+
+            <item type="label">
+                <attr name="x">530</attr>
+                <attr name="y">280</attr>
+                <attr name="text">2.5分</attr>
+                <style name="font-color">F8E37026</style>
+                <style name="font-shadow">-1,1,2,FF000000</style>
+            </item>
+
+            <area type="component">
+                <attr name="x">90</attr>
+                <attr name="y">50</attr>
+                <attr name="component">poster-with-mirror</attr>
+                <attr name="width">220</attr>
+                <attr name="height">320</attr>
+                <attr name="image">file:///.assets/detail_page_a/poster.png</attr>
+            </area>
+
+            <area type="slider">
+                <attr name="y">370</attr>
+                <style name="padding-left">360</style>
+                <attr name="direction">horizontal</attr>
+                <focus mode="dynamic"/>
+                <template binding="#func-btns/button">
+                    <item type="image" class="icon-btn-image">
+                        <style name="margin">5,5,12,5</style>
+                        <attr name="img.3" binding="icon"/>
+                        <attr name="text" binding="text"/>
+                        <attr name="action" binding="action"/>
+                    </item>
+                </template>
+            </area>
+
+            <area id="detail-pages">
+                <attr name="x">90</attr>
+                <attr name="y">450</attr>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+
+                <area id="detail-page-episodes" type="slider" class="detail-page">
+                    <attr name="direction">vertical</attr>
+                    <attr name="width">match_parent</attr>
+                    <attr name="height">match_parent</attr>
+                    <attr name="lock-focus">0.5</attr>
+
+                    <item type="label">
+                        <attr name="text">EPISODE</attr>
+                    </item>
+                    <area>
+                        <area>
+                            <focus mode="dynamic,priority"/>
+                            <attr name="height">match_parent</attr>
+                            <item type="image" class="episode-btn-image">
+                                <focus mode="focusable" priority="1"/>
+                                <attr name="x">10</attr>
+                                <attr name="y">10</attr>
+                                <attr name="width">160</attr>
+                                <attr name="text">正片</attr>
+                            </item>
+                            <item type="image" class="episode-btn-image">
+                                <attr name="x">10</attr>
+                                <attr name="y">80</attr>
+                                <attr name="width">160</attr>
+                                <attr name="text">花絮</attr>
+                            </item>
+                        </area>
+                        <area type="grid">
+                            <attr name="x">180</attr>
+                            <attr name="width">match_parent</attr>
+                            <template binding="#episodes/item">
+                                <item type="image" class="episode-btn-image">
+                                    <attr name="text" binding="text"/>
+                                </item>
+                            </template>
+                        </area>
+                    </area>
+                </area>
+                <area id="detail-page-film-stills" class="detail-page">
+                    <item type="label">
+                        <attr name="text">FILM STILLS</attr>
+                    </item>
+                </area>
+                <area id="detail-page-actors" class="detail-page">
+                    <item type="label">
+                        <attr name="text">ACTORS</attr>
+                    </item>
+                </area>
+                <area id="detail-page-recommendation" class="detail-page">
+                    <item type="label">
+                        <attr name="text">RECOMMENDATION</attr>
+                    </item>
+                </area>
+                <area id="detail-page-comments" type="slider" class="detail-page">
+                    <attr name="direction">vertical</attr>
+                    <attr name="width">match_parent</attr>
+                    <attr name="height">match_parent</attr>
+                    <attr name="lock-focus">0.5</attr>
+                    <item type="label">
+                        <attr name="text">COMMENTS</attr>
+                    </item>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                    <area type="component" class="comment-item">
+                        <attr name="component">user-comment</attr>
+                        <attr name="comment">乱七八糟一大堆，搞不清楚说什么</attr>
+                        <attr name="title">如影随形   2015-07-13 14:52:57</attr>
+                        <attr name="avatar">file:///.assets/animation/icon.ani.zip</attr>
+                    </area>
+                </area>
+            </area>
+        </layout>
+
+        <selector>
+            <select type="label">
+                <style name="font-size">24</style>
+                <style name="font-color">FFFFFFFF</style>
+            </select>
+            <select type="image" id="@float-focus-item">
+                <focus mode="nofocus"/>
+                <style name="z-index">9999999</style>
+                <attr name="img.0">file:///.assets/common/icon-btn-focus.9.png</attr>
+                <attr name="img.0.padding">-5</attr>
+                <attr name="animation-duration">200</attr>
+                <attr name="animation-sizing">true</attr>
+                <attr name="animation-moving">true</attr>
+            </select>
+            <select class="detail-page">
+                <style name="display">none</style>
+                <attr name="width">match_parent</attr>
+                <attr name="height">match_parent</attr>
+                <focus mode="priority,dynamic"/>
+            </select>
+            <select class="icon-btn-image">
+                <attr name="img.3.mode">center</attr>
+                <attr name="img.3.align">0,0.5</attr>
+                <attr name="img.3.padding">0,10,0,0</attr>
+                <attr name="img.3.width">32</attr>
+                <attr name="img.3.height">32</attr>
+                <style name="padding">6,48,10,6</style>
+                <style name="font-size">24</style>
+                <style name="font-color">8FFFFFFF</style>
+                <style name="border">2,8FFFFFFF,4,4</style>
+                <action event="click" type="script/javascript">DETAIL_PAGE_func_button_clicked</action>
+                <action event="focus" type="script/javascript">DETAIL_PAGE_func_button_focused</action>
+            </select>
+            <select class="show-detail-page">
+                <style name="display">blocked</style>
+            </select>
+            <select class="comment-item">
+                <focus mode="focusable"/>
+                <attr name="width">match_parent</attr>
+                <style name="margin">5</style>
+                <action event="focus" type="script/javascript">DETAIL_PAGE_comment_item_focused</action>
+            </select>
+            <select class="icon-btn-image" state="focused">
+                <style name="border">2,FF1AC8E3,4,4</style>
+                <style name="font-color">FFFFFFFF</style>
+            </select>
+            <select class="icon-btn-image-checked">
+                <style name="border">2,FF1AC8FF,4,4</style>
+            </select>
+            <select class="icon-btn-image-checked" state="focused">
+                <style name="border">2,FF1AC8FF,4,4</style>
+            </select>
+
+            <select class="episode-btn-image">
+                <focus mode="focusable"/>
+                <attr name="width">120</attr>
+                <style name="margin">10</style>
+                <style name="padding">8,16</style>
+                <style name="font-align">0.5,0.45</style>
+                <style name="font-size">24</style>
+                <style name="font-color">8FFFFFFF</style>
+                <style name="border">2,8FFFFFFF,4,4</style>
+                <action event="focus" type="script/javascript">DETAIL_PAGE_func_button_focused</action>
+            </select>
+            <select class="episode-btn-image" state="focused">
+                <style name="border">2,FF1AC8E3,4,4</style>
+                <style name="font-color">FFFFFFFF</style>
+            </select>
+        </selector>
+    </page>
+
+    <component id="float-animation-component">
+        <area type="layer" class="float-page-bkg-layer">
+            <item type="image" class="float-page-bkg-item">
+                <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                <attr name="text">background item</attr>
+            </item>
+        </area>
+        <area type="slider" class="float-layer">
+            <attr name="direction">vertical</attr>
+            <item type="image" class="float-item">
+                <attr name="img.0">file:///.assets/star/star-a1.png</attr>
+                <attr name="text">ITEM 1</attr>
+            </item>
+            <item type="image" class="float-item">
+                <attr name="img.0">file:///.assets/star/star-a2.png</attr>
+                <attr name="text">ITEM 2</attr>
+            </item>
+            <item type="image" class="float-item">
+                <attr name="img.0">file:///.assets/star/star-a3.png</attr>
+                <attr name="text">ITEM 3</attr>
+            </item>
+        </area>
+        <selector>
+            <select class="float-page-bkg-item">
+                <attr name="x">20</attr>
+                <attr name="y">40</attr>
+                <attr name="width">match_parent</attr>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="padding">0,64,0,0</style>
+                <attr name="img.0.mode">center</attr>
+                <attr name="img.0.align">0,0.5</attr>
+            </select>
+            <select class="float-page-bkg-layer" state="focused">
+                <style name="opacity">0.4</style>
+                <attr name="animation-duration">300</attr>
+            </select>
+            <select class="float-item">
+                <style name="margin">20</style>
+                <style name="font-size">32</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="padding">0,64,0,0</style>
+                <attr name="img.0.mode">center</attr>
+                <attr name="img.0.align">0,0.5</attr>
+            </select>
+            <select class="float-layer">
+	            <style name="background-color">CF800080</style>
+                <style name="padding">20,0</style>
+	            <attr name="y">400</attr>
+                <attr name="width">300</attr>
+                <attr name="height">0</attr>
+	            <attr name="animation-duration">300</attr>
+	            <attr name="animation-moving">true</attr>
+	            <attr name="animation-sizing">true</attr>
+            </select>
+
+	        <select class="float-layer" state="focused">
+		        <attr name="y">0</attr>
+                <attr name="height">400</attr>
+            </select>
+
+        </selector>
+    </component>
+
+    <page id="float_animation_demo_page">
+        <layout>
+	        <area type="slider">
+		        <attr name="x">30</attr>
+		        <attr name="y">30</attr>
+		        <area type="component" class="test-component">
+			        <attr name="component">float-animation-component</attr>
+		        </area>
+		        <area type="component" class="test-component">
+			        <attr name="component">float-animation-component</attr>
+		        </area>
+		        <area type="component" class="test-component">
+			        <attr name="component">float-animation-component</attr>
+		        </area>
+		        <area type="component" class="test-component">
+			        <attr name="component">float-animation-component</attr>
+		        </area>
+	        </area>
+        </layout>
+        <selector>
+            <select class="test-component">
+                <focus mode="focusable"/>
+                <style name="margin">0,20</style>
+                <style name="border">2,FFFFFFFF</style>
+                <attr name="width">300</attr>
+                <attr name="height">400</attr>
+            </select>
+        </selector>
+    </page>
+
+
+
+    <component id="page_component_async_binding_component">
+        <item type="label">
+            <style name="font-size">32</style>
+            <style name="font-color" binding="#component_data/item-color">FFFF0000</style>
+            <attr name="text" binding="#component_data/item">Component 测试数据 加载失败(可能要等待一段时间)!</attr>
+        </item>
+    </component>
+    <page id="page_component_async_binding" desc="binding异步数据加载对component的绑定影响">
+        <binding id="async_data">http://www.baidu.com</binding>
+        <binding id="component_data">
+            <root>
+                <item>Component 测试数据 加载成功</item>
+                <item-color>FF00FF00</item-color>
+            </root>
+        </binding>
+        <layout>
+            <item type="label">
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-size">48</style>
+                <style name="padding">16</style>
+                <attr name="text">数据绑定和选择器 Demo</attr>
+            </item>
+            <area type="component">
+                <attr name="x">32</attr>
+                <attr name="y">132</attr>
+                <style name="border">1,FFFFFFFF</style>
+                <style name="padding">5</style>
+                <attr name="component">page_component_async_binding_component</attr>
+            </area>
+        </layout>
+    </page>
+
+</starcor.xul>

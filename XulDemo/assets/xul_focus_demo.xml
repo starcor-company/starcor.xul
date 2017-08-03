@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<starcor.xul xmlns="http://www.starcor.cn/XUL" screen="1920x1080">
+    <page id="page_focus_demo">
+        <binding id="items">
+            <items>
+                <item name="item1"></item>
+                <item name="item2"></item>
+                <item name="item3"></item>
+                <item name="item4"></item>
+                <item name="item5"></item>
+            </items>
+        </binding>
+        <layout>
+
+            <area type="slider" class="vertical_scroll_slider">
+                <!-- 先按dynamic方式查找，若没有获取过焦点，则按照优先级查找到最后一个元素-->
+                <area type="slider">
+                    <style name="margin-top">40</style>
+                    <attr name="align">1,0.5</attr>
+                    <attr name="width">match_parent</attr>
+                    <focus mode="dynamic,priority"></focus>
+                    <template binding="#items/item">
+                        <item type="label" filter="[-1]">
+                            <focus mode="focusable" priority="1"></focus>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                        <item type="label">
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                    </template>
+                </area>
+                <!-- 先按dynamic方式查找，若没有获取过焦点，则按照nearby查找-->
+                <area type="slider">
+                    <attr name="align">0.5,0.5</attr>
+                    <attr name="width">match_parent</attr>
+                    <focus mode="dynamic,nearby"></focus>
+                    <template binding="#items/item">
+                        <item type="label">
+                            <attr name="width">300</attr>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                    </template>
+                </area>
+                <!-- 先按nearby方式查找，若未找到，则按优先级查找到第一个元素-->
+                <area type="slider">
+                    <attr name="width">match_parent</attr>
+                    <attr name="align">0.5,0.5</attr>
+                    <focus mode="dynamic,nearby,priority"></focus>
+                    <template binding="#items/item">
+                        <item type="label" filter="[0]">
+                            <focus mode="focusable" priority="1"></focus>
+                            <attr name="width">200</attr>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                        <item type="label">
+                            <attr name="width">200</attr>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                    </template>
+                </area>
+
+
+                <!-- 以下slider先按nearby查找焦点，若未找到，则按priority查找-->
+                <area type="slider">
+                    <style name="margin-top">200</style>
+                    <focus mode="nearby,priority"></focus>
+                    <template binding="#items/item[0~2]">
+                        <item type="label" filter="[-1]">
+                            <focus mode="focusable" priority="1"></focus>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                        <item type="label">
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                    </template>
+                </area>
+                <area type="slider">
+                    <focus mode="nearby,priority"></focus>
+                    <template binding="#items/item[0~3]">
+                        <item type="label" filter="[-1]">
+                            <focus mode="focusable" priority="1"></focus>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                        <item type="label">
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                    </template>
+                </area>
+                <area type="slider">
+                    <focus mode="nearby,priority"></focus>
+                    <template binding="#items/item">
+                        <item type="label" filter="[-1]">
+                            <focus mode="focusable" priority="1"></focus>
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                        <item type="label">
+                            <attr name="text" binding="[=name]"/>
+                        </item>
+                    </template>
+                </area>
+            </area>
+        </layout>
+        <selector>
+            <select type="slider">
+                <style name="border">4,FF00FF00</style>
+            </select>
+            <select type="label">
+                <!-- label 组件默认focus mode为nofocus-->
+                <focus mode="focusable"/>
+                <attr name="width">100</attr>
+                <style name="margin">20</style>
+                <style name="font-color">FFFFFFFF</style>
+                <style name="font-size">36</style>
+                <style name="font-align">0.5,0.5</style>
+            </select>
+            <select type="label" state="focused">
+                <style name="border">8,FF0000FF</style>
+            </select>
+        </selector>
+    </page>
+</starcor.xul>
