@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.view.Display;
 import android.view.WindowManager;
+
 import com.starcor.xul.XulManager;
 import com.starcor.xul.XulWorker;
 import com.starcor.xulapp.behavior.XulBehaviorManager;
@@ -16,7 +17,6 @@ import com.starcor.xulapp.cache.XulCacheCenter;
 import com.starcor.xulapp.cache.XulCacheDomain;
 import com.starcor.xulapp.model.XulDataServiceImpl;
 import com.starcor.xulapp.service.XulServiceManager;
-import com.starcor.xulapp.utils.XulLog;
 import com.starcor.xulapp.utils.XulResPrefetchManager;
 import com.starcor.xulapp.utils.XulSystemUtil;
 
@@ -70,11 +70,11 @@ public class XulApplication extends Application {
 		XulCacheCenter.setVersion(XulSystemUtil.getCurrentVersion(getAppContext()));
 
 		_xulCacheDomain = XulCacheCenter.buildCacheDomain(CACHE_DOMAIN_ID_APP)
-				.setDomainFlags(XulCacheCenter.CACHE_FLAG_FILE
-								| XulCacheCenter.CACHE_FLAG_REVISION_LOCAL)
-				.setLifeTime(CACHE_LIFETIME)
-				.setMaxFileSize(CACHE_MAX_SIZE)
-				.build();
+			.setDomainFlags(XulCacheCenter.CACHE_FLAG_FILE
+				| XulCacheCenter.CACHE_FLAG_REVISION_LOCAL)
+			.setLifeTime(CACHE_LIFETIME)
+			.setMaxFileSize(CACHE_MAX_SIZE)
+			.build();
 	}
 
 	public void postToMainLooper(Runnable runnable) {
@@ -83,6 +83,10 @@ public class XulApplication extends Application {
 
 	public void postDelayToMainLooper(Runnable runnable, long ms) {
 		_appMainHandler.postDelayed(runnable, ms);
+	}
+
+	public void removeMainLooperCallBack(Runnable runnable) {
+		_appMainHandler.removeCallbacks(runnable);
 	}
 
 	public void onRegisterXulServices() {
