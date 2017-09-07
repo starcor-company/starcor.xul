@@ -43,6 +43,7 @@ public class XulRenderContext {
 	XulTaskCollector _taskCollector;
 	XulSuspendTaskCollector _suspendTaskCollector;
 	boolean _suspended = false;
+	boolean _skipSyncData = false;      // all of changed view's layout have not be finished
 	volatile int _pendingImageItemNum = 0;
 	volatile int _pendingImageCollectingRound = 0;
 	int _pendingImageFinishingRound = 0;
@@ -62,6 +63,7 @@ public class XulRenderContext {
 		RectF _focusRect = new RectF();
 
 		XulView _focusTrackView;
+
 		public FocusTracker(XulView focusTrackerView) {
 			_focusTrackView = focusTrackerView;
 		}
@@ -459,6 +461,7 @@ public class XulRenderContext {
 	}
 
 	public void markDataChanged(XulViewRender view) {
+		_skipSyncData = false;
 		_changedViews.add(view);
 	}
 
@@ -949,16 +952,19 @@ public class XulRenderContext {
 	}
 
 	private void syncData() {
-		for (int round = 0; round < 3 && !_changedViews.isEmpty(); ++round) {
+		for (int round = 0; !_skipSyncData && round < 3 && !_changedViews.isEmpty(); ++round) {
 			int viewNum = _changedViews.size();
+			int emptyNum = 0;
 			for (int i = 0; i < viewNum; ++i) {
 				XulViewRender changedView = _changedViews.get(i);
 				if (changedView == null) {
 					// FIXME: find the root cause
+					emptyNum++;
 					continue;
 				}
 				if (changedView.getDrawingRect() == null) {
 					_changedViews.add(changedView);
+					emptyNum++;
 					continue;
 				}
 				try {
@@ -968,6 +974,11 @@ public class XulRenderContext {
 				}
 			}
 			_changedViews.remove(0, viewNum);
+			if (emptyNum == viewNum) {
+				// skip sync data operation, until layout or another view has been changed
+				_skipSyncData = true;
+				break;
+			}
 		}
 	}
 
@@ -1026,6 +1037,9 @@ public class XulRenderContext {
 		XulViewRender render = layout.getRender();
 		if (render == null) {
 			return true;
+		}
+		if (render.isLayoutChanged()) {
+			_skipSyncData = false;
 		}
 		page.doLayout(0, 0);
 		return false;
