@@ -1213,6 +1213,7 @@ public class XulWorker {
 			conn.setReadTimeout(readTimeout);
 			conn.setConnectTimeout(connectTimeout);
 			conn.setRequestProperty("Accept-Encoding", "gzip");
+			conn.setInstanceFollowRedirects(true);
 			if (extHeaders != null) {
 				for (int i = 0, extHeadersLength = extHeaders.length; i + 1 < extHeadersLength; i += 2) {
 					String key = extHeaders[i + 0];
