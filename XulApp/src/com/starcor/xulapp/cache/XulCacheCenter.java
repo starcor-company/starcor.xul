@@ -417,7 +417,7 @@ public class XulCacheCenter {
             return this;
         }
 
-        public XulCacheDomain build() {
+        public synchronized XulCacheDomain build() {
             XulCacheDomain cachedDomain = _cacheDomains.get(_domainId);
             if (cachedDomain != null) {
                 if (_domainFlags == cachedDomain.getDomainFlags()
@@ -483,14 +483,14 @@ public class XulCacheCenter {
                     cacheDir = new File(rootCacheDir, cacheDirName);
                     if (!cacheDir.exists()) {
                         // 目录不存在，可能存在旧的缓存，清除无效缓存
-                        clearInvalidCache(rootCacheDir, PREFIX_REVISION);
+                        clearInvalidCache(rootCacheDir, PREFIX_REVISION, cacheDirName);
                     }
                     break;
                 case CACHE_FLAG_VERSION_LOCAL:
                     cacheDirName = PREFIX_VERSION + getVersion();
                     cacheDir = new File(rootCacheDir, cacheDirName);
                     if (!cacheDir.exists()) {
-                        clearInvalidCache(rootCacheDir, PREFIX_VERSION);
+                        clearInvalidCache(rootCacheDir, PREFIX_VERSION, cacheDirName);
                     }
                     break;
                 case CACHE_FLAG_GLOBAL:
@@ -518,7 +518,7 @@ public class XulCacheCenter {
             return cacheDir;
         }
 
-        private void clearInvalidCache(final String parent, final String prefix) {
+        private void clearInvalidCache(final String parent, final String prefix, final  String curFile) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -528,6 +528,9 @@ public class XulCacheCenter {
                         return;
                     }
                     for (File file : files) {
+                        if (file.getName().equals(curFile)) { //不删除当前缓存文件
+                            continue;
+                        }
                         if (file.getName().startsWith(prefix)) {
                             XulSystemUtil.deleteDir(file);
                         }
