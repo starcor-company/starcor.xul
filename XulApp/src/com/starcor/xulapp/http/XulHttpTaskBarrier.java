@@ -12,7 +12,18 @@ public class XulHttpTaskBarrier {
 	public static int COND_OK = -1;
 	public static int COND_FAILED = -2;
 
-	private class BarrierResponseHandler implements XulHttpStack.XulHttpResponseHandler {
+	public interface BarrierHandler {
+	}
+
+	public static class BasicBarrierHandler implements BarrierHandler {
+		XulHttpTaskBarrier _barrier;
+
+		public void notifyResult(boolean success) {
+			_barrier.notifyResult(this, success);
+		}
+	}
+
+	private class BarrierResponseHandler implements XulHttpStack.XulHttpResponseHandler, BarrierHandler {
 		XulHttpStack.XulHttpResponseHandler _handler;
 		int _condition;
 
@@ -39,7 +50,7 @@ public class XulHttpTaskBarrier {
 
 	private volatile int _errorCount = 0;
 
-	private void notifyResult(BarrierResponseHandler handler, boolean success) {
+	private void notifyResult(BarrierHandler handler, boolean success) {
 		synchronized (_barrierHandler) {
 			_barrierHandler.remove(handler);
 		}
@@ -67,7 +78,7 @@ public class XulHttpTaskBarrier {
 		}
 	}
 
-	private HashSet<BarrierResponseHandler> _barrierHandler = new HashSet<BarrierResponseHandler>();
+	private HashSet<BarrierHandler> _barrierHandler = new HashSet<BarrierHandler>();
 
 	public XulHttpStack.XulHttpResponseHandler wrap(int condition, XulHttpStack.XulHttpResponseHandler handler) {
 		final BarrierResponseHandler newHandler = new BarrierResponseHandler(condition, handler);
@@ -79,6 +90,14 @@ public class XulHttpTaskBarrier {
 
 	public XulHttpStack.XulHttpResponseHandler wrap(XulHttpStack.XulHttpResponseHandler handler) {
 		return wrap(COND_OK, handler);
+	}
+
+	public BasicBarrierHandler wrap(BasicBarrierHandler handler) {
+		handler._barrier = this;
+		synchronized (_barrierHandler) {
+			_barrierHandler.add(handler);
+		}
+		return handler;
 	}
 
 	Runnable _onFinish;
@@ -97,7 +116,7 @@ public class XulHttpTaskBarrier {
 		_onOk = runnable;
 	}
 
-	public void resetErrorCountter(){
+	public void resetErrorCountter() {
 		_errorCount = 0;
 	}
 }

@@ -24,8 +24,13 @@ import com.starcor.xul.Utils.XulSimpleStack;
 
 import org.apache.http.conn.ConnectTimeoutException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -36,6 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -64,6 +70,26 @@ public class XulWorker {
 
 	public static int DEFAULT_CONNECT_TIMEOUT = 4 * 1000;
 	public static int DEFAULT_READ_TIMEOUT = 8 * 1000;
+
+
+	private static byte[] _FILENAME_;
+	private static byte[] _CONTENT_DISPOSITION_;
+	private static byte[] _CONTENT_TYPE_;
+	private static byte[] _APPLICATION_OCTET_STREAM_;
+	private static byte[] _CR_LF_;
+
+	static {
+		try {
+			_FILENAME_ = "; filename=\"".getBytes("UTF-8");
+			_CONTENT_DISPOSITION_ = "Content-Disposition: form-data; name=\"".getBytes("UTF-8");
+			_CONTENT_TYPE_ = "Content-Type: ".getBytes("UTF-8");
+			_APPLICATION_OCTET_STREAM_ = "application/octet-stream".getBytes("UTF-8");
+			_CR_LF_ = "\r\n".getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public static XulDrawable loadDrawableFromCache(String url) {
 		XulDrawable bitmap = null;
@@ -483,6 +509,15 @@ public class XulWorker {
 
 	public static InputStream postData(String xulPath, byte[] postData, String... extHeaders) {
 		return postData(xulPath, false, postData, extHeaders);
+	}
+
+	public static InputStream postForm(String xulPath, XulFormEntity... formEntities) {
+		_syncDownloadItem item = new _syncDownloadItem(xulPath, null);
+		item.noFileCache = true;
+		item.isDirect = true;
+		XulDownloadParams params = new XulDownloadParams(formEntities);
+		_doDownload(new _downloadContext(), item, params);
+		return item._result;
 	}
 
 	public static InputStream loadData(String xulPath, boolean noCache, XulDownloadParams params) {
@@ -1041,12 +1076,14 @@ public class XulWorker {
 		String cacheKey = downloadItem.__cacheKey;
 		boolean post = false;
 		byte[] postData = null;
+		XulFormEntity[] formEntities = null;
 		String[] extHeaders = null;
 		int connectTimeout = DEFAULT_CONNECT_TIMEOUT;
 		int readTimeout = DEFAULT_READ_TIMEOUT;
 		if (params != null) {
 			post = params.post;
 			postData = params.postBody;
+			formEntities = params.formEntities;
 			extHeaders = params.extHeaders;
 			if (params.connectTimeout > 500) {
 				connectTimeout = params.connectTimeout;
@@ -1176,6 +1213,7 @@ public class XulWorker {
 			conn.setReadTimeout(readTimeout);
 			conn.setConnectTimeout(connectTimeout);
 			conn.setRequestProperty("Accept-Encoding", "gzip");
+			conn.setInstanceFollowRedirects(true);
 			if (extHeaders != null) {
 				for (int i = 0, extHeadersLength = extHeaders.length; i + 1 < extHeadersLength; i += 2) {
 					String key = extHeaders[i + 0];
@@ -1188,9 +1226,32 @@ public class XulWorker {
 				if (postData != null) {
 					conn.setDoOutput(true);
 					conn.getOutputStream().write(postData);
+				} else if (formEntities != null) {
+					Random random = new Random();
+					byte[] randBytes = new byte[64];
+					random.nextBytes(randBytes);
+					String boundaryStr = XulUtils.calMD5(randBytes);
+					conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundaryStr);
+					conn.setDoOutput(true);
+
+
+					OutputStream os = conn.getOutputStream();
+					byte[] boundaryHead = ("--" + boundaryStr).getBytes("UTF-8");
+
+					for (int i = 0, formEntitiesLength = formEntities.length; i < formEntitiesLength; i++) {
+						XulFormEntity formEntity = formEntities[i];
+						os.write(boundaryHead);
+						os.write(_CR_LF_);
+						formEntity.writeBlock(os);
+						os.write(_CR_LF_);
+					}
+
+					// tail
+					os.write(boundaryHead);
+					os.write('-');
+					os.write('-');
 				}
 			}
-
 
 			//信任https站点
 			if (conn instanceof HttpsURLConnection) {
@@ -1770,11 +1831,170 @@ public class XulWorker {
 		public int responseCode;
 		public String responseMsg;
 		public Map<String, List<String>> responseHeaders;
+		public XulFormEntity[] formEntities;
 
 		public XulDownloadParams(boolean post, byte[] postBody, String[] extHeaders) {
 			this.post = post;
 			this.postBody = postBody;
 			this.extHeaders = extHeaders;
 		}
+
+		public XulDownloadParams(XulFormEntity[] formEntities) {
+			this.post = true;
+			this.formEntities = formEntities;
+		}
 	}
+
+
+	public static abstract class XulFormEntity {
+		public abstract int calLength();
+
+		public abstract int writeBlock(OutputStream os);
+
+		protected static byte[] getBytes(String v) {
+			try {
+				return v.getBytes("UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+
+	public static class XulFormField extends XulFormEntity {
+		public byte[] name;
+		public byte[] value;
+
+		public XulFormField(String name, String value) {
+			this.name = getBytes(name);
+			this.value = getBytes(value);
+		}
+
+		@Override
+		public int calLength() {
+			// _CONTENT_DISPOSITION_.length + name + "\"\r\n"
+			int length = _CONTENT_DISPOSITION_.length + name.length + 3;
+			length += _CR_LF_.length;    // \r\n
+			if (value != null) {
+				length += value.length;
+			}
+			return length;
+		}
+
+		@Override
+		public int writeBlock(OutputStream os) {
+			try {
+				os.write(_CONTENT_DISPOSITION_);
+				os.write(name);
+				os.write('\"');
+				os.write(_CR_LF_);
+				os.write(_CR_LF_);
+				if (value != null) {
+					os.write(value);
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}
+	}
+
+	public static class XulFormFile extends XulFormEntity {
+		public byte[] name;
+		public File file;
+		public byte[] contentType;
+
+		private byte[] _fileName;
+		private FileInputStream _fileInputStream;
+
+		public XulFormFile(String name, File file) {
+			this(getBytes(name), file, _APPLICATION_OCTET_STREAM_);
+		}
+
+		public XulFormFile(byte[] name, File file, byte[] contentType) {
+			this.name = name;
+			this.file = file;
+			this.contentType = contentType;
+
+			_fileName = getBytes(file.getName());
+
+			if (!file.exists()) {
+				return;
+			}
+
+			try {
+				_fileInputStream = new FileInputStream(file);
+			} catch (FileNotFoundException e) {
+			}
+		}
+
+		public XulFormFile(String name, File file, String contentType) {
+			this(getBytes(name), file, getBytes(contentType));
+		}
+
+		@Override
+		public int calLength() {
+			// _CONTENT_DISPOSITION_.length + name + "\""
+			int length = _CONTENT_DISPOSITION_.length + name.length + 1;
+			if (_fileName != null) {
+				// _FILENAME_.length + _fileName + "\""
+				length += _FILENAME_.length + _fileName.length + 1;
+			}
+			length += _CR_LF_.length;    // \r\n
+
+			if (contentType != null) {
+				// _CONTENT_TYPE_.length + contentType + "\r\n"
+				length += _CONTENT_TYPE_.length + contentType.length + _CR_LF_.length;
+			}
+
+			length += _CR_LF_.length;    // \r\n
+
+			if (_fileInputStream != null) {
+				try {
+					length += _fileInputStream.available();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return length;
+		}
+
+		@Override
+		public int writeBlock(OutputStream os) {
+			try {
+				os.write(_CONTENT_DISPOSITION_);
+				os.write(name);
+				os.write('\"');
+
+				if (_fileName != null) {
+					os.write(_FILENAME_);
+					os.write(_fileName);
+					os.write('\"');
+				}
+
+				if (contentType != null) {
+					os.write(_CR_LF_);
+					os.write(_CONTENT_TYPE_);
+					os.write(contentType);
+				}
+
+				os.write(_CR_LF_);
+				os.write(_CR_LF_);
+				if (_fileInputStream != null) {
+					byte[] buf = new byte[1024];
+					for (int len = _fileInputStream.read(buf); len > 0; len = _fileInputStream.read(buf)) {
+						os.write(buf, 0, len);
+					}
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}
+	}
+
 }
