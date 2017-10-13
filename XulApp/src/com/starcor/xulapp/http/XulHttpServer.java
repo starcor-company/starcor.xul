@@ -719,9 +719,11 @@ public class XulHttpServer {
 					} else if (_parseState == 1) {
 						if (line.isEmpty()) {
 							_parseState = 2;
-							String connection = _request.getHeader("connection");
-							if (connection != null && connection.toLowerCase().contains("close")) {
-								_requestBodySize = Integer.MAX_VALUE;
+							if (_requestBodySize == 0 && !"get".equals(_request.method)) {
+								String connection = _request.getHeader("connection");
+								if (connection != null && connection.toLowerCase().contains("close")) {
+									_requestBodySize = Integer.MAX_VALUE;
+								}
 							}
 
 							String expect = _request.getHeader("expect");
