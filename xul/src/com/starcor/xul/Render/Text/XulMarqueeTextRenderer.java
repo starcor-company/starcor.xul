@@ -160,7 +160,6 @@ public class XulMarqueeTextRenderer extends XulTextRenderer {
 				_marqueeAnimation = new TextMarqueeAnimation(_render);
 			}
 			_marqueeAnimation.prepareMarqueeAnimation(marquee);
-			_render.addAnimation(_marqueeAnimation);
 			return this;
 		}
 
@@ -284,6 +283,9 @@ public class XulMarqueeTextRenderer extends XulTextRenderer {
 
 		@Override
 		public void finish(boolean recalAutoWrap) {
+			if (_marqueeAnimation != null && !isEmpty()) {
+				_render.addAnimation(_marqueeAnimation);
+			}
 			_upperEditor.finish(recalAutoWrap);
 		}
 
@@ -325,6 +327,10 @@ public class XulMarqueeTextRenderer extends XulTextRenderer {
 
 		@Override
 		public boolean updateAnimation(long timestamp) {
+			if (isEmpty()) {
+				_running = false;
+			}
+
 			if (_marqueeSpeed <= 0 || !_running) {
 				_marqueePosition = -1;
 				return false;
