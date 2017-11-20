@@ -10,7 +10,7 @@ import com.starcor.xul.XulUtils;
 import com.starcor.xul.XulWorker;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 
 /**
  * Created by hy on 2014/5/13.
@@ -18,115 +18,178 @@ import java.util.HashSet;
 public class XulSimpleTextRenderer extends XulBasicTextRenderer {
 	private static final String TAG = XulSimpleTextRenderer.class.getSimpleName();
 	// 不应该放在行首的字符
-	private static HashSet<Character> _chSetA;
+	private static char[] _chSetA;
 	// 不应该放在行尾的字符
-	private static HashSet<Character> _chSetB;
+	private static char[] _chSetB;
+
+	private static char[][][] _charSetMap;
+
 	private static float[] tmpWidthArray = new float[16];
 	private static Paint.FontMetrics _tmpFontMetrics = new Paint.FontMetrics();
 
 	static {
-		_chSetA = new HashSet<Character>();
+		_chSetA = new char[]{
+			',',
+			'.',
+			'`',
+			'!',
+			'?',
+			')',
+			'}',
+			']',
+			':',
+			';',
+			'>',
+			'。',
+			'，',
+			'？',
+			'”',
+			'；',
+			'：',
+			'》',
+			'）',
+			'、',
+			'＞',
+			'］',
+			'．',
+			'，',
+			'＇',
+			'﹒',
+			'﹜',
+			'﹞',
+			'′',
+			'•',
+			'｝',
+			'’',
+			'…',
+			'〉',
+			'〉',
+			'》',
+			'」',
+			'』',
+			'】',
+			'〕',
+			'〗',
+			'〞',
+		};
 
-		_chSetA.add(',');
-		_chSetA.add('.');
-		_chSetA.add('`');
-		_chSetA.add('!');
-		_chSetA.add('?');
-		_chSetA.add(')');
-		_chSetA.add('}');
-		_chSetA.add(']');
-		_chSetA.add(':');
-		_chSetA.add(';');
-		_chSetA.add('>');
-		_chSetA.add('。');
-		_chSetA.add('，');
-		_chSetA.add('？');
-		_chSetA.add('”');
-		_chSetA.add('；');
-		_chSetA.add('：');
-		_chSetA.add('》');
-		_chSetA.add('）');
-		_chSetA.add('、');
-		_chSetA.add('＞');
-		_chSetA.add('］');
-		_chSetA.add('．');
-		_chSetA.add('，');
-		_chSetA.add('＇');
-		_chSetA.add('﹒');
-		_chSetA.add('﹜');
-		_chSetA.add('﹞');
-		_chSetA.add('′');
-		_chSetA.add('•');
-		_chSetA.add('｝');
-		_chSetA.add('’');
-		_chSetA.add('…');
-		_chSetA.add('〉');
-		_chSetA.add('〉');
-		_chSetA.add('》');
-		_chSetA.add('」');
-		_chSetA.add('』');
-		_chSetA.add('】');
-		_chSetA.add('〕');
-		_chSetA.add('〗');
-		_chSetA.add('〞');
+		Arrays.sort(_chSetA);
 
-		_chSetB = new HashSet<Character>();
+		_chSetB = new char[]{
+			'(',
+			'<',
+			'[',
+			'{',
+			'±',
+			'‘',
+			'“',
+			'‹',
+			'∈',
+			'∏',
+			'∑',
+			'∕',
+			'∠',
+			'∧',
+			'∨',
+			'∩',
+			'∪',
+			'∫',
+			'∫',
+			'∮',
+			'∴',
+			'∵',
+			'≤',
+			'≥',
+			'≦',
+			'≧',
+			'≮',
+			'≯',
+			'∽',
+			'≈',
+			'≌',
+			'≠',
+			'≡',
+			'⊙',
+			'⊿',
+			'⊥',
+			'〈',
+			'《',
+			'「',
+			'『',
+			'【',
+			'〔',
+			'〖',
+			'〝',
+			'﹙',
+			'﹛',
+			'﹝',
+			'﹤',
+			'（',
+			'＜',
+			'＝',
+			'＞',
+			'［',
+			'｛',
+		};
+		Arrays.sort(_chSetB);
+	}
 
-		_chSetB.add('(');
-		_chSetB.add('<');
-		_chSetB.add('[');
-		_chSetB.add('{');
-		_chSetB.add('±');
-		_chSetB.add('‘');
-		_chSetB.add('“');
-		_chSetB.add('‹');
-		_chSetB.add('∈');
-		_chSetB.add('∏');
-		_chSetB.add('∑');
-		_chSetB.add('∕');
-		_chSetB.add('∠');
-		_chSetB.add('∧');
-		_chSetB.add('∨');
-		_chSetB.add('∩');
-		_chSetB.add('∪');
-		_chSetB.add('∫');
-		_chSetB.add('∫');
-		_chSetB.add('∮');
-		_chSetB.add('∴');
-		_chSetB.add('∵');
-		_chSetB.add('≤');
-		_chSetB.add('≥');
-		_chSetB.add('≦');
-		_chSetB.add('≧');
-		_chSetB.add('≮');
-		_chSetB.add('≯');
-		_chSetB.add('∽');
-		_chSetB.add('≈');
-		_chSetB.add('≌');
-		_chSetB.add('≠');
-		_chSetB.add('≡');
-		_chSetB.add('⊙');
-		_chSetB.add('⊿');
-		_chSetB.add('⊥');
-		_chSetB.add('〈');
-		_chSetB.add('《');
-		_chSetB.add('「');
-		_chSetB.add('『');
-		_chSetB.add('【');
-		_chSetB.add('〔');
-		_chSetB.add('〖');
-		_chSetB.add('〝');
-		_chSetB.add('﹙');
-		_chSetB.add('﹛');
-		_chSetB.add('﹝');
-		_chSetB.add('﹤');
-		_chSetB.add('（');
-		_chSetB.add('＜');
-		_chSetB.add('＝');
-		_chSetB.add('＞');
-		_chSetB.add('［');
-		_chSetB.add('｛');
+	static {
+		_charSetMap = new char[][][]{
+			// 数字
+			new char[][]{new char[]{'0', '9'}},
+			// 英文
+			new char[][]{new char[]{'a', 'z'}, new char[]{'A', 'Z'}},
+			// 西里尔文
+			new char[][]{new char[]{'Ё', 'ё'}},
+			// 阿拉伯语
+			new char[][]{new char[]{'ﻼ', 'ﭑ'}},
+			// 高棉语
+			new char[][]{new char[]{'ក', '᧿'}},
+		};
+	}
 
+	private static int getCharSetIdx(char c) {
+		for (int charSetIdx = 0, charSetMapLength = _charSetMap.length; charSetIdx < charSetMapLength; charSetIdx++) {
+			char[][] charSetRanges = _charSetMap[charSetIdx];
+			for (int rangeIdx = 0, charSetRangesLength = charSetRanges.length; rangeIdx < charSetRangesLength; rangeIdx++) {
+				char[] range = charSetRanges[rangeIdx];
+				if (range[0] <= c && c <= range[1]) {
+					return charSetIdx;
+				}
+			}
+		}
+		return -1;
+	}
+
+	private static boolean isCharInCharSet(int charSetIdx, char c) {
+		if (charSetIdx < 0 || charSetIdx >= _charSetMap.length) {
+			return false;
+		}
+		char[][] charSetRanges = _charSetMap[charSetIdx];
+		for (int rangeIdx = 0, charSetRangesLength = charSetRanges.length; rangeIdx < charSetRangesLength; rangeIdx++) {
+			char[] range = charSetRanges[rangeIdx];
+			if (range[0] <= c && c <= range[1]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static int inSameCharSet(char c1, char c2) {
+		int charSetIdx = getCharSetIdx(c1);
+		if (charSetIdx < 0) {
+			return -1;
+		}
+
+		if (isCharInCharSet(charSetIdx, c2)) {
+			return charSetIdx;
+		}
+		return -1;
+	}
+
+	private static boolean isInCharSet(char[] chSet, char c) {
+		return Arrays.binarySearch(chSet, c) > 0;
 	}
 
 	float[] _textWidths;
@@ -395,13 +458,32 @@ public class XulSimpleTextRenderer extends XulBasicTextRenderer {
 						lineWidth = 0;
 						if (i - lineHead > 1) {
 							// 只有当前行字符数大于2个时才做行首/尾字符调整
-							if (_chSetA.contains(c)) {
-								if (prevCh != 0 && !_chSetA.contains(prevCh)) {
+							int charSetIdx = inSameCharSet(c, prevCh);
+							if (charSetIdx >= 0) {
+								// in same char set, do not break the word!
+								int newIdx = i - 1;
+								float fallbackWidth = 0;
+								for (; newIdx > lineHead; newIdx--) {
+									if (isCharInCharSet(charSetIdx, _text.charAt(newIdx))) {
+										fallbackWidth += _textWidths[newIdx];
+										continue;
+									}
+									break;
+								}
+								if (newIdx == lineHead) {
+									// will still break the word!!
+								} else {
+									lineTail = newIdx + 1;
+									curLineWidth -= fallbackWidth;
+									lineWidth = fallbackWidth;
+								}
+							} else if (isInCharSet(_chSetA, c)) {
+								if (prevCh != 0 && !isInCharSet(_chSetA, prevCh)) {
 									lineTail = i - 1;
 									lineWidth = _textWidths[lineTail];
 									curLineWidth -= lineWidth;
 								}
-							} else if (prevCh != 0 && _chSetB.contains(prevCh)) {
+							} else if (prevCh != 0 && isInCharSet(_chSetB, prevCh)) {
 								lineTail = i - 1;
 								lineWidth = _textWidths[lineTail];
 								curLineWidth -= lineWidth;
