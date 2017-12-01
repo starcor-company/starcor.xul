@@ -1606,7 +1606,7 @@ public class XulWorker {
 							e.printStackTrace();
 						}
 					}
-					XulDrawable drawable = XulDrawable.fromNinePitchBitmap(bitmap, drawableItem.url, imageKey);
+					XulDrawable drawable = XulDrawable.fromNinePatchBitmap(bitmap, drawableItem.url, imageKey);
 					_finishSchedule(drawableItem, drawable);
 					continue;
 				}

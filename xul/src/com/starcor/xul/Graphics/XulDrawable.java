@@ -23,16 +23,12 @@ public abstract class XulDrawable {
 		_isRecycled = true;
 	}
 
-	public static XulDrawable fromNinePitchBitmap(Bitmap bmp, String url, String imageKey) {
+	public static XulDrawable fromNinePatchBitmap(Bitmap bmp, String url, String imageKey) {
 		if (bmp == null) {
 			return null;
 		}
 
-		XulNinePatchDrawable drawable = new XulNinePatchDrawable();
-		drawable._url = url;
-		drawable._key = imageKey;
-		drawable.attach(bmp);
-		return drawable;
+		return XulNinePatchDrawable.build(bmp, url, imageKey);
 	}
 
 	public static XulDrawable fromColor(int color, int width, int height, String url, String imageKey) {
