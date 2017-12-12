@@ -55,17 +55,20 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 	}
 
 	boolean canPrefetch(XulView view) {
-		if (_pendingItems.isEmpty()) {
+		ArrayList<XulTaskCollector.XulVolatileReference<XulView>> pendingItems = _pendingItems;
+		if (pendingItems.isEmpty()) {
 			return false;
 		}
-		for (int i = 0, pendingItemsSize = _pendingItems.size(); i < pendingItemsSize; i++) {
-			XulTaskCollector.XulVolatileReference<XulView> ref = _pendingItems.get(i);
-			XulView xulView = ref.get();
-			if (xulView == null) {
-				continue;
-			}
-			if (view.isChildOf(xulView)) {
-				return true;
+		synchronized (pendingItems) {
+			for (int i = 0, pendingItemsSize = pendingItems.size(); i < pendingItemsSize; i++) {
+				XulTaskCollector.XulVolatileReference<XulView> ref = pendingItems.get(i);
+				XulView xulView = ref.get();
+				if (xulView == null) {
+					continue;
+				}
+				if (view.isChildOf(xulView)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -864,11 +867,9 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		if (_autoImageGCLevel >= 0) {
 			imageGC(_autoImageGCLevel);
 		}
-		for (int i = 0, pendingItemsSize = _pendingItems.size(); i < pendingItemsSize; i++) {
-			XulTaskCollector.XulVolatileReference<XulView> ref = _pendingItems.get(i);
-			ref.invalidate();
+		synchronized (_pendingItems) {
+			cleanPendItems(_pendingItems);
 		}
-		_pendingItems.clear();
 	}
 
 	XulWorker.DrawableItem getIndicatorsImageItem() {
@@ -1353,29 +1354,40 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 
 		final XulView view = _contents.get(_curPage);
 
-		_pendingItems.clear();
-		_pendingItems.add(xulTaskCollector.addVolatilePendingItem(view));
+		ArrayList<XulTaskCollector.XulVolatileReference<XulView>> pendingItems = _pendingItems;
+		synchronized (pendingItems) {
+			cleanPendItems(pendingItems);
+			pendingItems.add(xulTaskCollector.addVolatilePendingItem(view));
 
-		int pageNum = _contents.size();
-		if (pageNum <= 1) {
-			return true;
-		}
-
-		for (int offset = 1; offset <= _preloadPages; ++offset) {
-			int prevPage = (_curPage - offset + pageNum) % pageNum;
-			int nextPage = (_curPage + offset) % pageNum;
-
-			final XulView nextView = _contents.get(nextPage);
-			_pendingItems.add(xulTaskCollector.addVolatilePendingItem(nextView));
-			if (nextPage != prevPage) {
-				final XulView prevView = _contents.get(prevPage);
-				_pendingItems.add(xulTaskCollector.addVolatilePendingItem(prevView));
+			int pageNum = _contents.size();
+			if (pageNum <= 1) {
+				return true;
 			}
-			if (Math.abs(nextPage - prevPage) <= 1) {
-				break;
+
+			for (int offset = 1; offset <= _preloadPages; ++offset) {
+				int prevPage = (_curPage - offset + pageNum) % pageNum;
+				int nextPage = (_curPage + offset) % pageNum;
+
+				final XulView nextView = _contents.get(nextPage);
+				pendingItems.add(xulTaskCollector.addVolatilePendingItem(nextView));
+				if (nextPage != prevPage) {
+					final XulView prevView = _contents.get(prevPage);
+					pendingItems.add(xulTaskCollector.addVolatilePendingItem(prevView));
+				}
+				if (Math.abs(nextPage - prevPage) <= 1) {
+					break;
+				}
 			}
 		}
 		return true;
+	}
+
+	private void cleanPendItems(ArrayList<XulTaskCollector.XulVolatileReference<XulView>> pendingItems) {
+		for (int i = 0, pendingItemsSize = pendingItems.size(); i < pendingItemsSize; i++) {
+			XulTaskCollector.XulVolatileReference<XulView> ref = pendingItems.get(i);
+			ref.invalidate();
+		}
+		pendingItems.clear();
 	}
 
 	public int getPageCount() {
@@ -1421,20 +1433,20 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		return false;
 	}
 
-    public XulView getCurrentView(){
-        if (_contents == null || _contents.isEmpty() || _curPage >= _contents.size()) {
-            return null;
-        }
-        XulView page = _contents.get(_curPage);
-        return page;
-    }
+	public XulView getCurrentView() {
+		if (_contents == null || _contents.isEmpty() || _curPage >= _contents.size()) {
+			return null;
+		}
+		XulView page = _contents.get(_curPage);
+		return page;
+	}
 
-    public ArrayList<XulView> getAllChildViews(){
-        if (_contents == null || _contents.isEmpty()) {
-            return null;
-        }
-        return _contents;
-    }
+	public ArrayList<XulView> getAllChildViews() {
+		if (_contents == null || _contents.isEmpty()) {
+			return null;
+		}
+		return _contents;
+	}
 
 	public void syncPages() {
 		collectContent();
