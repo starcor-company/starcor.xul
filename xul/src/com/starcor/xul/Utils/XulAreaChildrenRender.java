@@ -32,6 +32,9 @@ public class XulAreaChildrenRender extends XulArea.XulViewIterator {
 		}
 		if (render.getDrawingRect() == null) {
 			Log.w(TAG, "invalid drawing state!!");
+			render.setUpdateLayout();
+			render.setDrawingSkipped(true);
+			return;
 		}
 		RectF updateRc = render.getUpdateRect();
 		updateRc.left += xBase;
