@@ -1447,6 +1447,7 @@ public class XulWorker {
 	static void _drawableWorkerRun() {
 
 		Pattern ninePatchPattern = Pattern.compile("^.+\\.9(\\.png)?$", Pattern.CASE_INSENSITIVE);
+		Pattern gifFilePattern = Pattern.compile("^.+\\.gif(\\?.*)?$", Pattern.CASE_INSENSITIVE);
 		Pattern animationPkgPattern = Pattern.compile("^.+\\.ani(\\.zip)?$", Pattern.CASE_INSENSITIVE);
 
 		Paint paintSolid = new Paint();
@@ -1590,6 +1591,13 @@ public class XulWorker {
 				Matcher matcher = animationPkgPattern.matcher(drawableItem.__resolvedPath);
 				if (matcher != null && matcher.matches()) {
 					XulDrawable drawable = XulAnimationDrawable.buildAnimation(inputStream, drawableItem.url, imageKey);
+					_finishSchedule(drawableItem, drawable);
+					continue;
+				}
+			}
+			{
+				if (_isGIF(gifFilePattern, drawableItem.url, inputStream)) {
+					XulDrawable drawable = XulDrawable.fromGIFFile(inputStream, drawableItem.url, imageKey);
 					_finishSchedule(drawableItem, drawable);
 					continue;
 				}
