@@ -18,6 +18,13 @@ public class XulGIFAnimationDrawable extends XulAnimationDrawable {
 	XulGIFDecoder.GIFAnimationRender _gifRender;
 	private float _speed;
 
+	@Override
+	protected void finalize() throws Throwable {
+		if (this instanceof XulGIFAnimationDrawable) {
+			BitmapTools.recycleBitmap(_gifRender._frameImage);
+		}
+		super.finalize();
+	}
 
 	public static XulDrawable buildAnimation(InputStream stream, String url, String imageKey) {
 		if (stream == null) {
@@ -26,21 +33,21 @@ public class XulGIFAnimationDrawable extends XulAnimationDrawable {
 
 		UrlQuerySanitizer s = new UrlQuerySanitizer(url);
 		boolean noLoop = s.hasParameter("NoLoop");
-		boolean NoTransparent = s.hasParameter("NoTransparent");
+		boolean noTransparent = s.hasParameter("noTransparent");
 		float speed = XulUtils.tryParseFloat(s.getValue("Speed"), 1.0f);
 		if (speed <= 0) {
 			speed = 0.01f;
 		}
 
-		XulGIFDecoder.GIFFrame[] frames = XulGIFDecoder.decode(stream, noLoop, NoTransparent);
+		XulGIFDecoder.GIFFrame[] frames = XulGIFDecoder.decode(stream, noLoop, noTransparent);
 
 		if (frames.length == 1) {
-			XulGIFDecoder.GIFStaticRender staticRenderer = XulGIFDecoder.createStaticRenderer(frames);
+			XulGIFDecoder.GIFStaticRender staticRenderer = XulGIFDecoder.createStaticRenderer(frames, noTransparent);
 			return staticRenderer.extractDrawable(url, imageKey);
 		} else {
 
 			XulGIFAnimationDrawable drawable = new XulGIFAnimationDrawable();
-			drawable._gifRender = XulGIFDecoder.createAnimationRenderer(frames, noLoop, NoTransparent);
+			drawable._gifRender = XulGIFDecoder.createAnimationRenderer(frames, noLoop, noTransparent);
 			drawable._url = url;
 			drawable._key = imageKey;
 			drawable._speed = speed;

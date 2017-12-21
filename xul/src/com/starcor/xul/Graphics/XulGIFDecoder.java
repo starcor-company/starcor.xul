@@ -144,15 +144,15 @@ public class XulGIFDecoder {
 		}
 	}
 
-	public static GIFAnimationRender createAnimationRenderer(GIFFrame[] gifFrames, boolean noLoop, boolean noTransBkg) {
+	public static GIFAnimationRender createAnimationRenderer(GIFFrame[] gifFrames, boolean noLoop, boolean noTransparent) {
 		GIFAnimationRender render = new GIFAnimationRender();
 		GIFFrame gifFrame0 = gifFrames[0];
-		render._frameImage = Bitmap.createBitmap(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
+		render._frameImage = BitmapTools.createBitmapFromRecycledBitmaps(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
 		render._gifFrames = gifFrames;
 		render._isCurrentFrameDecoded = false;
 		render._currentFrame = 0;
 		render._noLoop = noLoop;
-		if (noTransBkg || gifFrame0._backgroundColor == 0xFFFFFF) {
+		if (noTransparent || gifFrame0._backgroundColor == 0xFFFFFF) {
 			render._colorKeyXferMode = null;
 		} else {
 			render._colorKeyXferMode = new AvoidXfermode(gifFrame0._backgroundColor, 0, AvoidXfermode.Mode.AVOID);
@@ -161,10 +161,14 @@ public class XulGIFDecoder {
 		return render;
 	}
 
-	public static GIFStaticRender createStaticRenderer(GIFFrame[] gifFrames) {
+	public static GIFStaticRender createStaticRenderer(GIFFrame[] gifFrames, boolean noTransparent) {
 		GIFStaticRender render = new GIFStaticRender();
 		GIFFrame gifFrame0 = gifFrames[0];
-		render._frameImage = Bitmap.createBitmap(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
+		if (noTransparent) {
+			render._frameImage = BitmapTools.createBitmapFromRecycledBitmaps(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
+		} else {
+			render._frameImage = BitmapTools.createBitmap(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
+		}
 		render.decodeFrame(gifFrame0);
 		return render;
 	}

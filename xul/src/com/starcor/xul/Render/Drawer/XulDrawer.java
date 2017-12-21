@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import com.starcor.xul.Graphics.XulAnimationDrawable;
 import com.starcor.xul.Graphics.XulDC;
 import com.starcor.xul.Graphics.XulDrawable;
+import com.starcor.xul.Graphics.XulGIFAnimationDrawable;
 import com.starcor.xul.XulRenderContext;
 import com.starcor.xul.XulView;
 
@@ -16,7 +17,8 @@ import com.starcor.xul.XulView;
 public abstract class XulDrawer {
 
 	static public XulDrawer create(XulDrawable drawable, XulView owner, XulRenderContext render) {
-		if (drawable instanceof XulAnimationDrawable) {
+		if (drawable instanceof XulAnimationDrawable
+			|| drawable instanceof XulGIFAnimationDrawable) {
 			return XulAnimationDrawer.create(drawable, owner, render);
 		}
 		return XulBitmapDrawer.create(drawable, owner, render);
