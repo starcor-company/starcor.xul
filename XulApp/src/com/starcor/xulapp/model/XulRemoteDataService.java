@@ -20,7 +20,7 @@ import java.util.WeakHashMap;
  * Created by hy on 2016/11/15.
  */
 public class XulRemoteDataService extends XulDataService {
-	static LinkedList<Runnable> _pendingServiceCall = new LinkedList<Runnable>();
+	static LinkedList<Runnable> _pendingServiceCall;
 
 	private static final String TAG = XulRemoteDataService.class.getSimpleName();
 
@@ -32,11 +32,16 @@ public class XulRemoteDataService extends XulDataService {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			XulLog.d(TAG, "Remote data service connected! " + _failedCount);
 			_globalRemoteDataService = IXulRemoteDataService.Stub.asInterface(service);
-			synchronized (_pendingServiceCall) {
-				while (!_pendingServiceCall.isEmpty()) {
-					Runnable pendingServiceCall = _pendingServiceCall.pop();
+			LinkedList<Runnable> pendingServiceCall = _pendingServiceCall;
+			if (pendingServiceCall == null) {
+				XulLog.e(TAG, "Pending Service Calls queue is null!");
+				return;
+			}
+			synchronized (pendingServiceCall) {
+				while (!pendingServiceCall.isEmpty()) {
+					Runnable pendingCall = pendingServiceCall.pop();
 					try {
-						XulApplication.getAppInstance().postToMainLooper(pendingServiceCall);
+						XulApplication.getAppInstance().postToMainLooper(pendingCall);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -51,6 +56,8 @@ public class XulRemoteDataService extends XulDataService {
 			_globalRemoteDataService = null;
 			if (_failedCount > 20) {
 				XulLog.e(TAG, "Failed to connect remote data service!!!");
+
+				_cleanUpPendingRequests();
 				return;
 			}
 			XulApplication.getAppInstance().postDelayToMainLooper(new Runnable() {
@@ -62,32 +69,64 @@ public class XulRemoteDataService extends XulDataService {
 			}, 50);
 		}
 	};
+
+	private static void _cleanUpPendingRequests() {
+		LinkedList<Runnable> pendingServiceCall = _pendingServiceCall;
+		_pendingServiceCall = null;
+		if (pendingServiceCall == null) {
+			XulLog.e(TAG, "Pending Service Calls queue is null!");
+			return;
+		}
+		synchronized (pendingServiceCall) {
+			while (!pendingServiceCall.isEmpty()) {
+				Runnable pendingCall = pendingServiceCall.pop();
+				try {
+					XulApplication.getAppInstance().postToMainLooper(pendingCall);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	static String _serviceAction;
 	static String _servicePackage;
 	static WeakHashMap<XulDataCallback, WeakReference<XulRemoteDataCallbackProxy>> _callbackProxyCache = new WeakHashMap<>();
 	IXulRemoteDataService _remoteDataService;
+	private static XulDataServiceFactory _dataServiceFactory;
 
+	private static XulDataServiceFactory getDataServiceFactory() {
+		if (_dataServiceFactory != null) {
+			return _dataServiceFactory;
+		}
+		_dataServiceFactory = new XulDataServiceFactory() {
+			@Override
+			XulDataService createXulDataService() {
+				XulLog.d(TAG, "Create remote data service... GLOBAL RDS:" + _globalRemoteDataService);
+				return new XulRemoteDataService();
+			}
+		};
+		return _dataServiceFactory;
+	}
 
 	@Deprecated
 	public static void initRemoteDataService(String serviceAction) {
 		initRemoteDataService(serviceAction, null);
 	}
 
-	public static void initRemoteDataService(String serviceAction, String servicePackage) {
+	public static boolean initRemoteDataService(String serviceAction, String servicePackage) {
 		_serviceAction = serviceAction;
 		_servicePackage = servicePackage;
 		Intent serviceIntent = new Intent(serviceAction);
 		if (!TextUtils.isEmpty(servicePackage)) {
 			serviceIntent.setPackage(servicePackage);
 		}
-		XulApplication.getAppContext().bindService(serviceIntent, _conn, Service.BIND_AUTO_CREATE);
-		XulDataService.setDataServiceFactory(new XulDataServiceFactory() {
-			@Override
-			XulDataService createXulDataService() {
-				XulLog.d(TAG, "Create remote data service... GLOBAL RDS:" + _globalRemoteDataService);
-				return new XulRemoteDataService();
-			}
-		});
+		XulDataService.setDataServiceFactory(getDataServiceFactory());
+		boolean success = XulApplication.getAppContext().bindService(serviceIntent, _conn, Service.BIND_AUTO_CREATE);
+		if (success) {
+			_pendingServiceCall = new LinkedList<Runnable>();
+		}
+		return success;
 	}
 
 	public XulRemoteDataService() {
@@ -154,11 +193,18 @@ public class XulRemoteDataService extends XulDataService {
 	protected XulDataOperation execClause(final XulDataServiceContext ctx, final XulClauseInfo clauseInfo, final XulDataCallback dataCallback) {
 		IXulRemoteDataService remoteDataService = getRemoteDataService();
 		if (remoteDataService == null) {
-			synchronized (_pendingServiceCall) {
+			LinkedList<Runnable> pendingServiceCall = _pendingServiceCall;
+			if (pendingServiceCall == null) {
+				Clause clause = clauseInfo.getClause();
+				clause.setError(CODE_REMOTE_SERVICE_UNAVAILABLE, "remote service unavailable!!");
+				ctx.deliverError(dataCallback, clause);
+				return null;
+			}
+			synchronized (pendingServiceCall) {
 				if (_globalRemoteDataService != null) {
 					remoteDataService = getRemoteDataService();
 				} else {
-					_pendingServiceCall.push(new Runnable() {
+					pendingServiceCall.push(new Runnable() {
 						@Override
 						public void run() {
 							execClause(ctx, clauseInfo, dataCallback);

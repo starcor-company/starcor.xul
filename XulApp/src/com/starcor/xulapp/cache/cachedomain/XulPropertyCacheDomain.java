@@ -35,7 +35,7 @@ public class XulPropertyCacheDomain extends XulWriteBackCacheDomain {
         if (_isUpdated.getAndSet(false)) {
             // 更新过数据，需要写入文件缓存
             for (XulCacheModel cache : _memoryCache.getAllCaches()) {
-                if (!_fileCache.contains(cache.getKey())) {
+                if (null ==_fileCache.getCache(cache.getKey(), false)) {
                     _fileCache.putCache(cache);
                 }
             }

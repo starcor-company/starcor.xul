@@ -79,6 +79,10 @@ public class XulLayout extends XulArea {
 		if (_focus == null) {
 			return false;
 		}
+		XulViewRender render = _focus.getRender();
+		if (render == null || render.getDrawingRect() == null) {
+			return false;
+		}
 		return _focus.onKeyEvent(event);
 	}
 

@@ -104,8 +104,7 @@ public abstract class XulCacheDomain {
 	 * @return 包含返回true，否则返回false
 	 */
 	public boolean contains(String key) {
-//		return getCache(XulUtils.calMD5(key), false) != null;  --------ERROR 重复计算Key,导致匹配错误
-		return getCache(key, false) != null;
+		return getCache(XulUtils.calMD5(key), false) != null;
 	}
 
 	protected abstract XulCacheModel getCache(String key, boolean update);

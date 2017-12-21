@@ -16,14 +16,14 @@ import com.starcor.xul.XulUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static android.graphics.Bitmap.Config.*;
+import static android.graphics.Bitmap.Config.ARGB_8888;
 
 /**
  * 关于bitmap的处理，至少需要提供从路径到文件等函数
@@ -45,7 +45,7 @@ public class BitmapTools {
 	}
 
 	private static final ArrayList<Pair<Long, Bitmap>> _recycledBitmapQueue = new ArrayList<Pair<Long, Bitmap>>();
-	private static final ArrayList<Pair<Long, WeakReference<Bitmap>>> _weakGCBitmapQueue = new ArrayList<Pair<Long, WeakReference<Bitmap>>>();
+	private static final ArrayList<Pair<Long, SoftReference<Bitmap>>> _weakGCBitmapQueue = new ArrayList<Pair<Long, SoftReference<Bitmap>>>();
 
 	public static class ReuseStatisticInfo {
 		public final int width;
@@ -203,7 +203,7 @@ public class BitmapTools {
 					}
 				}
 				Pair<Long, Bitmap> removedCache = _recycledBitmapQueue.remove(i);
-				_weakGCBitmapQueue.add(Pair.create(removedCache.first, new WeakReference<Bitmap>(removedCache.second)));
+				_weakGCBitmapQueue.add(Pair.create(removedCache.first, new SoftReference<Bitmap>(removedCache.second)));
 			}
 			_totalBitmapCacheSize = 0;
 		}
@@ -268,7 +268,7 @@ public class BitmapTools {
 					int pixelCount = calBitmapPixelsCount(bmp);
 					_totalBitmapCacheSize -= pixelCount;
 					_recycledBitmapQueue.remove(i);
-					_weakGCBitmapQueue.add(Pair.create(item.first, new WeakReference<Bitmap>(bmp)));
+					_weakGCBitmapQueue.add(Pair.create(item.first, new SoftReference<Bitmap>(bmp)));
 					recordDropCacheItem(bmp.getWidth(), bmp.getWidth(), bmp.getConfig());
 				}
 			}
@@ -372,7 +372,7 @@ public class BitmapTools {
 			int selectedCacheItem = -1;
 			Bitmap selectedBitmap = null;
 			for (int i = 0, gcBitmapQueueSize = _weakGCBitmapQueue.size(); i < gcBitmapQueueSize; i++) {
-				Pair<Long, WeakReference<Bitmap>> item = _weakGCBitmapQueue.get(i);
+				Pair<Long, SoftReference<Bitmap>> item = _weakGCBitmapQueue.get(i);
 				Bitmap bmp = item.second.get();
 
 				if (bmp == null || !bmp.isMutable() || bmp.isRecycled()) {
@@ -453,6 +453,9 @@ public class BitmapTools {
 	}
 
 	public static void recycleBitmap(Bitmap bmp) {
+		if (bmp == null) {
+			return;
+		}
 		if (!_reuseBitmap) {
 			try {
 				if (!bmp.isMutable()) {
@@ -461,9 +464,6 @@ public class BitmapTools {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return;
-		}
-		if (bmp == null) {
 			return;
 		}
 		if (!bmp.isMutable()) {
@@ -486,6 +486,7 @@ public class BitmapTools {
 			if (XulManager.DEBUG) {
 				Log.d(TAG_RECYCLER, "exceed the cache limits");
 			}
+			_weakGCBitmapQueue.add(Pair.create(XulUtils.timestamp() + BITMAP_LIFETIME, new SoftReference<Bitmap>(bmp)));
 			return;
 		}
 
@@ -526,6 +527,7 @@ public class BitmapTools {
 				if (XulManager.DEBUG) {
 					Log.d(TAG_RECYCLER, "too many recycled bitmap with same dimension");
 				}
+				_weakGCBitmapQueue.add(Pair.create(XulUtils.timestamp() + BITMAP_LIFETIME, new SoftReference<Bitmap>(bmp)));
 				return;
 			}
 
@@ -671,7 +673,7 @@ public class BitmapTools {
 	public static int countGCBitmap() {
 		synchronized (_weakGCBitmapQueue) {
 			for (int i = 0, gcBitmapQueueSize = _weakGCBitmapQueue.size(); i < gcBitmapQueueSize; i++) {
-				Pair<Long, WeakReference<Bitmap>> item = _weakGCBitmapQueue.get(i);
+				Pair<Long, SoftReference<Bitmap>> item = _weakGCBitmapQueue.get(i);
 				Bitmap bmp = item.second.get();
 
 				if (bmp == null || !bmp.isMutable() || bmp.isRecycled()) {
@@ -709,7 +711,7 @@ public class BitmapTools {
 
 	public static void eachGCBitmaps(ICacheEnumerator enumerator) {
 		synchronized (_recycledBitmapQueue) {
-			for (Pair<Long, WeakReference<Bitmap>> cache : _weakGCBitmapQueue) {
+			for (Pair<Long, SoftReference<Bitmap>> cache : _weakGCBitmapQueue) {
 				Bitmap bmp = cache.second.get();
 				if (bmp == null) {
 					continue;

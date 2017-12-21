@@ -597,6 +597,10 @@ public class XulArea extends XulView {
 			if (!area.isEnabled() || !area.isVisible()) {
 				return true;
 			}
+			XulViewRender render = area.getRender();
+			if (render == null || render.getDrawingRect() == null) {
+				return false;
+			}
 			RectF focusRc = area.getFocusRc();
 			if (_filter.test(area, focusRc)) {
 				_targets.add(area, focusRc);
@@ -608,6 +612,10 @@ public class XulArea extends XulView {
 		public boolean onXulItem(int pos, XulItem item) {
 			if (!item.isEnabled() || !item.isVisible() || !item.focusable()) {
 				return true;
+			}
+			XulViewRender render = item.getRender();
+			if (render == null || render.getDrawingRect() == null) {
+				return false;
 			}
 			RectF focusRc = item.getFocusRc();
 			if (_filter.test(item, focusRc)) {

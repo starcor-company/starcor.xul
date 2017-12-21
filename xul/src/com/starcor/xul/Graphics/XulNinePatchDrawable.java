@@ -17,60 +17,93 @@ public class XulNinePatchDrawable extends XulDrawable {
 	int _width;
 	int _height;
 
-	public void attach(Bitmap bmp) {
-		byte[] ninePatchChunk = bmp.getNinePatchChunk();
-		if (ninePatchChunk != null) {
-			_drawable = new NinePatchDrawable(bmp, ninePatchChunk, null, _key);
-			_width = _drawable.getMinimumWidth();
-			_height = _drawable.getMinimumHeight();
-		} else {
-			_width = bmp.getWidth();
-			_height = bmp.getHeight();
 
-			_patchRect = new Rect();
-			_patchRect.left = _width;
-			_patchRect.right = 0;
-			_patchRect.top = _height;
-			_patchRect.bottom = 0;
-			for (int i = 0; i < _width; i++) {
-				int pixel = bmp.getPixel(i, 0);
-				if (pixel == Color.BLACK) {
-					if (_patchRect.left > i) {
-						_patchRect.left = i;
-					}
-					if (_patchRect.right < i) {
-						_patchRect.right = i;
-					}
-				}
-			}
-
-			_patchRect.right = _width - _patchRect.right;
-
-			for (int i = 0; i < _height; i++) {
-				int pixel = bmp.getPixel(0, i);
-				if (pixel == Color.BLACK) {
-					if (_patchRect.top > i) {
-						_patchRect.top = i;
-					}
-					if (_patchRect.bottom < i) {
-						_patchRect.bottom = i;
-					}
-				}
-			}
-			_patchRect.bottom = _height - _patchRect.bottom;
-			Matrix matrix = new Matrix();
-			float xScalar = XulManager.getGlobalXScalar();
-			float yScalar = XulManager.getGlobalYScalar();
-			matrix.setScale(xScalar, yScalar);
-			_bmp = Bitmap.createBitmap(bmp, 1, 1, _width - 2, _height - 2, matrix, true);
-			XulUtils.offsetRect(_patchRect, -1, -1);
-			_patchRect.left = XulUtils.roundToInt(_patchRect.left*xScalar);
-			_patchRect.top = XulUtils.roundToInt(_patchRect.top*xScalar);
-			_patchRect.right = XulUtils.roundToInt(_patchRect.right*xScalar);
-			_patchRect.bottom = XulUtils.roundToInt(_patchRect.bottom*xScalar);
-			_width = _bmp.getWidth();
-			_height = _bmp.getHeight();
+	public static XulDrawable build(Bitmap bmp, String url, String imageKey) {
+		if (bmp == null) {
+			return null;
 		}
+
+		byte[] ninePatchChunk = bmp.getNinePatchChunk();
+		XulNinePatchDrawable drawable;
+		if (ninePatchChunk != null) {
+			drawable = new XulNinePatchDrawable();
+			if (!drawable.attach(bmp, ninePatchChunk)) {
+				return null;
+			}
+		} else if (bmp.getWidth() > 3 && bmp.getHeight() > 3) {
+			drawable = new XulNinePatchDrawable();
+			drawable.attach(bmp);
+		} else {
+			return null;
+		}
+		drawable._url = url;
+		drawable._key = imageKey;
+		return drawable;
+	}
+
+	private boolean attach(Bitmap bmp, byte[] ninePatchChunk) {
+		if (ninePatchChunk == null) {
+			return false;
+		}
+		_drawable = new NinePatchDrawable(bmp, ninePatchChunk, null, _key);
+		_width = _drawable.getMinimumWidth();
+		_height = _drawable.getMinimumHeight();
+		return true;
+	}
+
+
+	private boolean attach(Bitmap bmp) {
+		_width = bmp.getWidth();
+		_height = bmp.getHeight();
+
+		if (_width < 3 || _height < 3) {
+			return false;
+		}
+
+		_patchRect = new Rect();
+		_patchRect.left = _width;
+		_patchRect.right = 0;
+		_patchRect.top = _height;
+		_patchRect.bottom = 0;
+		for (int i = 0; i < _width; i++) {
+			int pixel = bmp.getPixel(i, 0);
+			if (pixel == Color.BLACK) {
+				if (_patchRect.left > i) {
+					_patchRect.left = i;
+				}
+				if (_patchRect.right < i) {
+					_patchRect.right = i;
+				}
+			}
+		}
+
+		_patchRect.right = _width - _patchRect.right;
+
+		for (int i = 0; i < _height; i++) {
+			int pixel = bmp.getPixel(0, i);
+			if (pixel == Color.BLACK) {
+				if (_patchRect.top > i) {
+					_patchRect.top = i;
+				}
+				if (_patchRect.bottom < i) {
+					_patchRect.bottom = i;
+				}
+			}
+		}
+		_patchRect.bottom = _height - _patchRect.bottom;
+		Matrix matrix = new Matrix();
+		float xScalar = XulManager.getGlobalXScalar();
+		float yScalar = XulManager.getGlobalYScalar();
+		matrix.setScale(xScalar, yScalar);
+		_bmp = Bitmap.createBitmap(bmp, 1, 1, _width - 2, _height - 2, matrix, true);
+		XulUtils.offsetRect(_patchRect, -1, -1);
+		_patchRect.left = XulUtils.roundToInt(_patchRect.left * xScalar);
+		_patchRect.top = XulUtils.roundToInt(_patchRect.top * xScalar);
+		_patchRect.right = XulUtils.roundToInt(_patchRect.right * xScalar);
+		_patchRect.bottom = XulUtils.roundToInt(_patchRect.bottom * xScalar);
+		_width = _bmp.getWidth();
+		_height = _bmp.getHeight();
+		return true;
 	}
 
 	@Override

@@ -3,6 +3,8 @@ package com.starcor.xul.Graphics;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 
+import java.io.InputStream;
+
 /**
  * Created by hy on 2014/5/27.
  */
@@ -23,16 +25,12 @@ public abstract class XulDrawable {
 		_isRecycled = true;
 	}
 
-	public static XulDrawable fromNinePitchBitmap(Bitmap bmp, String url, String imageKey) {
+	public static XulDrawable fromNinePatchBitmap(Bitmap bmp, String url, String imageKey) {
 		if (bmp == null) {
 			return null;
 		}
 
-		XulNinePatchDrawable drawable = new XulNinePatchDrawable();
-		drawable._url = url;
-		drawable._key = imageKey;
-		drawable.attach(bmp);
-		return drawable;
+		return XulNinePatchDrawable.build(bmp, url, imageKey);
 	}
 
 	public static XulDrawable fromColor(int color, int width, int height, String url, String imageKey) {
@@ -75,6 +73,10 @@ public abstract class XulDrawable {
 		xulDrawable._url = url;
 		xulDrawable._key = imageKey;
 		return xulDrawable;
+	}
+
+	public static XulDrawable fromGIFFile(InputStream is, String url, String imageKey) {
+		return XulGIFAnimationDrawable.buildAnimation(is, url, imageKey);
 	}
 
 	public abstract boolean draw(Canvas canvas, Rect rc, Rect dst, Paint paint);

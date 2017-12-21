@@ -642,7 +642,7 @@ public abstract class XulViewRender {
 	private static final Rect _DUMMY_PADDING_ = new Rect(0, 0, 0, 0);
 
 	public boolean hitTest(int event, float x, float y) {
-		if (_isInvisible()) {
+		if (_isInvisible() || _rect == null) {
 			return false;
 		}
 		if (event != XulManager.HIT_EVENT_DOWN

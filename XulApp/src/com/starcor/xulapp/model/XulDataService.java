@@ -28,6 +28,7 @@ public class XulDataService {
 	public static final int CODE_NO_PROVIDER = -2;
 	public static final int CODE_UNSUPPORTED = -3;
 	public static final int CODE_DATA_EXCEPTION = -4;
+	public static final int CODE_REMOTE_SERVICE_UNAVAILABLE = -5;
 	public static final int XVERB_QUERY = 0x0001;
 	public static final int XVERB_DELETE = 0x0002;
 	public static final int XVERB_UPDATE = 0x0004;
@@ -61,7 +62,7 @@ public class XulDataService {
 
 	public static XulDataService obtainDataService() {
 		if (_dataServiceFactory == null) {
-			return new XulDataService();
+			return obtainLocalDataService();
 		}
 		return _dataServiceFactory.createXulDataService();
 	}
@@ -107,7 +108,6 @@ public class XulDataService {
 				.send();
 		}
 	}
-
 
 	private static void debugDoInvoke(String dataSource, String func, final XulHttpServer.XulHttpServerResponse response, LinkedHashMap<String, String> queries) {
 		final XulDataService xulDataService = obtainDataService();
@@ -308,7 +308,7 @@ public class XulDataService {
 						return XulDebugServer.PENDING_RESPONSE;
 					}
 
-					if ("_update".equals(cmd)) {
+					if ("update".equals(cmd)) {
 						debugDoUpdate(dataTarget, serverHandler.getResponse(request), request.queries);
 						return XulDebugServer.PENDING_RESPONSE;
 					}

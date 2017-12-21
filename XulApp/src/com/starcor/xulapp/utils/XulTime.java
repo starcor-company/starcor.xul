@@ -11,7 +11,7 @@ import java.util.TimeZone;
 public class XulTime {
 	private static final String TAG = XulTime.class.getSimpleName();
 	private static long _xulTimeDelta = System.currentTimeMillis() - XulUtils.timestamp();
-	private static long _meanDifference = Integer.MAX_VALUE;
+	private static long _meanDifference = 0;
 	private static int _tzOffset = 0;
 	private static TimeZone _tzObject = null;
 
@@ -33,7 +33,8 @@ public class XulTime {
 		double ratio = (double) delay / _meanDifference;
 		_xulTimeDelta = (long) (serverTimeDelta + (_xulTimeDelta - serverTimeDelta) * ratio);
 		_meanDifference = (long) (delay + (_meanDifference - delay) * ratio);
-		XulLog.d(TAG, "doSyncTime delta:", _xulTimeDelta, " mean:", _meanDifference);
+		XulLog.d(TAG, "doSyncTime delta:", _xulTimeDelta, " mean:", _meanDifference, " delay:", delay, " ratio:", ratio);
+		XulLog.d(TAG, "doSyncTime " + XulSystemUtil.formatDuring(currentTimeMillis() + getTimeZoneOffsetMS()));
 		return _meanDifference < 300;
 	}
 
