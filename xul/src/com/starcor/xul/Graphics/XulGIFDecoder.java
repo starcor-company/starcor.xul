@@ -2,6 +2,7 @@ package com.starcor.xul.Graphics;
 
 import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Xfermode;
@@ -107,6 +108,17 @@ public class XulGIFDecoder {
 			dc.drawBitmap(_xulDrawable, x1, y1, w1, h1, x2, y2, w2, h2, p);
 			p.setXfermode(xfermode);
 			dc.restore();
+		}
+
+		public void draw(Canvas canvas, int x1, int y1, int w1, int h1, float x2, float y2, float w2, float h2, Paint p) {
+			if (!_isCurrentFrameDecoded) {
+				decodeFrame();
+			}
+			canvas.save();
+			Xfermode xfermode = p.setXfermode(_colorKeyXferMode);
+			XulDC.drawBitmap(canvas, _frameImage, x1, y1, w1, h1, x2, y2, w2, h2, p);
+			p.setXfermode(xfermode);
+			canvas.restore();
 		}
 	}
 

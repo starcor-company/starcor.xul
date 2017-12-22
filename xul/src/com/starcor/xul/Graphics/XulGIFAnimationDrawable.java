@@ -57,12 +57,14 @@ public class XulGIFAnimationDrawable extends XulAnimationDrawable {
 
 	@Override
 	public boolean draw(Canvas canvas, Rect rc, Rect dst, Paint paint) {
-		return false;
+		_gifRender.draw(canvas, 0, 0, _gifRender.getWidth(), _gifRender.getHeight(), dst.left, dst.top, XulUtils.calRectWidth(dst), XulUtils.calRectHeight(dst), paint);
+		return true;
 	}
 
 	@Override
 	public boolean draw(Canvas canvas, Rect rc, RectF dst, Paint paint) {
-		return false;
+		_gifRender.draw(canvas, 0, 0, _gifRender.getWidth(), _gifRender.getHeight(), dst.left, dst.top, XulUtils.calRectWidth(dst), XulUtils.calRectHeight(dst), paint);
+		return true;
 	}
 
 	@Override

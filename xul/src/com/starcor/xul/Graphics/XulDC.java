@@ -1,6 +1,7 @@
 package com.starcor.xul.Graphics;
 
 import android.graphics.*;
+
 import com.starcor.xul.Utils.XulPriorityQueue;
 import com.starcor.xul.XulArea;
 import com.starcor.xul.XulRenderContext;
@@ -261,6 +262,16 @@ public class XulDC {
 	public void drawBitmap(XulDrawable bmp, Rect src, RectF dst, Paint paint) {
 		bmp.draw(_canvas, src, dst, paint);
 	}
+
+	public static void drawBitmap(Canvas canvas, Bitmap bmp, int x1, int y1, int width1, int height1, float x2, float y2, float width2, float height2, Paint paint) {
+		Rect src = _tmpRc0;
+		src.set(x1, y1, x1 + width1, y1 + height1);
+
+		RectF dst = _tmpFRc0;
+		dst.set(x2, y2, x2 + width2, y2 + height2);
+		canvas.drawBitmap(bmp, src, dst, paint);
+	}
+
 
 	public void drawText(CharSequence text, int start, int end, float xPos, float yPos, Paint paint) {
 		_canvas.drawText(text, start, end, xPos, yPos, paint);
