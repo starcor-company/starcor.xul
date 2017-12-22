@@ -149,6 +149,11 @@ public class XulResPrefetchManager implements XulWorker.IXulWorkItemSource {
 		return null;
 	}
 
+	@Override
+	public InputStream getSdcardData(XulWorker.DownloadItem item, String path) {
+		return null;
+	}
+
 	private static class _XulDownloadItemList extends XulSimpleArray<XulWorker.DownloadItem> {
 
 		public _XulDownloadItemList(int size) {

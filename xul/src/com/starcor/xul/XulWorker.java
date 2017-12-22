@@ -200,6 +200,8 @@ public class XulWorker {
 
 		InputStream getAppData(String path);
 
+		InputStream getSdcardData(String path);
+
 		String resolvePath(DownloadItem downloadItem, String path);
 
 		InputStream loadCachedData(String path);
@@ -286,6 +288,28 @@ public class XulWorker {
 		if (stream == null && _handler != null) {
 			try {
 				stream = _handler.getAppData(path);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (waitPendingStream(stream)) {
+			return stream;
+		}
+		return null;
+	}
+
+	private static InputStream _internalGetSdcardData(DownloadItem downloadItem, String path) {
+		InputStream stream = null;
+		try {
+			stream = downloadItem.__ownerDownloadHandler.getSdcardData(downloadItem, path);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (stream == null && _handler != null) {
+			try {
+				stream = _handler.getSdcardData(path);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -393,6 +417,8 @@ public class XulWorker {
 		InputStream getAssets(DownloadItem item, String path);
 
 		InputStream getAppData(DownloadItem item, String path);
+
+		InputStream getSdcardData(DownloadItem item, String path);
 	}
 
 	private static final ArrayList<WeakReference<IXulWorkItemSource>> _downloader = new ArrayList<WeakReference<IXulWorkItemSource>>();
@@ -457,6 +483,14 @@ public class XulWorker {
 			public InputStream getAppData(DownloadItem item, String path) {
 				if (_nextSource != null) {
 					return _nextSource.getAppData(item, path);
+				}
+				return null;
+			}
+
+			@Override
+			public InputStream getSdcardData(DownloadItem item, String path) {
+				if (_nextSource != null) {
+					return _nextSource.getSdcardData(item, path);
 				}
 				return null;
 			}
@@ -841,6 +875,13 @@ public class XulWorker {
 			DrawableItem imgItem = (DrawableItem) item;
 			return imgItem.__ownerDrawableHandler.getAppData(item, path);
 		}
+
+		@Override
+		public InputStream getSdcardData(DownloadItem item, String path) {
+			assert item instanceof DrawableItem;
+			DrawableItem imgItem = (DrawableItem) item;
+			return imgItem.__ownerDrawableHandler.getSdcardData(item, path);
+		}
 	};
 
 	static void _threadWait(int ms) {
@@ -1005,6 +1046,7 @@ public class XulWorker {
 	static class _downloadContext {
 		Pattern assetsPat = Pattern.compile("^file:///\\.assets/(.+)$");
 		Pattern appDataPat = Pattern.compile("^file:///\\.app/(.+)$");
+		Pattern sdcardDataPat = Pattern.compile("^file:///\\.sdcard/(.+)$");
 		byte downloadBuffer[] = new byte[1024];
 	}
 
@@ -1070,6 +1112,7 @@ public class XulWorker {
 	private static void _doDownload(_downloadContext ctx, DownloadItem downloadItem, XulDownloadParams params) {
 		Pattern assetsPat = ctx.assetsPat;
 		Pattern appDataPat = ctx.appDataPat;
+		Pattern sdcardDataPat = ctx.sdcardDataPat;
 		byte downloadBuffer[] = ctx.downloadBuffer;
 
 		String downloadUrl = downloadItem.url;
@@ -1189,6 +1232,17 @@ public class XulWorker {
 			return;
 		}
 
+		matcher = sdcardDataPat.matcher(downloadUrl);
+		if (matcher.matches()) {
+			String filePath = matcher.group(1);
+			if (XulManager.DEBUG_XUL_WORKER) {
+				Log.d(TAG, "load sdcard data:" + filePath);
+			}
+			InputStream inputStream = _internalGetSdcardData(downloadItem, filePath);
+			_notifyDownloadResult(downloadItem, inputStream);
+			return;
+		}
+
 		String itemKey = cacheKey;
 		String localCacheKey = XulUtils.calMD5(itemKey);
 
@@ -1214,6 +1268,7 @@ public class XulWorker {
 			conn.setConnectTimeout(connectTimeout);
 			conn.setRequestProperty("Accept-Encoding", "gzip");
 			conn.setInstanceFollowRedirects(true);
+
 			if (extHeaders != null) {
 				for (int i = 0, extHeadersLength = extHeaders.length; i + 1 < extHeadersLength; i += 2) {
 					String key = extHeaders[i + 0];
@@ -1274,6 +1329,7 @@ public class XulWorker {
 				}
 				e.printStackTrace();
 			}
+
 
 			if (params != null) {
 				params.responseCode = conn.getResponseCode();

@@ -267,6 +267,8 @@ public class XulRenderContext {
 
 		InputStream getAppData(XulWorker.DownloadItem item, String path);
 
+		InputStream getSdcardData(XulWorker.DownloadItem item, String path);
+
 		void onRenderIsReady();
 
 		void onRenderEvent(int eventId, int param1, int param2, Object msg);
@@ -663,6 +665,14 @@ public class XulRenderContext {
 		public InputStream getAppData(XulWorker.DownloadItem item, String path) {
 			if (_handler != null) {
 				return _handler.getAppData(item, path);
+			}
+			return null;
+		}
+
+		@Override
+		public InputStream getSdcardData(XulWorker.DownloadItem item, String path) {
+			if (_handler != null) {
+				return _handler.getSdcardData(item, path);
 			}
 			return null;
 		}

@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.Display;
 import android.view.WindowManager;
@@ -20,6 +21,8 @@ import com.starcor.xulapp.service.XulServiceManager;
 import com.starcor.xulapp.utils.XulResPrefetchManager;
 import com.starcor.xulapp.utils.XulSystemUtil;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -158,6 +161,11 @@ public class XulApplication extends Application {
 			}
 
 			@Override
+			public InputStream getSdcardData(String path) {
+				return XulApplication.this.xulGetSdcardData(path);
+			}
+
+			@Override
 			public String resolvePath(XulWorker.DownloadItem downloadItem, String path) {
 				return XulApplication.this.xulResolvePath(downloadItem, path);
 			}
@@ -233,6 +241,15 @@ public class XulApplication extends Application {
 	public InputStream xulGetAppData(String path) {
 		return null;
 	}
+
+    public InputStream xulGetSdcardData(String path) {
+        try {
+            return new FileInputStream(Environment.getExternalStorageDirectory().getPath() + File.separator + path);
+        } catch (IOException e) {
+        }
+
+        return null;
+    }
 
 	public InputStream xulGetAssets(String path) {
 		try {
