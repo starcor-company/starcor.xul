@@ -240,6 +240,10 @@ public class XulUiBehavior extends XulScriptableObjectWrapper<XulUiBehavior> imp
 		return null;
 	}
 
+	public InputStream xulGetSdcardData(XulWorker.DownloadItem item, String path) {
+		return null;
+	}
+
 	public void xulOnRenderIsReady() {
 	}
 
