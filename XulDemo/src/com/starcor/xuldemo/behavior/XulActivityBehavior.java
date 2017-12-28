@@ -16,6 +16,10 @@ import java.util.HashMap;
  * Created by hy on 2015/8/7.
  */
 public abstract class XulActivityBehavior implements XulRenderContext.IXulRenderHandler {
+    @Override
+    public InputStream getSdcardData(XulWorker.DownloadItem item, String path) {
+        return null;
+    }
 
     protected Activity mXulActivity;
     protected View mLayout;

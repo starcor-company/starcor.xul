@@ -293,7 +293,7 @@
                         <attr name="multi-line">true</attr>
                     </item>
                     <item id="label_multi_line" desc="多行文本" type="label" class="fix_height_item">
-                        <attr name="text">多行文本多行文本多行文本多行文本</attr>
+                        <attr name="text">The need to pack more compute capability into a smaller package drives the evolution of server technology. And this innovation is driven by new and emerging workloads with new requirements around compute, I/O, and power. Recognizing these new dynamics, we continue to innovate in processor technology. AMD is the only company to offer an ambidextrous portfolio, and our x86, APU, and ARM technologies are targeted to meet the diverse needs of the modern enterprise – today and tomorrow.</attr>
 
                         <!-- true/false，是否为多行文本，默认为false -->
                         <attr name="multi-line">true</attr>
@@ -302,7 +302,7 @@
                     </item>
                     <item id="label_multi_line_ellipsis" desc="多行文本截断" type="label"
                           class="fix_height_item">
-                        <attr name="text">多行文本截断多行文本截断多行文本截断多行文本截断多行文本截断</attr>
+                        <attr name="text">The need to pack more compute capability into a smaller package drives the evolution of server technology. And this innovation is driven by new and emerging workloads with new requirements around compute, I/O, and power. Recognizing these new dynamics, we continue to innovate in processor technology. AMD is the only company to offer an ambidextrous portfolio, and our x86, APU, and ARM technologies are targeted to meet the diverse needs of the modern enterprise – today and tomorrow.</attr>
 
                         <!-- true/false，是否为多行文本，默认为false -->
                         <attr name="multi-line">true</attr>
@@ -359,10 +359,7 @@
                         <attr name="scrollbar">simple,1.0,-1,4.0,2.0,80FFFFFF,2.0,FF000000</attr>
                     </item>
                     <item id="label_scrollbar" desc="滚动条文本" type="label" class="fix_height_item">
-                        <attr name="text">滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本 滚动条文本
-                            滚动条文本
-                            滚动条文本 滚动条文本 滚动条文本
-                        </attr>
+                        <attr name="text">AAAAAAAAAAAAAAAAAAAAAA The need to pack more compute capability into a smaller package drives the evolution of server technology. And this innovation is driven by new and emerging workloads with new requirements around compute, I/O, and power. Recognizing these new dynamics, we continue to innovate in processor technology. AMD is the only company to offer an ambidextrous portfolio, and our x86, APU, and ARM technologies are targeted to meet the diverse needs of the modern enterprise – today and tomorrow.</attr>
 
                         <focus mode="focusable" priority="1"/>
                         <attr name="multi-line">true</attr>
@@ -2488,6 +2485,7 @@
                     <!-- 自定义render属性 -->
                     <attr name="indicator-animation-duration">500</attr>
                     <attr name="indicator-animation-count">2</attr>
+                    <attr name="testImage">file:///.assets/gif/5.gif</attr>
                 </item>
             </area>
         </layout>

@@ -265,6 +265,11 @@ public abstract class XulDemoBaseActivity extends Activity
 	}
 
 	@Override
+	public InputStream getSdcardData(XulWorker.DownloadItem item, String path) {
+		return null;
+	}
+
+	@Override
 	public void onRenderIsReady() {
 		if (mXulBehavior != null) {
 			mXulBehavior.onRenderIsReady();
