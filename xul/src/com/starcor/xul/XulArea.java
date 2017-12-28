@@ -986,7 +986,7 @@ public class XulArea extends XulView {
 						viewFocusPriority = 0;
 					}
 					int focusPriority = basePriority + viewFocusPriority;
-					if (focusPriority > _maxPriority) {
+					if (_result == null || focusPriority > _maxPriority) {
 						_maxPriority = focusPriority;
 						_result = view;
 					}
