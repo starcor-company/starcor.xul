@@ -1276,6 +1276,16 @@ public class XulWorker {
 					conn.setRequestProperty(key, val);
 				}
 			}
+
+			//信任https站点
+			if (conn instanceof HttpsURLConnection) {
+				HttpsURLConnection conns = (HttpsURLConnection) conn;
+				conns.setHostnameVerifier(_hostVerifier);
+				if (_sslCtx != null) {
+					conns.setSSLSocketFactory(_sslCtx.getSocketFactory());
+				}
+			}
+
 			if (post) {
 				conn.setRequestMethod("POST");
 				if (postData != null) {
@@ -1305,15 +1315,6 @@ public class XulWorker {
 					os.write(boundaryHead);
 					os.write('-');
 					os.write('-');
-				}
-			}
-
-			//信任https站点
-			if (conn instanceof HttpsURLConnection) {
-				HttpsURLConnection conns = (HttpsURLConnection) conn;
-				conns.setHostnameVerifier(_hostVerifier);
-				if (_sslCtx != null) {
-					conns.setSSLSocketFactory(_sslCtx.getSocketFactory());
 				}
 			}
 
