@@ -467,6 +467,14 @@ public class XulRenderContext {
 		_changedViews.add(view);
 	}
 
+	public void unmarkDirtyView(XulView view) {
+		_dirtyViews.remove(view);
+	}
+
+	public void unmarkDataChanged(XulViewRender view) {
+		_changedViews.remove(view);
+	}
+
 	public void addAnimation(IXulAnimation ani) {
 		if (_animation.contains(ani)) {
 			return;

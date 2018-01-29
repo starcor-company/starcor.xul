@@ -163,6 +163,7 @@ public class XulCustomViewRender extends XulViewRender {
 			e.printStackTrace();
 		}
 		_extView = null;
+		super.destroy();
 	}
 
 	protected class LayoutElement extends XulViewRender.LayoutElement {

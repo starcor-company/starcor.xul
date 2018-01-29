@@ -1342,6 +1342,7 @@ public abstract class XulView extends XulElement implements IXulDrawable {
 		if (_parent == null) {
 			return;
 		}
+		this.internalDestroy();
 		getOwnerPage().removeSelectorTarget(this, getSelectKeys());
 		_parent.removeChild(this);
 		_parent = null;

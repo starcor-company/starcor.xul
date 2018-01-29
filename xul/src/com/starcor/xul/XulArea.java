@@ -148,18 +148,7 @@ public class XulArea extends XulView {
 		if (_parent == null) {
 			return;
 		}
-		eachView(new XulViewIterator() {
-			@Override
-			public boolean onXulView(int pos, XulView view) {
-				ownerPage.removeSelectorTarget(view, view.getSelectKeys());
-				if (view instanceof XulArea) {
-					((XulArea) view).eachView(this);
-				}
-				view.internalDestroy();
-				view._parent = null;
-				return true;
-			}
-		});
+		removeAllChildrenUpdateSelector();
 		ownerPage.removeSelectorTarget(this, getSelectKeys());
 		this.internalDestroy();
 		_parent.removeChild(this);

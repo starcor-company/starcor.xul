@@ -1517,6 +1517,8 @@ public abstract class XulViewRender {
 		if (_transformAnimation != null) {
 			removeAnimation(_transformAnimation);
 		}
+		_ctx.unmarkDataChanged(this);
+		_ctx.unmarkDirtyView(_view);
 	}
 
 	public void switchState(int state) {
