@@ -1832,6 +1832,10 @@ public class XulPage extends XulView {
 		_selectors.add(select);
 	}
 
+	public ArrayList<XulSelect> getSelectors() {
+		return _selectors;
+	}
+
 	public void addLayout(XulLayout xulLayout) {
 		_layouts.add(xulLayout);
 		if (_currentLayout == null) {

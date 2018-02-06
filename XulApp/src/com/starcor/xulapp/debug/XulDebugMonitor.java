@@ -1,49 +1,28 @@
 package com.starcor.xulapp.debug;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-
-import com.starcor.xul.*;
-import com.starcor.xul.Prop.XulAction;
-import com.starcor.xul.Prop.XulAttr;
-import com.starcor.xul.Prop.XulData;
-import com.starcor.xul.Prop.XulFocus;
-import com.starcor.xul.Prop.XulProp;
-import com.starcor.xul.Prop.XulStyle;
+import com.starcor.xul.Prop.*;
 import com.starcor.xul.PropMap.IXulPropIterator;
 import com.starcor.xul.Render.XulLayerRender;
 import com.starcor.xul.Render.XulMassiveRender;
 import com.starcor.xul.Render.XulSliderAreaRender;
 import com.starcor.xul.Render.XulViewRender;
+import com.starcor.xul.*;
 import com.starcor.xulapp.http.XulHttpServer;
 import com.starcor.xulapp.utils.XulLog;
-
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.TreeMap;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -191,14 +170,41 @@ public class XulDebugMonitor {
 		}
 	}
 
-	public synchronized boolean dumpPageList(final XulHttpServer.XulHttpServerRequest request, final XulHttpServer.XulHttpServerResponse response) {
-		XmlSerializer xmlWriter;
+	private XmlSerializer obtainXmlSerializer(OutputStream stream) {
+		XmlSerializer xmlWriter = null;
 		try {
 			XmlPullParserFactory xmlPullParserFactory = XmlPullParserFactory.newInstance();
 			xmlWriter = xmlPullParserFactory.newSerializer();
-			xmlWriter.setOutput(response.getBodyStream(), "utf-8");
+			xmlWriter.setOutput(stream, "utf-8");
 		} catch (Exception e) {
 			XulLog.e(TAG, e);
+		}
+		return xmlWriter;
+	}
+
+	public synchronized boolean dumpGlobalSelector(final XulHttpServer.XulHttpServerRequest request, final XulHttpServer.XulHttpServerResponse response) {
+		XmlSerializer xmlWriter = obtainXmlSerializer(response.getBodyStream());
+		if (xmlWriter == null) {
+			return false;
+		}
+
+		try {
+			xmlWriter.startDocument("utf-8", Boolean.TRUE);
+			XmlContentDumper contentDumper = initContentDumper(request.queries, xmlWriter);
+			contentDumper.setNoSelectors(false);
+			contentDumper.dumpSelectors(XulManager.getSelectors());
+			xmlWriter.endDocument();
+			xmlWriter.flush();
+			return true;
+		} catch (IOException e) {
+			XulLog.e(TAG, e);
+		}
+		return false;
+	}
+
+	public synchronized boolean dumpPageList(final XulHttpServer.XulHttpServerRequest request, final XulHttpServer.XulHttpServerResponse response) {
+		XmlSerializer xmlWriter = obtainXmlSerializer(response.getBodyStream());
+		if (xmlWriter == null) {
 			return false;
 		}
 
@@ -384,7 +390,22 @@ public class XulDebugMonitor {
 				writer.attribute(null, "status", pageInfo.status);
 				writer.attribute(null, "refreshTime", String.valueOf(pageInfo.getRefreshTime()));
 
-				dumpLayout(xulPage.getLayout(), writer, request.queries);
+				LinkedHashMap<String, String> queries = request.queries;
+
+				XulLayout layout = xulPage.getLayout();
+				ArrayList<XulSelect> selectors = xulPage.getSelectors();
+
+				if (layout != null || (selectors != null && !selectors.isEmpty())) {
+					XmlContentDumper contentDumper = initContentDumper(queries, writer);
+
+					if (layout != null) {
+						contentDumper.dumpXulLayout(layout);
+					}
+
+					if (selectors != null) {
+						contentDumper.dumpSelectors(selectors);
+					}
+				}
 
 				writer.endTag(null, "page");
 				writer.endDocument();
@@ -507,16 +528,13 @@ public class XulDebugMonitor {
 		});
 	}
 
-	private void dumpLayout(XulLayout layout, XmlSerializer writer, LinkedHashMap<String, String> queries) throws Exception {
-		if (layout == null) {
-			return;
-		}
+	private XmlContentDumper initContentDumper(Map<String, String> queries, XmlSerializer writer) {
 		XmlContentDumper contentDumper = new XmlContentDumper(writer);
-
 		if (queries != null) {
 			String noProp = queries.get("skip-prop");
 			String withPosition = queries.get("with-position");
 			String withBindingData = queries.get("with-binding-data");
+			String withSelector = queries.get("with-selector");
 
 			if ("true".equals(noProp)) {
 				contentDumper.setNoProp(true);
@@ -533,12 +551,17 @@ public class XulDebugMonitor {
 			} else {
 				contentDumper.setNoBindingData(true);
 			}
+
+			if ("true".equalsIgnoreCase(withSelector)) {
+				contentDumper.setNoSelectors(false);
+			} else {
+				contentDumper.setNoSelectors(true);
+			}
 		} else {
 			contentDumper.setNoPosition(true);
 			contentDumper.setNoBindingData(true);
 		}
-
-		contentDumper.dumpXulLayout(layout);
+		return contentDumper;
 	}
 
 	private void dumpItem(XulView view, XmlSerializer writer, LinkedHashMap<String, String> queries) throws Exception {
@@ -977,6 +1000,7 @@ public class XulDebugMonitor {
 		private boolean _noChildren = false;
 		private boolean _noBindingData = true;
 		private boolean _noPosition = true;
+		private boolean _noSelectors = true;
 
 		XmlContentDumper(XmlSerializer writer) {
 			this.writer = writer;
@@ -998,6 +1022,74 @@ public class XulDebugMonitor {
 			} else if (view instanceof XulItem) {
 				onXulItem(0, (XulItem) view);
 			}
+		}
+
+		public void dumpSelectors(ArrayList<XulSelect> selectors) throws IOException {
+			if (_noSelectors) {
+				return;
+			}
+
+			writer.startTag(null, "selector");
+			try {
+				for (int i = 0, selectorsSize = selectors.size(); i < selectorsSize; i++) {
+					XulSelect selector = selectors.get(i);
+					writer.startTag(null, "select");
+
+					String selectID = selector.getSelectID();
+					String selectClass = selector.getSelectClass();
+					String selectType = selector.getSelectType();
+					String selectState = selector.getSelectState();
+
+					if (!TextUtils.isEmpty(selectID)) {
+						writer.attribute(null, "id", selectID);
+					}
+
+					if (!TextUtils.isEmpty(selectClass)) {
+						writer.attribute(null, "class", selectClass);
+					}
+
+					if (!TextUtils.isEmpty(selectType)) {
+						writer.attribute(null, "type", selectType);
+					}
+
+					if (!TextUtils.isEmpty(selectState) && !"normal".equalsIgnoreCase(selectState)) {
+						writer.attribute(null, "state", selectState);
+					}
+
+
+					if (!_noProp) {
+						ArrayList<XulProp> properties = selector.getProp();
+						for (int idx = 0, propSize = properties.size(); idx < propSize; idx++) {
+							XulProp prop = properties.get(idx);
+							try {
+								if (prop instanceof XulAttr) {
+									_writeItemHead("attr", prop, -1);
+									_writeItemTail("attr");
+								} else if (prop instanceof XulStyle) {
+									_writeItemHead("style", prop, -1);
+									_writeItemTail("style");
+								} else if (prop instanceof XulData) {
+									_writeItemHead("data", prop, -1);
+									_writeItemTail("data");
+								} else if (prop instanceof XulAction) {
+									_writeItemHead("action", (XulAction) prop, -1);
+									_writeItemTail("action");
+								} else if (prop instanceof XulFocus) {
+									_writeItemHead("focus", (XulFocus) prop, -1);
+									_writeItemTail("focus");
+								}
+							} catch (IOException e) {
+								XulLog.e(TAG, e);
+							}
+						}
+					}
+
+					writer.endTag(null, "select");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			writer.endTag(null, "selector");
 		}
 
 		@Override
@@ -1250,6 +1342,10 @@ public class XulDebugMonitor {
 
 		public void setNoChildren(boolean noChildren) {
 			_noChildren = noChildren;
+		}
+
+		public void setNoSelectors(boolean noSelectors) {
+			_noSelectors = noSelectors;
 		}
 	}
 

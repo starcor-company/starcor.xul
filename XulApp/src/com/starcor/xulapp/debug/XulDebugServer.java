@@ -104,6 +104,8 @@ public class XulDebugServer extends XulHttpServer {
 				XulHttpServerResponse response = null;
 				if ("/api/list-pages".equals(path)) {
 					response = listPages(request);
+				} else if (path.startsWith("/api/get-selector")) {
+					response = dumpSelector(request);
 				} else if (path.startsWith("/api/take-snapshot/")) {
 					response = getPageSnapShot(request, XulUtils.tryParseInt(path.substring(19)));
 				} else if (path.startsWith("/api/get-layout/")) {
@@ -584,6 +586,17 @@ public class XulDebugServer extends XulHttpServer {
 		private XulHttpServerResponse listPages(XulHttpServerRequest request) {
 			XulHttpServerResponse response = getResponse(request);
 			if (_monitor.dumpPageList(request, response)) {
+				response.addHeader("Content-Type", "text/xml");
+			} else {
+				response.setStatus(404)
+					.cleanBody();
+			}
+			return response;
+		}
+
+		private XulHttpServerResponse dumpSelector(XulHttpServerRequest request) {
+			XulHttpServerResponse response = getResponse(request);
+			if (_monitor.dumpGlobalSelector(request, response)) {
 				response.addHeader("Content-Type", "text/xml");
 			} else {
 				response.setStatus(404)

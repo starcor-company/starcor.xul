@@ -239,4 +239,36 @@ public class XulSelect {
 		}
 		_selectors.add(select);
 	}
+
+	public ArrayList<XulProp> getProp() {
+		return _prop;
+	}
+
+	public String getSelectID() {
+		return _id;
+	}
+
+	public String getSelectClass() {
+		return _class;
+	}
+
+	public String getSelectType() {
+		return _type;
+	}
+
+	public String getSelectState() {
+		switch (_state) {
+		case XulView.STATE_NORMAL:
+			return "normal";
+		case XulView.STATE_FOCUSED:
+			return "focused";
+		case XulView.STATE_DISABLED:
+			return "disabled";
+		case XulView.STATE_VISIBLE:
+			return "visible";
+		case XulView.STATE_INVISIBLE:
+			return "invisible";
+		}
+		return null;
+	}
 }

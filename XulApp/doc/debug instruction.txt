@@ -23,6 +23,7 @@ http://192.168.0.1:9999/api/list-pages
 	skip-prop            true/false, 跳过元素属性， 默认为false
 	with-binding-data    true/false, 显示绑定数据， 默认为false
 	with-position        true/false, 显示元素位置， 默认为false
+	with-selector        true/false, 获取页面selector， 默认为false
 
 4. 获取元素详情
 /api/get-item/元素id[?skip-prop=true&with-children=true&with-binding-data=true&with-position=true]
@@ -139,4 +140,12 @@ insert, 及invoke操作中,所有名为-add-value的参数都会被认做无名�
 /api/clear-all-plugins //清空所有的插件、文件并退出应用
 /api/delete-plugin/[插件的名称:name] //删除指定的插件并退出应用
 
+28. 获取全局selector
+/api/get-selector
 
+29. 创建新的selector (未实现!)
+/api/add-selector[/Page-ID]?[class="类名"&&id="id"&&type="组件类型"&&state="normal|focused|disabled"]
+创建新的selector时，如果Page-ID为空，则会创建全局selector
+
+30. 删除指定的selector (未实现!)
+/api/remove-selector/Selector-ID
