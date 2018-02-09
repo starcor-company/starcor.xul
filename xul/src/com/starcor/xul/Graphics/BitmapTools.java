@@ -479,6 +479,11 @@ public class BitmapTools {
 			return;
 		}
 
+		if (bmp.getConfig() == null) {
+			new Exception("unsupported bitmap! can't get config!").printStackTrace();
+			return;
+		}
+
 		++_recycleCount;
 		int pixelCount = calBitmapPixelsCount(bmp);
 		if (_totalBitmapCacheSize + pixelCount >= _maxBitmapCacheSize) {
