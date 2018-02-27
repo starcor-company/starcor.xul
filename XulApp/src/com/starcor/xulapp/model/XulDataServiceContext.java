@@ -46,6 +46,7 @@ public class XulDataServiceContext {
 			}
 			_pendingOps.clear();
 		}
+		_dataService = null;
 	}
 
 	public boolean isDestroyed() {
@@ -101,6 +102,9 @@ public class XulDataServiceContext {
 	}
 
 	public Object getUserData() {
+		if (_dataService == null) {
+			return null;
+		}
 		return _dataService.getUserData();
 	}
 }

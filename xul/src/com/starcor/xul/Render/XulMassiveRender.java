@@ -1454,8 +1454,8 @@ public class XulMassiveRender extends XulAreaRender {
 		Rect itemMargin = itemLayoutElement.getMargin();
 		int startX = itemMargin.left + containerPadding.left;
 		int startY = itemMargin.top + containerPadding.top;
-		int extX = itemMargin.right;
-		int extY = itemMargin.bottom;
+		int extX = 0; // itemMargin.right;
+		int extY = 0; // itemMargin.bottom;
 
 		float itemWidth = XulUtils.calRectWidth(itemFocusRect);
 		float itemHeight = XulUtils.calRectHeight(itemFocusRect);

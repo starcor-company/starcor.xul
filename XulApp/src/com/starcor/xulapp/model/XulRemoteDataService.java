@@ -150,10 +150,7 @@ public class XulRemoteDataService extends XulDataService {
 			remoteDataCallbackProxy = new XulRemoteDataCallbackProxy(ctx, clauseInfo, dataCallback);
 			_callbackProxyCache.put(dataCallback, new WeakReference<XulRemoteDataCallbackProxy>(remoteDataCallbackProxy));
 		} else {
-			remoteDataCallbackProxy._ctx = ctx;
-			remoteDataCallbackProxy._clauseInfo = clauseInfo;
-			remoteDataCallbackProxy._dataOperation = null;
-			remoteDataCallbackProxy._dataCallback = dataCallback;
+			remoteDataCallbackProxy.attach(ctx, clauseInfo, dataCallback);
 		}
 		return remoteDataCallbackProxy;
 	}
@@ -231,11 +228,30 @@ public class XulRemoteDataService extends XulDataService {
 		XulDataCallback _dataCallback;
 		XulDataOperation _dataOperation;
 		XulClauseInfo _clauseInfo;
+		XulDataOperation _dummyOperation = new XulDataOperation() {
+			@Override
+			public boolean cancel() {
+				XulRemoteDataCallbackProxy proxyThis = XulRemoteDataCallbackProxy.this;
+				proxyThis._dummyOperation = null;
+				proxyThis._dataCallback = null;
+				XulDataOperation dataOperation = proxyThis._dataOperation;
+				if (dataOperation != null) {
+					dataOperation.cancel();
+				}
+				return true;
+			}
+		};
 
 		public XulRemoteDataCallbackProxy(XulDataServiceContext ctx, XulClauseInfo clauseInfo, XulDataCallback callback) {
+			attach(ctx, clauseInfo, callback);
+		}
+
+		public void attach(XulDataServiceContext ctx, XulClauseInfo clauseInfo, XulDataCallback callback) {
 			_ctx = ctx;
+			_ctx.attach(_dummyOperation);
 			_dataCallback = callback;
 			_clauseInfo = clauseInfo;
+			_dataOperation = null;
 		}
 
 		@Override
@@ -250,8 +266,12 @@ public class XulRemoteDataService extends XulDataService {
 
 		@Override
 		public void onResult(IXulRemoteDataOperation op, int code, XulDataNode data) throws RemoteException {
+			XulDataCallback dataCallback = _dataCallback;
+			if (dataCallback == null) {
+				return;
+			}
 			_clauseInfo.dataOperation = getDataOperation(op);
-			_ctx.deliverResult(_dataCallback, _clauseInfo.clause, data);
+			_ctx.deliverResult(dataCallback, _clauseInfo.clause, data);
 		}
 
 		@Override
@@ -259,8 +279,12 @@ public class XulRemoteDataService extends XulDataService {
 			if (code == XulDataService.CODE_NO_PROVIDER) {
 				return;
 			}
+			XulDataCallback dataCallback = _dataCallback;
+			if (dataCallback == null) {
+				return;
+			}
 			_clauseInfo.dataOperation = getDataOperation(op);
-			_ctx.deliverError(_dataCallback, _clauseInfo.clause);
+			_ctx.deliverError(dataCallback, _clauseInfo.clause);
 		}
 
 		public XulDataOperation getDataOperation(IXulRemoteDataOperation xulRemoteDataOperation) {
