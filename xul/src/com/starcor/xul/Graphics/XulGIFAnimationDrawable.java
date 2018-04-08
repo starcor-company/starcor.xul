@@ -18,13 +18,13 @@ public class XulGIFAnimationDrawable extends XulAnimationDrawable {
 	XulGIFDecoder.GIFAnimationRender _gifRender;
 	private float _speed;
 
-	@Override
-	protected void finalize() throws Throwable {
-		if (this instanceof XulGIFAnimationDrawable) {
-			BitmapTools.recycleBitmap(_gifRender._frameImage);
-		}
-		super.finalize();
-	}
+//	@Override
+//	protected void finalize() throws Throwable {
+//		if (this instanceof XulGIFAnimationDrawable) {
+//			BitmapTools.recycleBitmap(_gifRender._frameImage);
+//		}
+//		super.finalize();
+//	}
 
 	public static XulDrawable buildAnimation(InputStream stream, String url, String imageKey) {
 		if (stream == null) {

@@ -159,7 +159,7 @@ public class XulGIFDecoder {
 	public static GIFAnimationRender createAnimationRenderer(GIFFrame[] gifFrames, boolean noLoop, boolean noTransparent) {
 		GIFAnimationRender render = new GIFAnimationRender();
 		GIFFrame gifFrame0 = gifFrames[0];
-		render._frameImage = BitmapTools.createBitmapFromRecycledBitmaps(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
+		render._frameImage = BitmapTools.createBitmap(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
 		render._gifFrames = gifFrames;
 		render._isCurrentFrameDecoded = false;
 		render._currentFrame = 0;
@@ -177,7 +177,7 @@ public class XulGIFDecoder {
 		GIFStaticRender render = new GIFStaticRender();
 		GIFFrame gifFrame0 = gifFrames[0];
 		if (noTransparent) {
-			render._frameImage = BitmapTools.createBitmapFromRecycledBitmaps(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
+			render._frameImage = BitmapTools.createBitmap(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
 		} else {
 			render._frameImage = BitmapTools.createBitmap(gifFrame0._screenW, gifFrame0._screenH, Bitmap.Config.ARGB_8888);
 		}
