@@ -29,7 +29,7 @@ import static android.graphics.Bitmap.Config.ARGB_8888;
  * 关于bitmap的处理，至少需要提供从路径到文件等函数
  *
  * @author hy
- *         2013/6/23
+ * 2013/6/23
  */
 public class BitmapTools {
 	private static final String TAG = "BitmapTools";
@@ -142,7 +142,8 @@ public class BitmapTools {
 	 * 如果重用比例越小, 队列长度越小
 	 */
 	private static int fixMaximumSameDimension(Bitmap bmp, int maximumSameDimension) {
-		Long key = Long.valueOf(bmp.getWidth() * 0x8000 + bmp.getHeight() * 0x20 + bmp.getConfig().ordinal());
+		final Config cfg = getConfig(bmp);
+		Long key = Long.valueOf(bmp.getWidth() * 0x8000 + bmp.getHeight() * 0x20 + cfg.ordinal());
 		ReuseStatisticInfo record = _reuseStatistic.get(key);
 		if (record == null || record.recycled < 5) {
 			return maximumSameDimension;
@@ -230,8 +231,25 @@ public class BitmapTools {
 		return bmp.getWidth() * bmp.getHeight();
 	}
 
+	public static Bitmap.Config getConfig(Bitmap bmp) {
+		Config cfg = bmp.getConfig();
+		if (cfg != null) {
+			return cfg;
+		}
+		switch (bmp.getRowBytes() / bmp.getWidth()) {
+		case 4: // 32bits rgba8888
+			return Config.ARGB_8888;
+		case 2: // 16bits rgb565
+			return Config.RGB_565;
+		case 1: // 8bit
+			return Config.ALPHA_8;
+		default:
+			return defaultConfig;
+		}
+	}
+
 	private static int calBitmapPixelSize(Bitmap bmp) {
-		return getPixelSize(bmp.getConfig());
+		return getPixelSize(getConfig(bmp));
 	}
 
 	public static void cleanRecycledBitmaps(long timestamp) {
@@ -269,7 +287,7 @@ public class BitmapTools {
 					_totalBitmapCacheSize -= pixelCount;
 					_recycledBitmapQueue.remove(i);
 					_weakGCBitmapQueue.add(Pair.create(item.first, new SoftReference<Bitmap>(bmp)));
-					recordDropCacheItem(bmp.getWidth(), bmp.getWidth(), bmp.getConfig());
+					recordDropCacheItem(bmp.getWidth(), bmp.getWidth(), getConfig(bmp));
 				}
 			}
 		}
@@ -317,7 +335,7 @@ public class BitmapTools {
 							selectedCacheItem = i;
 						}
 					}
-				} else if (bmp.getWidth() == width && bmp.getHeight() == height && config.equals(bmp.getConfig())) {
+				} else if (bmp.getWidth() == width && bmp.getHeight() == height && config.equals(getConfig(bmp))) {
 					selectedCacheItem = i;
 					break;
 				}
@@ -326,7 +344,7 @@ public class BitmapTools {
 			if (selectedCacheItem >= 0) {
 				Pair<Long, Bitmap> item = _recycledBitmapQueue.remove(selectedCacheItem);
 				Bitmap bmp = item.second;
-				recordReuseSuccess(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+				recordReuseSuccess(bmp.getWidth(), bmp.getHeight(), getConfig(bmp));
 				int pixelCount = calBitmapPixelsCount(bmp);
 				int byteCount = calBitmapByteSize(bmp);
 				if (XulManager.DEBUG && byteCount <= 0) {
@@ -401,7 +419,7 @@ public class BitmapTools {
 							selectedBitmap = bmp;
 						}
 					}
-				} else if (bmp.getWidth() == width && bmp.getHeight() == height && config.equals(bmp.getConfig())) {
+				} else if (bmp.getWidth() == width && bmp.getHeight() == height && config.equals(getConfig(bmp))) {
 					selectedCacheItem = i;
 					selectedBitmap = bmp;
 					break;
@@ -536,7 +554,7 @@ public class BitmapTools {
 				return;
 			}
 
-			recordRecycled(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
+			recordRecycled(bmp.getWidth(), bmp.getHeight(), getConfig(bmp));
 			_recycledBitmapQueue.add(Pair.create(XulUtils.timestamp() + BITMAP_LIFETIME, bmp));
 			_totalBitmapCacheSize += pixelCount;
 		}

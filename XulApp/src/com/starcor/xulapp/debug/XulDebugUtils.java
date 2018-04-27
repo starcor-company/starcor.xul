@@ -81,7 +81,7 @@ public class XulDebugUtils {
 								infoWriter.startTag("", "bitmap");
 								infoWriter.attribute("", "width", String.valueOf(bmp.getWidth()));
 								infoWriter.attribute("", "height", String.valueOf(bmp.getHeight()));
-								infoWriter.attribute("", "pixel", bmp.getConfig().name());
+								infoWriter.attribute("", "pixel", BitmapTools.getConfig(bmp).name());
 								infoWriter.endTag("", "bitmap");
 							} catch (IOException e) {
 								e.printStackTrace();
@@ -99,7 +99,7 @@ public class XulDebugUtils {
 								infoWriter.startTag("", "bitmap");
 								infoWriter.attribute("", "width", String.valueOf(bmp.getWidth()));
 								infoWriter.attribute("", "height", String.valueOf(bmp.getHeight()));
-								infoWriter.attribute("", "pixel", bmp.getConfig().name());
+								infoWriter.attribute("", "pixel", BitmapTools.getConfig(bmp).name());
 								infoWriter.endTag("", "bitmap");
 							} catch (IOException e) {
 								e.printStackTrace();
