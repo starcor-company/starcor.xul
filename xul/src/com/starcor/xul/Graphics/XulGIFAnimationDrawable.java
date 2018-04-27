@@ -5,7 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.UrlQuerySanitizer;
-
+import android.util.Log;
 import com.starcor.xul.XulUtils;
 
 import java.io.InputStream;
@@ -15,6 +15,7 @@ import java.io.InputStream;
  */
 
 public class XulGIFAnimationDrawable extends XulAnimationDrawable {
+	private static final String TAG = XulGIFAnimationDrawable.class.getSimpleName();
 	XulGIFDecoder.GIFAnimationRender _gifRender;
 	private float _speed;
 
@@ -40,6 +41,10 @@ public class XulGIFAnimationDrawable extends XulAnimationDrawable {
 		}
 
 		XulGIFDecoder.GIFFrame[] frames = XulGIFDecoder.decode(stream, noLoop, noTransparent);
+		if (frames == null) {
+			Log.e(TAG, "GIF decode failed! " + stream + " URL:" + url);
+			return null;
+		}
 
 		if (frames.length == 1) {
 			XulGIFDecoder.GIFStaticRender staticRenderer = XulGIFDecoder.createStaticRenderer(frames, noTransparent);
