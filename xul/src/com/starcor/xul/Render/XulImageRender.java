@@ -254,6 +254,7 @@ public class XulImageRender extends XulLabelRender {
 					boolean ret = super.updateAnimation(timestamp);
 					if (!ret) {
 						_fadeEffect.remove(this);
+						this._drawer.reset();
 					}
 					return ret;
 				}
@@ -294,6 +295,10 @@ public class XulImageRender extends XulLabelRender {
 			} else {
 				_bmp = bmp;
 				_fadeInBkg = null;
+				final XulDrawer drawer = _drawer;
+				if (drawer != null) {
+					drawer.reset();
+				}
 				_drawer = XulDrawer.create(_bmp, _item, _ctx);
 			}
 		}
@@ -574,6 +579,10 @@ public class XulImageRender extends XulLabelRender {
 			DrawableInfo imgInfo = _images.get(i);
 			if (attrImg == null) {
 				if (imgInfo != null) {
+					final XulDrawer drawer = imgInfo._drawer;
+					if (drawer != null) {
+						drawer.reset();
+					}
 					imgInfo._url = null;
 					imgInfo._bmp = null;
 					imgInfo._fadeInBkg = null;
@@ -1037,6 +1046,10 @@ public class XulImageRender extends XulLabelRender {
 					bmp.recycle();
 				}
 			}
+			final XulDrawer drawer = imageInfo._drawer;
+			if (drawer != null) {
+				drawer.reset();
+			}
 			imageInfo._bmp = null;
 			imageInfo._fadeInBkg = null;
 			imageInfo._drawer = null;
@@ -1074,13 +1087,19 @@ public class XulImageRender extends XulLabelRender {
 					BitmapTools.recycleBitmap(XulBitmapDrawable.detachBitmap((XulBitmapDrawable) bmp));
 					bmp.recycle();
 				}
+				final XulDrawer drawer = imageInfo._drawer;
+				if (drawer != null) {
+					drawer.reset();
+				}
+
 				imageInfo._bmp = null;
 				imageInfo._fadeInBkg = null;
 				imageInfo._drawer = null;
 				imageInfo._lastLoadFailedTime = 0;
 				imageInfo._loadFailedCounter = 0;
-				if (imageInfo._fadeEffect != null) {
-					imageInfo._fadeEffect.clear();
+				final ArrayList<ImageEffectDrawer> fadeEffect = imageInfo._fadeEffect;
+				if (fadeEffect != null) {
+					fadeEffect.clear();
 				}
 				_imageChanged = true;
 				anyImageRecycled = true;

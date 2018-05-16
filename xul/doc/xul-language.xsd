@@ -615,6 +615,10 @@
 					<xs:enumeration value="img.1.auto-hide"/>
 					<xs:enumeration value="img.2.auto-hide"/>
 					<xs:enumeration value="img.3.auto-hide"/>
+					<xs:enumeration value="img.0.reuse"/>
+					<xs:enumeration value="img.1.reuse"/>
+					<xs:enumeration value="img.2.reuse"/>
+					<xs:enumeration value="img.3.reuse"/>
 
 					<xs:enumeration value="img.0.pixfmt">
 						<xs:annotation>
