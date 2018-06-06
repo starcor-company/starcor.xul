@@ -64,6 +64,7 @@ public abstract class SimpleTransformAnimation implements IXulAnimation {
 
 	/**
 	 * update animation information
+	 *
 	 * @param timestamp
 	 * @return true indicates end of animation
 	 */
@@ -74,16 +75,19 @@ public abstract class SimpleTransformAnimation implements IXulAnimation {
 		}
 		_progress = t;
 		float percent;
+		boolean isEnd;
 		if (_aniTransformer != null) {
 			final float scalar = getScalar();
 			percent = _aniTransformer.transform(t, _duration, _srcVal / scalar, _destVal / scalar);
+			isEnd = _aniTransformer.isEnd();
 		} else {
 			percent = (float) t / _duration;
+			isEnd = percent >= 1.0;
 		}
-		if (percent >= 1.0f) {
+
+		if (isEnd) {
 			percent = 1.0f;
 		}
-		boolean isEnd = percent >= 1.0f;
 
 		float delta = _destVal - _srcVal;
 		_val = _srcVal;

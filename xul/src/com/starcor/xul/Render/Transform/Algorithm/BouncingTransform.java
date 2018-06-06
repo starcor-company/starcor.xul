@@ -12,8 +12,8 @@ public class BouncingTransform extends BasicTransformAlgorithmImpl {
 	@Override
 	public float transform(float[] params, float time, float duration, float fromVal, float toVal) {
 		float percent = time / duration;
-		if (percent > 1.0f) {
-			percent = 1.0f;
+		if (percent >= 1.0f) {
+			return -1000;
 		}
 		double growSpeed = params[0];
 		double frequency = params[1];

@@ -15,7 +15,7 @@ public class ConstantTransform extends BasicTransformAlgorithmImpl {
 		float startDuration = params[1];
 		float endDuration = params[2];
 		if (speed <= 0) {
-			return 1.0f;
+			return -1000.0f;
 		}
 
 		float v0 = speed / duration;    // px/ms
@@ -23,7 +23,7 @@ public class ConstantTransform extends BasicTransformAlgorithmImpl {
 		float totalRange = Math.abs(toVal - fromVal);
 
 		if (totalRange <= 0.01f) {
-			return 1.0f;
+			return -1000.0f;
 		}
 
 		float startRange = startDuration * v0 / 2;
@@ -63,7 +63,7 @@ public class ConstantTransform extends BasicTransformAlgorithmImpl {
 		}
 
 		if (pos >= totalRange) {
-			pos = totalRange;
+			return -1000;
 		}
 
 		return pos / totalRange;
@@ -79,7 +79,11 @@ public class ConstantTransform extends BasicTransformAlgorithmImpl {
 			if (startDuration > 0) {
 				if (progress >= startDuration) {
 					updateResult.newBegin = (long) (begin + progress - startDuration);
-					float delta = transform(params, startDuration, duration, srcVal, newDestVal) * (newDestVal - srcVal);
+					float percentage = transform(params, startDuration, duration, srcVal, newDestVal);
+					if (percentage <= -1000) {
+						percentage = 1;
+					}
+					float delta = percentage * (newDestVal - srcVal);
 					updateResult.newSrc = curVal - delta;
 				} else {
 					updateResult.newBegin = begin;

@@ -22,4 +22,9 @@ public abstract class BasicTransformAlgorithmImpl implements ITransformAlgorithm
 		}
 		return updateResult;
 	}
+
+	@Override
+	public float transform(float[] params, float time, float duration, float fromVal, float toVal) {
+		return 0;
+	}
 }

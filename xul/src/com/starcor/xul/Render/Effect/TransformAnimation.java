@@ -111,12 +111,18 @@ public class TransformAnimation implements IXulAnimation {
 		}
 		_progress = t;
 		float percent;
+		boolean isEnd;
 		if (_aniTransformer != null) {
 			percent = _aniTransformer.transform(t, _duration, 0, 0);
+			isEnd = _aniTransformer.isEnd();
 		} else {
 			percent = (float) t / _duration;
+			isEnd = percent >= 1.0f;
 		}
-		boolean isEnd = percent >= 1.0f;
+
+		if (isEnd) {
+			percent = 1.0f;
+		}
 
 		if (_values != null) {
 			boolean anyChanged = false;

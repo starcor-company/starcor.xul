@@ -11,4 +11,6 @@ public interface ITransformer {
 	float transform(float time, float duration, float fromVal, float toVal);
 	// return new begin time
 	ITransformAlgorithm.UpdateResult updateAnimation(long begin, long duration, long progress, float curVal, float srcVal, float oldDestVal, float newDestVal);
+
+	boolean isEnd();
 }

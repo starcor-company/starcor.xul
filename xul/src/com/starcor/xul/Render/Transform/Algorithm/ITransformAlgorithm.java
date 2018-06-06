@@ -10,6 +10,8 @@ public interface ITransformAlgorithm {
 		public float newDest;
 	}
 	String name();
+
+	// returns -1 if terminated
 	float transform(float[] params, float time, float duration, float fromVal, float toVal);
 	UpdateResult update(float[] params, long begin, long duration, long progress, float curVal, float srcVal, float oldDestVal, float newDestVal);
 }
