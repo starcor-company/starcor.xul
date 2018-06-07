@@ -63,7 +63,7 @@ public class TransformerFactory {
 			float outValue = _algo.transform(_params, time, duration, fromVal, toVal);
 			if (outValue <= -1000) {
 				_isEnd = true;
-				outValue = -outValue;
+				outValue = 1;
 			}
 			// Log.d("Transformer", String.format("%.3f => %.3f:end(%s):%s", time / duration, outValue, _isEnd, this));
 			return outValue;

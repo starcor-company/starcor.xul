@@ -496,6 +496,15 @@ public class XulLayerRender extends XulAreaRender {
 				int r = (int) (Color.red(srcColor) + (Color.red(destColor) - Color.red(srcColor)) * percent);
 				int g = (int) (Color.green(srcColor) + (Color.green(destColor) - Color.green(srcColor)) * percent);
 				int b = (int) (Color.blue(srcColor) + (Color.blue(destColor) - Color.blue(srcColor)) * percent);
+				if (a > 0xFF) {
+					a = 0xff;
+				} else if (a < 0) {
+					a = 0;
+				}
+				a = XulUtils.constrain(a, 0, 0xff);
+				r = XulUtils.constrain(r, 0, 0xff);
+				g = XulUtils.constrain(g, 0, 0xff);
+				b = XulUtils.constrain(b, 0, 0xff);
 				_curColors[i] = Color.argb(a, r, g, b);
 			}
 

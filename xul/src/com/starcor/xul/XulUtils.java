@@ -186,6 +186,16 @@ public class XulUtils {
 		return (int) Math.ceil(v);
 	}
 
+	public static int constrain(int x, int min, int max) {
+		if (x > max) {
+			return max;
+		}
+		if (x < min) {
+			return min;
+		}
+		return x;
+	}
+
 	public static long roundToLong(double val) {
 		return Math.round(val);
 	}
