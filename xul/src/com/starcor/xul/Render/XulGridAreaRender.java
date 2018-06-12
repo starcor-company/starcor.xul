@@ -8,7 +8,6 @@ import com.starcor.xul.Prop.XulAttr;
 import com.starcor.xul.Prop.XulFocus;
 import com.starcor.xul.Prop.XulPropNameCache;
 import com.starcor.xul.Utils.XulAreaChildrenRender;
-import com.starcor.xul.Utils.XulAreaChildrenVisibleChangeNotifier;
 import com.starcor.xul.Utils.XulLayoutHelper;
 import com.starcor.xul.Utils.XulPropParser;
 import com.starcor.xul.*;
@@ -82,15 +81,6 @@ public class XulGridAreaRender extends XulViewContainerBaseRender {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public void onVisibilityChanged(boolean isVisible, XulView eventSource) {
-		super.onVisibilityChanged(isVisible, eventSource);
-		XulAreaChildrenVisibleChangeNotifier notifier = XulAreaChildrenVisibleChangeNotifier.getNotifier();
-		notifier.begin(isVisible, (XulArea) eventSource);
-		_area.eachChild(notifier);
-		notifier.end();
 	}
 
 	@Override

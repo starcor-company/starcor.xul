@@ -2,6 +2,7 @@ package com.starcor.xul.Render;
 
 import com.starcor.xul.Events.XulStateChangeEvent;
 import com.starcor.xul.Prop.XulPropNameCache;
+import com.starcor.xul.Utils.XulAreaChildrenVisibleChangeNotifier;
 import com.starcor.xul.Utils.XulLayoutHelper;
 import com.starcor.xul.Utils.XulSimpleArray;
 import com.starcor.xul.XulArea;
@@ -109,6 +110,15 @@ public abstract class XulViewContainerBaseRender extends XulViewRender {
 			return _area.getAllVisibleChildLayoutElement(array);
 		}
 
+	}
+
+	@Override
+	public void onVisibilityChanged(boolean isVisible, XulView eventSource) {
+		super.onVisibilityChanged(isVisible, eventSource);
+		XulAreaChildrenVisibleChangeNotifier notifier = XulAreaChildrenVisibleChangeNotifier.getNotifier();
+		notifier.begin(isVisible, (XulArea) eventSource);
+		_area.eachChild(notifier);
+		notifier.end();
 	}
 
 	@Override

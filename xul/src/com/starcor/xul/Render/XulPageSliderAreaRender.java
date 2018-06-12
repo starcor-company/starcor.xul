@@ -1458,15 +1458,6 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		super.destroy();
 	}
 
-	@Override
-	public void onVisibilityChanged(boolean isVisible, XulView eventSource) {
-		super.onVisibilityChanged(isVisible, eventSource);
-		XulAreaChildrenVisibleChangeNotifier notifier = XulAreaChildrenVisibleChangeNotifier.getNotifier();
-		notifier.begin(isVisible, (XulArea) eventSource);
-		_area.eachChild(notifier);
-		notifier.end();
-	}
-
 	public void imageGC(int range) {
 		if (_contents == null || _contents.isEmpty() || _curPage >= _contents.size()) {
 			return;
