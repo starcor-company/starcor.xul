@@ -23,9 +23,9 @@ public class XulTime {
 	private static synchronized boolean doSyncTime(long serverTime, long timestamp, long delay) {
 		delay /= 1.7;
 		long serverTimeDelta = serverTime - timestamp + delay;
-		if (delay >= _meanDifference || _meanDifference <= 0) {
-			long diff = Math.abs(serverTimeDelta - _xulTimeDelta);
-			if (diff < (_meanDifference + delay) * 3 / 4 || delay > diff) {
+		long diff = Math.abs(serverTimeDelta - _xulTimeDelta);
+		if (delay >= _meanDifference || _meanDifference <= 0 || diff > 1.5*(_meanDifference + delay)) {
+			if (diff < (_meanDifference + delay)) {
 				return false;
 			}
 			_meanDifference = diff * delay / (_meanDifference + delay);
