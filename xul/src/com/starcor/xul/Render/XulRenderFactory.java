@@ -1,7 +1,6 @@
 package com.starcor.xul.Render;
 
 import android.text.TextUtils;
-
 import com.starcor.xul.Render.Components.BaseScrollBar;
 import com.starcor.xul.Render.Components.SimpleScrollBar;
 import com.starcor.xul.Utils.XulCachedHashMap;
@@ -98,10 +97,12 @@ public final class XulRenderFactory {
 		XulLabelRender.register();
 		XulSpannedLabelRender.register();
 		XulPageSliderAreaRender.register();
+		XulDragPageSliderAreaRender.register();
 		XulSliderAreaRender.register();
 		XulGroupRender.register();
 		XulLayerRender.register();
 		XulComponentRender.register();
 		XulMassiveRender.register();
+		XulCoverFlashRender.register();
 	}
 }

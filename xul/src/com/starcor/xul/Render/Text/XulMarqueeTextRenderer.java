@@ -140,6 +140,11 @@ public class XulMarqueeTextRenderer extends XulTextRenderer {
 		return _textRenderer.collectPendingImageItem();
 	}
 
+	@Override
+	public String getText() {
+		return _textRenderer != null ? _textRenderer.getText() : null;
+	}
+
 	public void updateBaseTextRender(XulTextRenderer baseTextRenderer) {
 		_textRenderer = baseTextRenderer;
 	}

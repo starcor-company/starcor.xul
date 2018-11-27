@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by hy on 2015/6/17.
  */
-public class V8ScriptContext implements IScriptContext {
+public class V8ScriptContext implements IScriptContext,IScriptFinalize {
 	public static final String TAG = V8ScriptContext.class.getSimpleName();
 	private static ArrayList<String> _supportedScriptTypes;
 	public static final String DEFAULT_SCRIPT_TYPE = "javascript";
@@ -47,8 +47,24 @@ public class V8ScriptContext implements IScriptContext {
 		if (XulManager.DEBUG_V8_ENGINE) {
 			Log.d(TAG, String.format("finalize id:%x", _nativeId));
 		}
-		V8Engine.v8DestroyScriptContext(_nativeId);
+		markGC();
 		super.finalize();
+	}
+
+	@Override
+	public void markGC() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("markGC id:%x", _nativeId));
+		}
+		XulScriptFinalizeCollector.register(this);
+	}
+
+	@Override
+	public void doFinalize() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("doFinalize id:%x", _nativeId));
+		}
+		V8Engine.v8DestroyScriptContext(_nativeId);
 	}
 
 	V8ScriptArray createArray(long arrayId) {

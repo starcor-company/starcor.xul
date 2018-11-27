@@ -1,14 +1,17 @@
 package com.starcor.xul.Script.V8;
 
 import android.util.Log;
+
+import com.starcor.xul.Script.IScriptFinalize;
 import com.starcor.xul.Script.IScriptableObject;
+import com.starcor.xul.Script.XulScriptFinalizeCollector;
 import com.starcor.xul.Script.XulScriptableObject;
 import com.starcor.xul.XulManager;
 
 /**
  * Created by hy on 2015/6/17.
  */
-public class V8ScriptObject implements IScriptableObject {
+public class V8ScriptObject implements IScriptableObject,IScriptFinalize {
 	public static final String TAG = V8ScriptObject.class.getSimpleName();
 	V8ScriptContext _ctx;
 	V8ScriptObject _prototype;
@@ -20,8 +23,25 @@ public class V8ScriptObject implements IScriptableObject {
 		if (XulManager.DEBUG_V8_ENGINE) {
 			Log.d(TAG, String.format("finalize ctx:%x, id:%x", _ctx._nativeId, _nativeId));
 		}
-		V8Engine.v8DestroyScriptObject(_ctx._nativeId, _nativeId);
+		markGC();
 		super.finalize();
+	}
+
+	@Override
+	public void doFinalize() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("doFinalize ctx:%x, id:%x", _ctx._nativeId, _nativeId));
+		}
+		V8Engine.v8DestroyScriptObject(_ctx._nativeId, _nativeId);
+
+	}
+
+	@Override
+	public void markGC() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("markGC ctx:%x, id:%x", _ctx._nativeId, _nativeId));
+		}
+		XulScriptFinalizeCollector.register(this);
 	}
 
 	static boolean invokeMethod(V8ScriptObject classObject, V8ScriptObject thisObject, int methodId, long argsId) {

@@ -3,7 +3,9 @@ package com.starcor.xul.Script.V8;
 import android.util.Log;
 import com.starcor.xul.Script.IScriptArguments;
 import com.starcor.xul.Script.IScriptArray;
+import com.starcor.xul.Script.IScriptFinalize;
 import com.starcor.xul.Script.IScriptableObject;
+import com.starcor.xul.Script.XulScriptFinalizeCollector;
 import com.starcor.xul.Utils.XulArrayList;
 import com.starcor.xul.XulManager;
 import com.starcor.xul.XulView;
@@ -14,7 +16,7 @@ import java.util.Collection;
 /**
  * Created by hy on 2015/6/17.
  */
-public class V8Arguments implements IScriptArguments {
+public class V8Arguments implements IScriptArguments,IScriptFinalize {
 	public static final String TAG = V8Arguments.class.getSimpleName();
 	V8ScriptContext _ctx;
 	long _nativeId;
@@ -25,10 +27,26 @@ public class V8Arguments implements IScriptArguments {
 		if (XulManager.DEBUG_V8_ENGINE) {
 			Log.d(TAG, String.format("finalize ctx:%x, id:%x, destroy:%s", _ctx._nativeId, _nativeId, String.valueOf(_autoDestroy)));
 		}
+		markGC();
+		super.finalize();
+	}
+
+	@Override
+	public void doFinalize() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("doFinalize ctx:%x, id:%x, destroy:%s", _ctx._nativeId, _nativeId, String.valueOf(_autoDestroy)));
+		}
 		if (_autoDestroy) {
 			V8Engine.v8DestroyArguments(_ctx._nativeId, _nativeId);
 		}
-		super.finalize();
+	}
+
+	@Override
+	public void markGC() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("markGC ctx:%x, id:%x, destroy:%s", _ctx._nativeId, _nativeId, String.valueOf(_autoDestroy)));
+		}
+		XulScriptFinalizeCollector.register(this);
 	}
 
 	V8Arguments(V8ScriptContext ctx, long argsId) {

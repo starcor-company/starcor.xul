@@ -90,6 +90,7 @@ public class BitmapTools {
 	private static volatile long _reuseCount = 0;
 	private static volatile long _newCount = 0;
 	private static volatile long _reuseGCCount = 0;
+	private static volatile boolean _sysDecode = true;
 
 	public static final int MINIMUM_API_LEVEL = 19;
 
@@ -172,6 +173,10 @@ public class BitmapTools {
 
 	public static void setBitmapReuse(boolean reuse) {
 		_reuseBitmap = reuse;
+	}
+
+	public static void setSysDecodeHeader(boolean sysDecode) {
+		_sysDecode = sysDecode;
 	}
 
 	public static boolean hasBitmapReuse() {
@@ -604,14 +609,23 @@ public class BitmapTools {
 			opts.inPreferredConfig = pixelFormat;
 
 			opts.inJustDecodeBounds = true;
-			is.mark(64 * 1024);
-			BitmapFactory.decodeStream(is, null, opts);
-			try {
-				is.reset();
-			} catch (IOException e) {
-				e.printStackTrace();
-				is.close();
-				return null;
+			if (_sysDecode) {
+                is.mark(64 * 1024);
+                BitmapFactory.decodeStream(is, null, opts);
+                try {
+                    is.reset();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    is.close();
+                    return null;
+                }
+			} else {
+				InputStream reBuildStream = BitmapUtil.decodeStream(is, opts);
+				if (reBuildStream != null) {
+					is = reBuildStream;
+				} else {
+					is.reset();
+				}
 			}
 			if ((outWidth > 0 && outHeight >= 0) || (outWidth >= 0 && outHeight > 0) ||
 				(maxWidth > 0 && maxHeight >= 0) || (maxWidth >= 0 && maxHeight > 0)) {
@@ -667,8 +681,9 @@ public class BitmapTools {
 				++_newCount;
 			}
 			opts.inSampleSize = 1;
-			Bitmap bm = BitmapFactory.decodeStream(is, null, opts);
-			return bm;
+			return BitmapFactory.decodeStream(is, null, opts);
+		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

@@ -90,7 +90,7 @@ public class XulGIFDecoder {
 				_isCurrentFrameDecoded = false;
 				return true;
 			}
-			return false;
+			return true;
 		}
 
 		public boolean reset() {

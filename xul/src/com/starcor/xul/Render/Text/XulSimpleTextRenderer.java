@@ -193,7 +193,7 @@ public class XulSimpleTextRenderer extends XulBasicTextRenderer {
 	}
 
 	float[] _textWidths;
-	ArrayList<XulSimpleTextRenderer._lineInfo> _lines = null;
+	ArrayList<_lineInfo> _lines = null;
 	private SimpleTextEditor _editor;
 
 	public XulSimpleTextRenderer(XulViewRender render) {

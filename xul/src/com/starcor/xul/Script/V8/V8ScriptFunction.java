@@ -3,13 +3,15 @@ package com.starcor.xul.Script.V8;
 import android.util.Log;
 import com.starcor.xul.Script.IScript;
 import com.starcor.xul.Script.IScriptContext;
+import com.starcor.xul.Script.IScriptFinalize;
 import com.starcor.xul.Script.IScriptableObject;
+import com.starcor.xul.Script.XulScriptFinalizeCollector;
 import com.starcor.xul.XulManager;
 
 /**
  * Created by hy on 2015/6/17.
  */
-public class V8ScriptFunction implements IScript {
+public class V8ScriptFunction implements IScript,IScriptFinalize {
 	public static final String TAG = V8ScriptFunction.class.getSimpleName();
 	V8ScriptContext _ctx;
 	long _nativeId;
@@ -19,8 +21,24 @@ public class V8ScriptFunction implements IScript {
 		if (XulManager.DEBUG_V8_ENGINE) {
 			Log.d(TAG, String.format("finalize ctx:%x, id:%x", _ctx._nativeId, _nativeId));
 		}
-		V8Engine.v8DestroyFunction(_ctx._nativeId, _nativeId);
+		markGC();
 		super.finalize();
+	}
+
+	@Override
+	public void markGC() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("markGC ctx:%x, id:%x", _ctx._nativeId, _nativeId));
+		}
+		XulScriptFinalizeCollector.register(this);
+	}
+
+	@Override
+	public void doFinalize() {
+		if (XulManager.DEBUG_V8_ENGINE) {
+			Log.d(TAG, String.format("doFinalize ctx:%x, id:%x", _ctx._nativeId, _nativeId));
+		}
+		V8Engine.v8DestroyFunction(_ctx._nativeId, _nativeId);
 	}
 
 	private V8ScriptFunction(V8ScriptContext ctx, long funcId) {

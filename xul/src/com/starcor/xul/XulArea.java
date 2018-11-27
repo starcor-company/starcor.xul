@@ -1492,7 +1492,7 @@ public class XulArea extends XulView {
 		if ("layer".equals(_type)) {
 			return new XulLayerScriptableObject(this);
 		}
-		if ("page_slider".equals(_type)) {
+		if ("page_slider".equals(_type) || "drag_page_slider".equals(_type)) {
 			return new XulPageSliderScriptableObject(this);
 		}
 		if ("slider".equals(_type)) {

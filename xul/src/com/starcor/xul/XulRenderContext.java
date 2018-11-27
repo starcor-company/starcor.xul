@@ -1,30 +1,25 @@
 package com.starcor.xul;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Typeface;
+import android.graphics.*;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-
 import com.starcor.xul.Factory.XulFactory;
 import com.starcor.xul.Graphics.XulDC;
 import com.starcor.xul.Graphics.XulDrawable;
+import com.starcor.xul.Prop.XulAttr;
 import com.starcor.xul.Prop.XulBinding;
 import com.starcor.xul.Prop.XulFocus;
 import com.starcor.xul.Prop.XulPropNameCache;
 import com.starcor.xul.Render.Drawer.IXulAnimation;
+import com.starcor.xul.Render.XulCoverFlashRender;
+import com.starcor.xul.Render.XulCustomViewRender;
 import com.starcor.xul.Render.XulSliderAreaRender;
 import com.starcor.xul.Render.XulViewRender;
-import com.starcor.xul.Utils.XulArrayList;
-import com.starcor.xul.Utils.XulCachedHashMap;
-import com.starcor.xul.Utils.XulRenderDrawableItem;
-import com.starcor.xul.Utils.XulSimpleArray;
+import com.starcor.xul.Utils.*;
+import com.starcor.xul.Wrapper.XulPageSliderAreaWrapper;
+import com.starcor.xul.Wrapper.XulSliderAreaWrapper;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -57,6 +52,9 @@ public class XulRenderContext {
 			return new Runnable[size];
 		}
 	};
+
+	boolean _enableMouse;
+	MotionFocusFilter focusFilter;
 
 	class FocusTracker {
 		Matrix _tmpDrawMatrix = new Matrix();
@@ -117,6 +115,51 @@ public class XulRenderContext {
 
 		public void preDrawFocus(XulViewRender xulViewRender, XulDC dc, Rect rect, int xBase, int yBase) {
 
+
+		}
+	}
+
+	class FlashTracker extends FocusTracker {
+
+		String[] flashClass;
+		XulCoverFlashRender flashRender;
+
+		public FlashTracker(XulView focusTrackerView) {
+			super(focusTrackerView);
+			String trackerClass = focusTrackerView.getAttrString(XulCoverFlashRender.ATTR_FLASH_CLASS);
+			flashRender = (XulCoverFlashRender) _focusTrackView._render;
+			if (TextUtils.isEmpty(trackerClass)) {
+				return;
+			}
+			if (trackerClass.contains(",")) {
+				flashClass = trackerClass.split(",");
+			} else {
+				flashClass = new String[]{trackerClass};
+			}
+		}
+
+		@Override
+		public void postDrawFocus(XulViewRender xulViewRender, XulDC dc, Rect rect, int xBase, int yBase) {
+			if (flashClass == null) {
+				flashRender.syncSpecialFlash(xulViewRender.getView());
+				super.postDrawFocus(xulViewRender, dc, rect, xBase, yBase);
+				return;
+			}
+            XulView view = xulViewRender.getView();
+			for (int i = 0; i < flashClass.length; i++) {
+				if (view.hasClass(flashClass[i])) {
+					flashRender.syncSpecialFlash(view);
+					super.postDrawFocus(xulViewRender, dc, rect, xBase, yBase);
+					return;
+				}
+				XulArrayList<XulView> targetList = view.findItemsByClass(flashClass[i]);
+				if (targetList != null && !targetList.isEmpty()) {
+					flashRender.syncSpecialFlash(view);
+					super.postDrawFocus(targetList.get(0).getRender(), dc, rect, xBase, yBase);
+					return;
+				}
+			}
+			flashRender.stopFlash();
 		}
 	}
 
@@ -729,7 +772,11 @@ public class XulRenderContext {
 
 		XulView focusTrackerView = getLayout().findItemById("@focus-tracker");
 		if (focusTrackerView != null) {
-			_focusTracker = new FocusTracker(focusTrackerView);
+			if (focusTrackerView.getRender() instanceof XulCoverFlashRender) {
+				_focusTracker = new FlashTracker(focusTrackerView);
+			} else {
+				_focusTracker = new FocusTracker(focusTrackerView);
+			}
 		}
 
 		XulWorker.registerDownloader(_downloader);
@@ -1101,6 +1148,15 @@ public class XulRenderContext {
 
 	WeakReference<XulView> lastMotionDownEventView;
 	private static PointF _motionEventsHitTestPt = new PointF();
+	private static PointF _downEventPoint = new PointF();
+	private static PointF _tmpEventPoint = new PointF();
+
+	private XulView pageScrollView;
+	private boolean isMotionDown;
+	private boolean isDragScrolled;
+
+	// motion point最大移动距离，若超出，则出现移动事件丢失现象
+	private static final int DISTANCE_THRESHOLD = 60;
 
 	public boolean onMotionEvent(MotionEvent event) {
 		XulLayout layout;
@@ -1115,6 +1171,35 @@ public class XulRenderContext {
 		switch (action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_HOVER_MOVE:
 		case MotionEvent.ACTION_MOVE:
+			if (_enableMouse) {
+				if (isMotionDown && doDragScroll(event) ) {
+					isDragScrolled = true;
+					_motionEventsHitTestPt.set(x, y);
+                    return true;
+                }
+
+				final float distanceX = getDistanceX(event, _motionEventsHitTestPt);
+				final float distanceY = getDistanceY(event, _motionEventsHitTestPt);
+				if ((Math.abs(distanceX) > DISTANCE_THRESHOLD) || (Math.abs(distanceY) > DISTANCE_THRESHOLD)) {
+					// 移动距离超过阈值，出现移动事件丢失现象
+					int steps = (int) (Math.ceil(Math.max(Math.abs(distanceX), Math.abs(distanceY))
+							/ DISTANCE_THRESHOLD));
+					float xStep = distanceX / steps;
+					float yStep = distanceY / steps;
+
+					// 使用线性插值算法补充缺失的移动事件
+					boolean isHandled = false;
+					for (int i = 0; i < steps; i++) {
+						isHandled |= handleMotionEvent(_motionEventsHitTestPt.x + xStep,
+								_motionEventsHitTestPt.y + yStep);
+					}
+
+					return isHandled;
+				} else {
+					_motionEventsHitTestPt.set(x, y);
+					return handleMotionEvent(x, y);
+				}
+			}
 			break;
 		case MotionEvent.ACTION_SCROLL: {
 			_motionEventsHitTestPt.set(x, y);
@@ -1135,11 +1220,19 @@ public class XulRenderContext {
 		}
 		break;
 		case MotionEvent.ACTION_DOWN: {
+			pageScrollView = null;
+			isMotionDown = true;
+			isDragScrolled = false;
+			_downEventPoint.set(x, y);
+
 			lastMotionDownEventView = null;
 			_motionEventsHitTestPt.set(x, y);
+
 			ArrayList<WeakReference<XulView>> viewsByPoint = findViewsByPoint(XulManager.HIT_EVENT_DOWN, _motionEventsHitTestPt);
 			if (viewsByPoint.isEmpty()) {
-				return false;
+				//fix drag in screen which no view, ACTION_DOWN return false and then ACTION_UP will not
+				// be call.but i need ACTION_UP event to  calculate move distance.so return true.
+				return true;
 			}
 			for (int i = 0, viewsByPointSize = viewsByPoint.size(); i < viewsByPointSize; i++) {
 				XulView xulView = viewsByPoint.get(i).get();
@@ -1147,13 +1240,31 @@ public class XulRenderContext {
 					lastMotionDownEventView = xulView.getWeakReference();
 					layout.requestFocus(xulView);
 					viewsByPoint.clear();
+					if (xulView.getRender() instanceof XulCustomViewRender) {
+						if ("Android.EditBox".equals(xulView.getAttrString("class"))) {
+							return false;
+						}
+					}
 					return true;
 				}
 			}
+			return true;
 		}
-		break;
 		case MotionEvent.ACTION_UP: {
 			_motionEventsHitTestPt.set(x, y);
+
+			isMotionDown = false;
+			if (pageScrollView != null) {
+				dragToFlipPage(pageScrollView, event);
+				pageScrollView = null;
+				return true;
+			}
+			pageScrollView = null;
+			if (isDragScrolled) {
+				isDragScrolled = false;
+				return true;
+			}
+
 			ArrayList<WeakReference<XulView>> viewsByPoint = findViewsByPoint(XulManager.HIT_EVENT_UP, _motionEventsHitTestPt);
 			if (viewsByPoint.isEmpty() || lastMotionDownEventView == null) {
 				lastMotionDownEventView = null;
@@ -1166,6 +1277,11 @@ public class XulRenderContext {
 					XulView downEventView = lastMotionDownEventView.get();
 					if (downEventView == xulView) {
 						layout.doClick(actionCallback);
+					}
+					if (xulView.getRender() instanceof XulCustomViewRender) {
+						if ("Android.EditBox".equals(xulView.getAttrString("class"))) {
+							return false;
+						}
 					}
 					return true;
 				}
@@ -1406,5 +1522,178 @@ public class XulRenderContext {
 				}
 			}
 		}
+	}
+
+	public void setEnableMouse(boolean enable) {
+		_enableMouse = enable;
+	}
+
+	public void setMotionFocusFilter(MotionFocusFilter filter) {
+		focusFilter = filter;
+	}
+
+	private boolean handleMotionEvent(float x, float y) {
+		_motionEventsHitTestPt.set(x, y);
+		ArrayList<WeakReference<XulView>> viewsByPoint = null;
+		try {
+			viewsByPoint = findViewsByPoint(XulManager.HIT_EVENT_DOWN, _motionEventsHitTestPt);
+		} catch (Exception e) {
+			Log.d(TAG, "findViewsByPoint failed!");
+		}
+		if (viewsByPoint == null) {
+			Log.d(TAG, "viewsByPoint null");
+			return false;
+		}
+
+		for (WeakReference<XulView> viewRef : viewsByPoint) {
+			XulView view = viewRef.get();
+			if (view != null && view.focusable()) {
+				if (view.isFocused()) {
+					return false;
+				} else {
+					doRequestFocus(view);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public void doRequestFocus(XulView view) {
+		if (view == null) {
+			return;
+		}
+		if (focusFilter != null) {
+			if (focusFilter.focusable(view)) {
+				getLayout().requestFocus(view);
+			}
+			return;
+		}
+
+		getLayout().requestFocus(view);
+	}
+
+	private float getDistanceY(MotionEvent event, PointF point) {
+		return event.getY() - point.y;
+	}
+
+	private float getDistanceX(MotionEvent event, PointF point) {
+		return event.getX() - point.x;
+	}
+
+	private boolean isVerticalScroll(float diffX, float diffY) {
+		return Math.abs(diffX) < Math.abs(diffY);
+	}
+
+	private boolean doDragScroll(MotionEvent event) {
+		float diffX = getDistanceX(event, _motionEventsHitTestPt);
+		float diffY = getDistanceY(event, _motionEventsHitTestPt);
+		boolean isVertical = isVerticalScroll(diffX, diffY);
+		float diff = isVertical? diffY : diffX;
+		if (diff == 0) {
+			return false;
+		}
+
+		XulView view = getScrollView(event, isVertical);
+		if (view == null) {
+			return false;
+		}
+
+		if ("slider".equals(view.getType())) {
+			XulSliderAreaWrapper sliderAreaWrapper = XulSliderAreaWrapper.fromXulView(view);
+			if (sliderAreaWrapper != null) {
+				float pos = sliderAreaWrapper.getScrollPos();
+				float nextPos = diff > 0? pos - Math.abs(diff) : pos + Math.abs(diff);
+				sliderAreaWrapper.scrollTo((int) nextPos, false);
+				XulPage.invokeActionNoPopupWithArgs(view, "dragStart", String.valueOf(diffX), String.valueOf(diffY));
+				return true;
+			}
+		} else if ("drag_page_slider".equals(view.getType())) {
+			if (isVertical) {
+				diffX = 0;
+			} else {
+				diffY = 0;
+			}
+			if (view.handleScrollEvent(diffX, diffY)) {
+				pageScrollView = view;
+				XulPage.invokeActionNoPopupWithArgs(view, "dragStart", String.valueOf(diffX), String.valueOf(diffY));
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	private XulView getScrollView(MotionEvent event, boolean isVertical) {
+		_tmpEventPoint.set(event.getX(), event.getY());
+		ArrayList<WeakReference<XulView>> viewsByPoint = findViewsByPoint(XulManager.HIT_EVENT_SCROLL, _tmpEventPoint);
+		if (viewsByPoint.isEmpty()) {
+			return null;
+		}
+
+		for (int i = viewsByPoint.size() - 1; i >= 0; --i) {
+			XulView xulView = viewsByPoint.get(i).get();
+			if (xulView != null && "slider".equals(xulView.getType())) {
+				XulSliderAreaWrapper sliderAreaWrapper = XulSliderAreaWrapper.fromXulView(xulView);
+				boolean direction = sliderAreaWrapper.isVertical();
+				if ((direction == isVertical)) {
+					if (sliderAreaWrapper.getScrollRange() > 0) {
+						return xulView;
+					}
+				}
+			}
+		}
+		for (int i = viewsByPoint.size() - 1; i >= 0; --i) {
+			XulView xulView = viewsByPoint.get(i).get();
+			if (xulView != null && "drag_page_slider".equals(xulView.getType())) {
+				XulAttr directionAttr = xulView.getAttr(XulPropNameCache.TagId.DIRECTION);
+				boolean _isVertical = false;
+				if (directionAttr != null) {
+					XulPropParser.xulParsedAttr_Direction direction = directionAttr.getParsedValue();
+					_isVertical = direction.vertical;
+				}
+				if (_isVertical == isVertical) {
+					return xulView;
+				}
+			}
+		}
+		return null;
+	}
+
+	private void dragToFlipPage(XulView view, MotionEvent event) {
+		if (view == null || event == null) {
+			return;
+		}
+
+		String type = view.getType();
+		switch (type) {
+			case "drag_page_slider":
+				float diff = getDistanceX(event, _downEventPoint);
+				XulAttr directionAttr = view.getAttr(XulPropNameCache.TagId.DIRECTION);
+				boolean _isVertical = false;
+				if (directionAttr != null) {
+					XulPropParser.xulParsedAttr_Direction direction = directionAttr.getParsedValue();
+					_isVertical = direction.vertical;
+				}
+				if (_isVertical) {
+					diff = getDistanceY(event, _downEventPoint);
+				}
+				XulPageSliderAreaWrapper sliderAreaWrapper = XulPageSliderAreaWrapper.fromXulView(view);
+				int pageIndex = sliderAreaWrapper.getCurrentPage();
+				if (diff > 600) {
+					pageIndex = pageIndex == 0 ? 0: pageIndex - 1;
+				} else if (diff < -600){
+					pageIndex = pageIndex == sliderAreaWrapper.getPageCount() -1  ? sliderAreaWrapper
+							.getPageCount() -1 : pageIndex + 1;
+				}
+				sliderAreaWrapper.setCurrentPage(pageIndex);
+				XulPage.invokeActionNoPopupWithArgs(view, "dragStopped", String.valueOf(diff), String.valueOf(diff));
+				break;
+		}
+	}
+
+
+	public interface MotionFocusFilter {
+		boolean focusable(XulView view);
 	}
 }

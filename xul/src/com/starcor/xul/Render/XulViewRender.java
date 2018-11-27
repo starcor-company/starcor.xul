@@ -820,6 +820,10 @@ public abstract class XulViewRender {
 				_scalarY = _scalarYVal;
 				_scalarXAlign = _scalarXAlignVal;
 				_scalarYAlign = _scalarYAlignVal;
+
+				if (_rect != null && _scalarX > 0 && _scalarY > 0 && !isInvisible()) {
+					setDrawingSkipped(false);
+				}
 			}
 
 			@Override

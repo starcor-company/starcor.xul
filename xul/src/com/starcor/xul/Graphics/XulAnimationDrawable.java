@@ -4,9 +4,14 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+
 import com.starcor.xul.Utils.XulCachedHashMap;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -108,6 +113,10 @@ public abstract class XulAnimationDrawable extends XulDrawable {
 			drawable._key = imageKey;
 		}
 		return drawable;
+	}
+
+	public static XulDrawable buildGIFAnimation(InputStream is, String url, String imageKey) {
+		return XulGIFAnimationDrawable.buildAnimation(is, url, imageKey);
 	}
 
 	public abstract boolean drawAnimation(AnimationDrawingContext ctx, XulDC dc, Rect dst, Paint paint);

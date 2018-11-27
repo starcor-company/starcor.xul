@@ -33,6 +33,8 @@ public abstract class XulTextRenderer {
 
 	public abstract XulWorker.DrawableItem collectPendingImageItem();
 
+	public abstract String getText();
+
 	public abstract class XulTextEditor {
 		public abstract XulTextEditor setText(String newText);
 

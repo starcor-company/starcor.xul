@@ -17,6 +17,7 @@ import com.starcor.xul.Graphics.BitmapTools;
 import com.starcor.xul.Graphics.XulAnimationDrawable;
 import com.starcor.xul.Graphics.XulBitmapDrawable;
 import com.starcor.xul.Graphics.XulDrawable;
+import com.starcor.xul.Graphics.XulSVGDrawable;
 import com.starcor.xul.Utils.XulBufferedInputStream;
 import com.starcor.xul.Utils.XulCachedHashMap;
 import com.starcor.xul.Utils.XulMemoryOutputStream;
@@ -160,6 +161,7 @@ public class XulWorker {
 		if (bmp == null || !bmp.cacheable()) {
 			return;
 		}
+
 		synchronized (_weakCachedDrawable) {
 			if (bmp == null) {
 				_weakCachedDrawable.remove(url);
@@ -1504,6 +1506,7 @@ public class XulWorker {
 	static void _drawableWorkerRun() {
 
 		Pattern ninePatchPattern = Pattern.compile("^.+\\.9(\\.png)?$", Pattern.CASE_INSENSITIVE);
+		Pattern svgPattern = Pattern.compile("^.+\\.svg$", Pattern.CASE_INSENSITIVE);
 		Pattern gifPattern = Pattern.compile("^.+\\.gif(\\?.*)?$", Pattern.CASE_INSENSITIVE);
 		Pattern animationPkgPattern = Pattern.compile("^.+\\.ani(\\.zip)?$", Pattern.CASE_INSENSITIVE);
 
@@ -1645,9 +1648,11 @@ public class XulWorker {
 			}
 			_drawableWorkerWaitSuspend();
 			{
-				Matcher matcher = animationPkgPattern.matcher(drawableItem.__resolvedPath);
+				Matcher matcher = svgPattern.matcher(drawableItem.__resolvedPath);
 				if (matcher != null && matcher.matches()) {
-					XulDrawable drawable = XulAnimationDrawable.buildAnimation(inputStream, drawableItem.url, imageKey);
+					int width = drawableItem.width;
+					int height = drawableItem.height;
+					XulDrawable drawable = XulSVGDrawable.buildSVGDrawable(inputStream, drawableItem.url, imageKey, width, height);
 					_finishSchedule(drawableItem, drawable);
 					continue;
 				}
@@ -1655,6 +1660,14 @@ public class XulWorker {
 			{
 				if (_isGIF(gifPattern, drawableItem.__resolvedPath, inputStream)) {
 					XulDrawable drawable = XulDrawable.fromGIFFile(inputStream, drawableItem.url, imageKey);
+					_finishSchedule(drawableItem, drawable);
+					continue;
+				}
+			}
+			{
+				Matcher matcher = animationPkgPattern.matcher(drawableItem.__resolvedPath);
+				if (matcher != null && matcher.matches()) {
+					XulDrawable drawable = XulAnimationDrawable.buildAnimation(inputStream, drawableItem.url, imageKey);
 					_finishSchedule(drawableItem, drawable);
 					continue;
 				}

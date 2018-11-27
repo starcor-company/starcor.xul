@@ -101,18 +101,18 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 	}
 
 	_PageSliderChildrenCollector _contentCollector = new _PageSliderChildrenCollector();
-	ArrayList<XulView> _contents = new ArrayList<XulView>();
-	int _curPage;
+	protected ArrayList<XulView> _contents = new ArrayList<XulView>();
+	protected int _curPage;
 	int _preloadPages = 1;
-	boolean _isVertical = false;
-	boolean _isLoopMode = true;
+	protected boolean _isVertical = false;
+	protected boolean _isLoopMode = true;
 	int _autoImageGCLevel = DEFAULT_IMAGE_GC_LEVEL;
 	boolean _peekViewNextPage = false;
 
 	// 页面滑动速度，-1无滑动动画
 	int _animationSpeed = 400;
-	int _pageOffsetX;
-	int _pageOffsetY;
+	protected int _pageOffsetX;
+	protected int _pageOffsetY;
 
 	boolean _clipChildren = true;
 	boolean _clipFocus = false;
@@ -127,7 +127,7 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		_pageOffsetY = XulUtils.roundToInt(offsetY);
 	}
 
-	private void _updatePageOffsetX(float offsetX) {
+	protected void _updatePageOffsetX(float offsetX) {
 		if (_pageOffsetX == offsetX) {
 			return;
 		}
@@ -629,7 +629,8 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		_flipAnimation.postDraw(dc, xBase + _screenX + thisRc.left, yBase + _screenY + thisRc.top, XulUtils.calRectWidth(thisRc), XulUtils.calRectHeight(thisRc));
 	}
 
-	private void drawSlideAnimation(XulDC dc, Rect rect, int xBase, int yBase, int counter, XulView curPageArea, RectF curPageFocusRc) {
+	protected void drawSlideAnimation(XulDC dc, Rect rect, int xBase, int yBase, int counter, XulView curPageArea, RectF
+            curPageFocusRc) {
 		if (_pageOffsetX > 0 || _pageOffsetY > 0) {
 			XulView prevPageArea = _contents.get(_curPage == 0 ? counter - 1 : _curPage - 1);
 			float prevXoffset = _pageOffsetX != 0 ? _pageOffsetX - XulUtils.calRectWidth(curPageFocusRc) : 0;
@@ -649,7 +650,7 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 
 
 	SimpleTransformAnimation _sliderAnimation;
-	private void _updateSlideAnimation() {
+	protected void _updateSlideAnimation() {
 		if (!_hasAnimation()) {
 			_updatePageOffsetX(0);
 			_updatePageOffsetY(0);
@@ -863,7 +864,7 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		return null;
 	}
 
-	private void cleanPageCache() {
+	protected void cleanPageCache() {
 		if (_autoImageGCLevel >= 0) {
 			imageGC(_autoImageGCLevel);
 		}
@@ -1138,42 +1139,10 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		return super.hitTest(event, x, y);
 	}
 
-	@Override
-	public boolean handleScrollEvent(float hScroll, float vScroll) {
-		float delta;
-		if (_isVertical) {
-			delta = vScroll;
-			if (delta == 0) {
-				delta = hScroll;
-			}
-		} else {
-			delta = vScroll;
-			if (delta == 0) {
-				delta = vScroll;
-			}
-		}
-		if (delta == 0) {
-			return false;
-		}
-		if (delta > 0) {
-			if (_isLoopMode || _curPage > 0) {
-				slidePrev();
-			} else {
-				return false;
-			}
-		} else {
-			if (_isLoopMode || _curPage + 1 < _contents.size()) {
-				slideNext();
-			} else {
-				return false;
-			}
-		}
-		return true;
-	}
 
 	Runnable _pageChangedNotifier;
 
-	private void notifyPageChanged(int curPage) {
+	protected void notifyPageChanged(int curPage) {
 		if (_contents.isEmpty()) {
 			return;
 		}
@@ -1215,6 +1184,7 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		if (_curPage >= _contents.size()) {
 			_curPage = 0;
 		}
+
 		XulView curPageView = _contents.get(_curPage);
 		RectF focusRc = curPageView.getFocusRc();
 		_updatePageOffsetX(XulUtils.calRectWidth(focusRc));
@@ -1249,6 +1219,7 @@ public class XulPageSliderAreaRender extends XulViewContainerBaseRender {
 		if (_curPage < 0) {
 			_curPage += _contents.size();
 		}
+
 		XulView curPageView = _contents.get(_curPage);
 		RectF focusRc = curPageView.getFocusRc();
 		_updatePageOffsetX(-XulUtils.calRectWidth(focusRc));

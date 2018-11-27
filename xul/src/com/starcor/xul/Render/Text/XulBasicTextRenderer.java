@@ -48,6 +48,10 @@ public abstract class XulBasicTextRenderer extends XulTextRenderer {
 		return _getTextPaint();
 	}
 
+	public String getText() {
+		return _text;
+	}
+
 	protected Paint _getTextPaint() {
 		return _getTextPaint(1.0f);
 	}
