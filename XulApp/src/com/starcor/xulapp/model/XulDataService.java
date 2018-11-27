@@ -403,7 +403,6 @@ public class XulDataService {
 					queryData(request, url.substring(16), false);
 					return XulDebugServer.PENDING_RESPONSE;
 				}
-
 				if (url.startsWith("/api/pull-data/")) {
 					queryData(request, url.substring(15), true);
 					return XulDebugServer.PENDING_RESPONSE;
@@ -413,6 +412,19 @@ public class XulDataService {
 					invokeData(request, tmp[0], tmp[1]);
 					return XulDebugServer.PENDING_RESPONSE;
 				}
+                if (url.startsWith("/api/insert-data/")) {
+				    insertData(request, url.substring(17));
+                    return XulDebugServer.PENDING_RESPONSE;
+                }
+                if (url.startsWith("/api/update-data/")) {
+                    updateData(request, url.substring(17));
+                    return XulDebugServer.PENDING_RESPONSE;
+                }
+                if (url.startsWith("/api/delete-data/")) {
+                    deleteData(request, url.substring(17));
+                    return XulDebugServer.PENDING_RESPONSE;
+                }
+
 				return null;
 			}
 
@@ -425,6 +437,21 @@ public class XulDataService {
 				final XulHttpServer.XulHttpServerResponse response = _serverHandler.getResponse(request);
 				debugDoInvoke(dataSource, func, response, request.queries);
 			}
+
+            private void insertData(final XulHttpServer.XulHttpServerRequest request, final String dataSource) {
+                final XulHttpServer.XulHttpServerResponse response = _serverHandler.getResponse(request);
+                debugDoInsert(dataSource, response, request.queries);
+            }
+
+            private void updateData(final XulHttpServer.XulHttpServerRequest request, final String dataSource) {
+                final XulHttpServer.XulHttpServerResponse response = _serverHandler.getResponse(request);
+                debugDoUpdate(dataSource, response, request.queries);
+            }
+
+            private void deleteData(final XulHttpServer.XulHttpServerRequest request, final String dataSource) {
+                final XulHttpServer.XulHttpServerResponse response = _serverHandler.getResponse(request);
+                debugDoDelete(dataSource, response, request.queries);
+            }
 		});
 	}
 
@@ -898,6 +925,6 @@ public class XulDataService {
 	}
 
 	public static abstract class XulDataServiceFactory {
-		abstract XulDataService createXulDataService();
+		public abstract XulDataService createXulDataService();
 	}
 }

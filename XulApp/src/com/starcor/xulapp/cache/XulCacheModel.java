@@ -95,7 +95,11 @@ public class XulCacheModel {
 	}
 
 	public void updateLastAccessTime() {
-		_lastAccessTime = System.currentTimeMillis();
+		long currentTime = System.currentTimeMillis();
+		if (_lastAccessTime >= currentTime) {
+			return;
+		}
+		_lastAccessTime = currentTime;
 	}
 
 	public void setOwner(XulCacheDomain owner) {

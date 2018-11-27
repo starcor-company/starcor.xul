@@ -101,7 +101,7 @@ public class XulRemoteDataService extends XulDataService {
 		}
 		_dataServiceFactory = new XulDataServiceFactory() {
 			@Override
-			XulDataService createXulDataService() {
+			public XulDataService createXulDataService() {
 				XulLog.d(TAG, "Create remote data service... GLOBAL RDS:" + _globalRemoteDataService);
 				return new XulRemoteDataService();
 			}

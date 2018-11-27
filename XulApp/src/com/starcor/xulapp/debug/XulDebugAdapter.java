@@ -12,6 +12,7 @@ import android.view.View;
 import com.starcor.xul.XulRenderContext;
 import com.starcor.xulapp.XulApplication;
 import com.starcor.xulapp.XulPresenter;
+import com.starcor.xulapp.behavior.XulUiBehavior;
 import com.starcor.xulapp.utils.XulLog;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -89,7 +90,12 @@ public class XulDebugAdapter {
 		}
 
 		public void writePageSpecifiedAttribute(Object pageObj, XmlSerializer xmlWriter) throws IOException {
-			XulPresenter presenter = (XulPresenter) pageObj;
+			XulPresenter presenter = null;
+			if (pageObj instanceof XulUiBehavior) {
+				presenter = ((XulUiBehavior) pageObj)._presenter;
+			} else {
+				presenter = (XulPresenter) pageObj;
+			}
 			final String pageId = presenter.xulGetCurPageId();
 			if (!TextUtils.isEmpty(pageId)) {
 				xmlWriter.attribute(null, "pageId", pageId);
@@ -127,7 +133,12 @@ public class XulDebugAdapter {
 		}
 
 		public boolean isPageFinished(Object pageObj) {
-			XulPresenter presenter = (XulPresenter) pageObj;
+			XulPresenter presenter = null;
+			if (pageObj instanceof XulUiBehavior) {
+				presenter = ((XulUiBehavior) pageObj)._presenter;
+			} else {
+				presenter = (XulPresenter) pageObj;
+			}
 			return !presenter.xulIsAlive();
 		}
 
@@ -142,23 +153,43 @@ public class XulDebugAdapter {
 		}
 
 		public XulRenderContext getPageRenderContext(Object pageObj) {
-			XulPresenter presenter = (XulPresenter) pageObj;
+			XulPresenter presenter = null;
+			if (pageObj instanceof XulUiBehavior) {
+				presenter = ((XulUiBehavior) pageObj)._presenter;
+			} else {
+				presenter = (XulPresenter) pageObj;
+			}
 			return presenter.xulGetRenderContext();
 		}
 
 		public void drawPage(Object pageObj, Canvas canvas) {
-			XulPresenter presenter = (XulPresenter) pageObj;
+			XulPresenter presenter = null;
+			if (pageObj instanceof XulUiBehavior) {
+				presenter = ((XulUiBehavior) pageObj)._presenter;
+			} else {
+				presenter = (XulPresenter) pageObj;
+			}
 			View rootView = presenter.xulGetRenderContextView();
 			rootView.draw(canvas);
 		}
 
 		public void finishPage(Object pageObj) {
-			XulPresenter presenter = (XulPresenter) pageObj;
+			XulPresenter presenter = null;
+			if (pageObj instanceof XulUiBehavior) {
+				presenter = ((XulUiBehavior) pageObj)._presenter;
+			} else {
+				presenter = (XulPresenter) pageObj;
+			}
 			presenter.xulDestroy();
 		}
 
 		public String getPageId(Object pageObj) {
-			XulPresenter presenter = (XulPresenter) pageObj;
+			XulPresenter presenter = null;
+			if (pageObj instanceof XulUiBehavior) {
+				presenter = ((XulUiBehavior) pageObj)._presenter;
+			} else {
+				presenter = (XulPresenter) pageObj;
+			}
 			return presenter.xulGetCurPageId();
 		}
 	}

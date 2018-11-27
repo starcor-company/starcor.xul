@@ -82,6 +82,10 @@ public class XulClauseInfo implements Parcelable {
 		return null;
 	}
 
+	public void setDataOperation(XulDataOperation dataOperation) {
+		this.dataOperation = dataOperation;
+	}
+
 	public void addDataItem(String key, String value) {
 		final DataItem dataItem = new DataItem(key, value);
 		addDataItem(dataItem);

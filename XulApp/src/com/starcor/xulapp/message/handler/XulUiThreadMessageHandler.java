@@ -42,6 +42,11 @@ public class XulUiThreadMessageHandler implements XulMessageHandler {
 				}
 
 				XulMessage xulMessage = subscription.getXulMessage();
+
+				if (xulMessage == null) {
+					return;
+				}
+
 				int repeat = xulMessage.getRepeat();
 				if (repeat <= 0) {
 					// 不需要执行

@@ -39,7 +39,8 @@ public class XulFileCache extends XulCacheImpl {
 	public XulFileCache(File cacheDir, long maxSize, int maxCount) {
 		super(maxSize, maxCount);
 		if (!cacheDir.exists() && !cacheDir.mkdirs()) {
-			throw new RuntimeException("Can't make dirs in " + cacheDir.getAbsolutePath());
+			XulLog.e(TAG,"Can't make dirs in " + cacheDir.getAbsolutePath());
+			return;
 		}
 		_cacheDir = cacheDir;
 		calculateCacheSizeAndCacheCount();
@@ -134,14 +135,14 @@ public class XulFileCache extends XulCacheImpl {
 
 		if (update) {
 			cacheModel.updateLastAccessTime();
-			file.setLastModified(System.currentTimeMillis());
+			file.setLastModified(cacheModel.getLastAccessTime());
 		}
 		return cacheModel;
 	}
 
 	@Override
 	public boolean putCache(XulCacheModel data) {
-		if (!_cacheDir.exists() && !_cacheDir.mkdirs()) {
+		if (_cacheDir == null || !_cacheDir.exists() && !_cacheDir.mkdirs()) {
 			XulLog.e(TAG, "Cache directory is null and cannot create.");
 			return false;
 		}
@@ -492,8 +493,10 @@ public class XulFileCache extends XulCacheImpl {
 	@Override
 	public void clear() {
 		super.clear();
-		XulSystemUtil.deleteDir(_cacheDir);
-		_cacheDir.mkdirs();
+		if (_cacheDir != null) {
+			XulSystemUtil.deleteDir(_cacheDir);
+			_cacheDir.mkdirs();
+		}
 	}
 
 }

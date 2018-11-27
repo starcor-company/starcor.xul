@@ -345,7 +345,6 @@ public abstract class XulCacheDomain {
 	 * 关闭cache
 	 */
 	public void close() {
-		clear();
 	}
 
 	/**

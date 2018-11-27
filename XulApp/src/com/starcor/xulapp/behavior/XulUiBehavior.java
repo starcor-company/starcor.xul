@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.starcor.xul.IXulExternalView;
+import com.starcor.xul.*;
 import com.starcor.xul.Script.IScriptContext;
 import com.starcor.xul.Script.IScriptableObject;
 import com.starcor.xul.Script.V8.V8Arguments;
@@ -17,17 +17,12 @@ import com.starcor.xul.Script.V8.V8ScriptContext;
 import com.starcor.xul.Script.V8.V8ScriptObject;
 import com.starcor.xul.ScriptWrappr.XulScriptableObjectWrapper;
 import com.starcor.xul.Wrapper.XulMassiveAreaWrapper;
-import com.starcor.xul.XulDataNode;
-import com.starcor.xul.XulLayout;
-import com.starcor.xul.XulManager;
-import com.starcor.xul.XulPage;
-import com.starcor.xul.XulRenderContext;
-import com.starcor.xul.XulView;
-import com.starcor.xul.XulWorker;
 import com.starcor.xulapp.XulPresenter;
+import com.starcor.xulapp.behavior.utils.IBehaviorContact;
 import com.starcor.xulapp.message.XulMessageCenter;
 import com.starcor.xulapp.model.XulDataService;
 import com.starcor.xulapp.model.XulPullDataCollection;
+import com.starcor.xulapp.third.lottie.XulLottieView;
 import com.starcor.xulapp.utils.XulMassiveHelper;
 
 import java.io.InputStream;
@@ -37,11 +32,12 @@ import java.util.ArrayList;
  * Created by hy on 2015/8/31.
  */
 public class XulUiBehavior extends XulScriptableObjectWrapper<XulUiBehavior> implements XulBehavior {
-	protected final XulPresenter _presenter;
+	public final XulPresenter _presenter;
 	protected XulRenderContext _xulRenderContext;
 	private IScriptableObject _scriptableObject;
 	private XulDataService _dataService;
 	private ArrayList<XulActionFilter> _xulActionFilters = new ArrayList<XulActionFilter>();
+	private IBehaviorContact contact;
 
 	public XulUiBehavior(XulPresenter xulPresenter) {
 		super(null);
@@ -225,6 +221,16 @@ public class XulUiBehavior extends XulScriptableObjectWrapper<XulUiBehavior> imp
 	}
 
 	public IXulExternalView xulCreateExternalView(String cls, int x, int y, int width, int height, XulView view) {
+		if ("lottie".equals(cls)) {
+			XulLottieView lottieView = new XulLottieView(getContext(), view);
+			View rootView = _presenter.xulGetRenderContextView();
+			FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+			layoutParams.topMargin = y;
+			layoutParams.leftMargin = x;
+			((ViewGroup)rootView).addView(lottieView, layoutParams);
+			lottieView.bringToFront();
+			return lottieView;
+		}
 		return null;
 	}
 
@@ -307,4 +313,13 @@ public class XulUiBehavior extends XulScriptableObjectWrapper<XulUiBehavior> imp
 
 	@Deprecated
 	public interface XulDataNodeHelper extends com.starcor.xulapp.utils.XulMassiveHelper.XulDataNodeHelper {}
+
+
+	public IBehaviorContact getContact() {
+		if (contact == null && getContext() instanceof IBehaviorContact) {
+			contact = (IBehaviorContact) getContext();
+		}
+		return contact;
+	}
+
 }

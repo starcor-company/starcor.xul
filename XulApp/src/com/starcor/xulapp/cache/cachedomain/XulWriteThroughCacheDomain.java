@@ -80,6 +80,11 @@ public class XulWriteThroughCacheDomain extends XulCacheDomain {
     }
 
     @Override
+    public void close() {
+        _memoryCache.clear();
+    }
+
+    @Override
     protected XulCacheModel removeNextCache() {
         XulCacheModel memoryData = _memoryCache.removeNextCache();
         if (memoryData != null) {

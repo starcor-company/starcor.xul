@@ -66,7 +66,10 @@ public abstract class XulCacheImpl extends XulCacheDomain {
 
         cacheData.updateLastAccessTime();
         _caches.put(cacheData.getKey(), cacheData);
-        cacheData.setOwner(this);
+
+        if (cacheData.getOwner() == null){
+            cacheData.setOwner(this);
+        }
         return true;
     }
 

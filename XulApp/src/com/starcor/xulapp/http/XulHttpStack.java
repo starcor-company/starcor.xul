@@ -1,11 +1,13 @@
 package com.starcor.xulapp.http;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.starcor.xul.Utils.XulCircleQueue;
 import com.starcor.xul.XulUtils;
 import com.starcor.xulapp.utils.XulLog;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;

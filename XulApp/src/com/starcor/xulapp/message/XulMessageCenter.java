@@ -476,6 +476,9 @@ public final class XulMessageCenter {
          * 根据message查找到所有匹配的集合,然后处理消息
          */
         private void deliveryMessage(XulMessage message) {
+            if (messageFilter != null && messageFilter.filter(message)) {
+                return;
+            }
             // 如果有缓存则直接从缓存中取
             List<XulMessage> xulMessages = getMatchedMessageTypes(message);
             // 迭代所有匹配的消息并且分发给订阅者
@@ -657,4 +660,13 @@ public final class XulMessageCenter {
         }
     }
 
+    private XulMessageFilter messageFilter;
+
+    public void setMessageFilter(XulMessageFilter messageFilter) {
+        this.messageFilter = messageFilter;
+    }
+
+    public interface XulMessageFilter {
+        boolean filter(XulMessage message);
+    }
 }

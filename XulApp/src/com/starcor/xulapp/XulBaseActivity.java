@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -47,6 +48,7 @@ public class XulBaseActivity extends Activity implements XulPresenter {
 
 	private SystemUiHider _systemUiHider;
 	protected final XulDebugMonitor _dbgMonitor;
+	protected boolean _useSystemUiHider = true;
 
 	private static class XulFrameLayout extends FrameLayout {
 
@@ -84,7 +86,7 @@ public class XulBaseActivity extends Activity implements XulPresenter {
 
 				@Override
 				public int getOpacity() {
-					return 0;
+					return PixelFormat.UNKNOWN;
 				}
 			});
 		}
@@ -177,6 +179,13 @@ public class XulBaseActivity extends Activity implements XulPresenter {
 				}
 				return xulDefaultDispatchTouchEvent(event);
 			}
+			@Override
+			public boolean dispatchGenericMotionEvent(MotionEvent event) {
+				if (xulOnDispatchTouchEvent(event)) {
+					return true;
+				}
+				return super.dispatchGenericMotionEvent(event);
+			}
 		};
 
 		Intent intent = getIntent();
@@ -207,17 +216,19 @@ public class XulBaseActivity extends Activity implements XulPresenter {
 		_xulFrameLayout.setFocusable(true);
 		_xulFrameLayout.setFocusableInTouchMode(true);
 
-		_systemUiHider = SystemUiHider.getInstance(this, _xulFrameLayout, HIDER_FLAGS);
-		_systemUiHider.setup();
-		_systemUiHider.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
-			@Override
-			@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-			public void onVisibilityChange(boolean visible) {
-				if (visible) {
-					delayedHide(AUTO_HIDE_DELAY_MILLIS);
-				}
-			}
-		});
+		if (_useSystemUiHider) {
+            _systemUiHider = SystemUiHider.getInstance(this, _xulFrameLayout, HIDER_FLAGS);
+            _systemUiHider.setup();
+            _systemUiHider.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
+                @Override
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+                public void onVisibilityChange(boolean visible) {
+                    if (visible) {
+                        delayedHide(AUTO_HIDE_DELAY_MILLIS);
+                    }
+                }
+            });
+		}
 	}
 
 	protected void xulPreCreate() {
@@ -295,7 +306,9 @@ public class XulBaseActivity extends Activity implements XulPresenter {
 	Runnable _hideRunnable = new Runnable() {
 		@Override
 		public void run() {
-			_systemUiHider.hide();
+			if (_systemUiHider != null) {
+			    _systemUiHider.hide();
+			}
 		}
 	};
 

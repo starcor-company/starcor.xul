@@ -73,11 +73,11 @@ public class XulApplication extends Application {
 		XulCacheCenter.setVersion(XulSystemUtil.getCurrentVersion(getAppContext()));
 
 		_xulCacheDomain = XulCacheCenter.buildCacheDomain(CACHE_DOMAIN_ID_APP)
-			.setDomainFlags(XulCacheCenter.CACHE_FLAG_FILE
-				| XulCacheCenter.CACHE_FLAG_REVISION_LOCAL)
-			.setLifeTime(CACHE_LIFETIME)
-			.setMaxFileSize(CACHE_MAX_SIZE)
-			.build();
+				.setDomainFlags(XulCacheCenter.CACHE_FLAG_FILE
+								| XulCacheCenter.CACHE_FLAG_REVISION_LOCAL)
+				.setLifeTime(CACHE_LIFETIME)
+				.setMaxFileSize(CACHE_MAX_SIZE)
+				.build();
 	}
 
 	public void postToMainLooper(Runnable runnable) {

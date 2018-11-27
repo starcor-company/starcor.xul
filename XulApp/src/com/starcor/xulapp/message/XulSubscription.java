@@ -1,6 +1,7 @@
 package com.starcor.xulapp.message;
 
 import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -138,7 +139,10 @@ public class XulSubscription {
             // 执行
             _targetMethod.setAccessible(true);
             XulMessage xulMessage = getXulMessage();
-            _targetMethod.invoke(_subscriber.get(), xulMessage.getData());
+            Object o = _subscriber.get();
+            if (o != null) {
+                _targetMethod.invoke(o, xulMessage.getData());
+            }
             if (xulMessage.getRepeat() <= 1) {
                 _messageQueue.poll();
             }

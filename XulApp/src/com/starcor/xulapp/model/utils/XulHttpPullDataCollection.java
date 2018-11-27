@@ -23,9 +23,9 @@ public abstract class XulHttpPullDataCollection extends XulPullDataCollection {
 	protected volatile int _curPageIdx = 0;
 	protected volatile int _curPageSize = 16;
 	volatile boolean _finished = false;
-	XulDataServiceContext _ctx;
-	XulClauseInfo _clauseInfo;
-	volatile XulHttpStack.XulHttpTask _httpTask;
+	protected XulDataServiceContext _ctx;
+	protected XulClauseInfo _clauseInfo;
+	protected volatile XulHttpStack.XulHttpTask _httpTask;
 	XulHttpStack.XulHttpResponseHandler _httpHandler = new XulHttpStack.XulHttpResponseHandler() {
 		@Override
 		public int onResult(XulHttpStack.XulHttpTask task, XulHttpRequest request, XulHttpResponse response) {

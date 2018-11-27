@@ -91,4 +91,9 @@ public class XulMemoryCache extends XulCacheImpl {
 		}
 		return null;
 	}
+
+	@Override
+	public void close() {
+		clear();
+	}
 }
